@@ -49,29 +49,28 @@ insert into libro (id, titulo, autor_id) values (4, 'Monstruos del Pantano', 3);
 insert into libro (id, titulo, autor_id) values (5, 'Sátira a la Profecía de Ithlinne', 1);
 insert into libro (id, titulo, autor_id) values (6, 'Balada del Lobo Blanco', 2);
 insert into libro (id, titulo, autor_id) values (7, 'Medicina Forense', 4);
-alter session set NLS_DATE_FORMAT = 'DD-MM-YYYY';
 create table edicion
 (
   isbn varchar2(13) not null,
   libro_id number not null,
   editorial_id number not null,
   numero number(2) not null,
-  fecha date,
+  fecha varchar2(10),
   descripcion varchar2(200),
   constraint edicion_pk primary key (isbn),
   constraint fk_libro foreign key (libro_id) references libro(id),
   constraint fk_editorial foreign key (editorial_id) references editorial(id)
 );
 insert all
-  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('1111111111111', 1, 1, 1, '01-04-1112', 'Pergaminos, Lengua Antigua')
-  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('2222222222222', 1, 5, 2, '02-07-1216', 'Encuadernado, Traducido a Lengua Común, Incluye 8 nuevos mitos')
-  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('3333333333333', 5, 1, 1, '22-11-1019', 'Pergaminos, Lengua Élfica')
-  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('4444444444444', 2, 3, 1, '06-04-1212', 'Encuadernado, Lengua Común')
-  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('5555555555555', 3, 4, 1, '07-05-1213', 'Encuadernado, Lengua Común')
-  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('6666666666666', 4, 3, 1, '12-09-1219', 'Encuadernado, Lengua Común')
-  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('7777777777777', 6, 2, 1, '11-12-1222', 'Encuadernado, Lengua Común')
-  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('8888888888888', 7, 4, 1, '08-12-1211', 'Encuadernado, Lengua Antigua')
-  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('9999999999999', 7, 4, 2, '09-11-1223', 'Encuadernado, Traducido a Lengua Común')
+  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('1111111111111', 1, 1, 1, '1112-04-01', 'Pergaminos, Lengua Antigua')
+  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('2222222222222', 1, 5, 2, '1216-07-02', 'Encuadernado, Traducido a Lengua Común, Incluye 8 nuevos mitos')
+  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('3333333333333', 5, 1, 1, '1019-11-22', 'Pergaminos, Lengua Élfica')
+  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('4444444444444', 2, 3, 1, '1212-04-06', 'Encuadernado, Lengua Común')
+  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('5555555555555', 3, 4, 1, '1213-05-07', 'Encuadernado, Lengua Común')
+  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('6666666666666', 4, 3, 1, '1219-09-12', 'Encuadernado, Lengua Común')
+  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('7777777777777', 6, 2, 1, '1222-12-11', 'Encuadernado, Lengua Común')
+  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('8888888888888', 7, 4, 1, '1211-12-08', 'Encuadernado, Lengua Antigua')
+  into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('9999999999999', 7, 4, 2, '1223-11-09', 'Encuadernado, Traducido a Lengua Común')
 select * from dual;
 create table planta
 (
@@ -120,26 +119,26 @@ insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observa
 insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones) values ('7777777777777', 1, 0, 3, 1, ' ');
 insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones) values ('8888888888888', 1, 0, 3, 1, 'Portada Mutilada');
 insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones) values ('9999999999999', 1, 0, 3, 1, ' ');
-alter session set NLS_TIMESTAMP_FORMAT = 'DD-MM-YYYY HH24:MI:SS';
 create table alquiler
 (
   usuario_cedula varchar2(100) not null,
   edicion_isbn varchar2(13) not null,
   ejemplar_id number not null,
-  fecha_hora_prestamo timestamp(0) not null,
-  fecha_hora_estimada_entrega timestamp(0) not null,
-  fecha_hora_entrega timestamp(0),
+  fecha_hora_prestamo varchar2(20) not null,
+  fecha_hora_estimada_entrega varchar2(20) not null,
+  fecha_hora_entrega varchar2(20),
   constraint alquiler_pk primary key (usuario_cedula , edicion_isbn, ejemplar_id, fecha_hora_prestamo),
   constraint fk_usuario foreign key (usuario_cedula) references usuario(cedula),
   constraint fk_ejemplar foreign key (edicion_isbn, ejemplar_id) references ejemplar(edicion_isbn, id)
 );
-insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '1111111111111', 1, '27-12-2019 09:10:02', '28-12-2019 00:00:00');
+insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '1111111111111', 1, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
 update ejemplar set prestado = 1 where edicion_isbn = '1111111111111' and id = 1;
-insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '2222222222222', 2, '27-12-2019 09:10:02', '28-12-2019 00:00:00');
+insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '2222222222222', 2, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
 update ejemplar set prestado = 1 where edicion_isbn = '2222222222222' and id = 2;
 update usuario set puede_prestamo = 0 where cedula = '0123456789';
-insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0987654321', '7777777777777', 1, '27-12-2019 11:00:23', '28-12-2019 12:30:00');
+insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0987654321', '7777777777777', 1, '2019-12-27 11:00:23', '2019-12-28 12:30:00');
 update ejemplar set prestado = 1 where edicion_isbn = '7777777777777' and id = 1;
 update usuario set puede_prestamo = 0 where cedula = '0987654321';
-update alquiler set fecha_hora_entrega = '28-12-2019 11:30:00' where usuario_cedula = '0987654321' and fecha_hora_prestamo = '27-12-2019 11:00:23';
+update alquiler set fecha_hora_entrega = '2019-12-28 11:30:00' where usuario_cedula = '0987654321' and fecha_hora_prestamo = '2019-12-27 11:00:23';
 update usuario set puede_prestamo = 1 where cedula = '0987654321';
+update ejemplar set prestado = 0 where edicion_isbn = '7777777777777' and id = 1;

@@ -5,8 +5,6 @@
  */
 package negocio;
 
-import java.sql.Timestamp;
-
 /**
  *
  * @author USUARIO
@@ -15,7 +13,7 @@ public class Edicion {
     
     public Edicion() {}
 
-    public Edicion(String isbn, int libro_id, int editorial_id, int numero, Timestamp fecha, String descripcion) {
+    public Edicion(String isbn, int libro_id, int editorial_id, int numero, String fecha, String descripcion) {
         this.isbn = isbn;
         this.libro_id = libro_id;
         this.editorial_id = editorial_id;
@@ -24,7 +22,7 @@ public class Edicion {
         this.descripcion = descripcion;
     }
     
-    public Edicion(String isbn, int libro_id, int editorial_id, int numero, Timestamp fecha) {
+    public Edicion(String isbn, int libro_id, int editorial_id, int numero, String fecha) {
         this.isbn = isbn;
         this.libro_id = libro_id;
         this.editorial_id = editorial_id;
@@ -64,11 +62,11 @@ public class Edicion {
         this.numero = numero;
     }
 
-    public Timestamp getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Timestamp fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
@@ -89,7 +87,7 @@ public class Edicion {
     private int libro_id;
     private int editorial_id;
     private int numero;
-    private Timestamp fecha;
+    private String fecha;
     private String descripcion;
     
 }

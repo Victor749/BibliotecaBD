@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import oracle.sql.TIMESTAMP;
 /**
  *
  * @author USUARIO
@@ -90,6 +89,7 @@ public class CapaDatos {
         } catch (SQLException | IllegalArgumentException e) {
             try {
                 conexion.rollback();
+                desconectarBD();
             } catch (SQLException ex) {
                 String string = "Error durante rollback: " + ex.getMessage();
                 throw new RuntimeException(string, ex);
@@ -186,6 +186,7 @@ public class CapaDatos {
         } catch (SQLException | IllegalArgumentException e) {
             try {
                 conexion.rollback();
+                desconectarBD();
             } catch (SQLException ex) {
                 String string = "Error durante rollback: " + ex.getMessage();
                 throw new RuntimeException(string, ex);
@@ -256,6 +257,7 @@ public class CapaDatos {
         } catch (SQLException | IllegalArgumentException e) {
             try {
                 conexion.rollback();
+                desconectarBD();
             } catch (SQLException ex) {
                 String string = "Error durante rollback: " + ex.getMessage();
                 throw new RuntimeException(string, ex);
@@ -265,12 +267,15 @@ public class CapaDatos {
         }
     }
     
-    public <T> List <T> consulta(Class<T> tipo, String nombreTabla, String where) {
+    public <T> List <T> selectBD(Class<T> tipo, String nombreTabla, String where, String orderBy) {
         List<T> lista = new ArrayList<>();
         conectarBD();
         String sql = "SELECT * FROM " + nombreTabla;
         if(!(where == null || where.isEmpty())) {
              sql += " WHERE " + where;
+        }
+        if(!(orderBy == null || orderBy.isEmpty())) {
+             sql += " ORDER BY " + orderBy;
         }
         try (Statement sentencia = conexion.createStatement()) {
             ResultSet resultado = sentencia.executeQuery(sql);
@@ -293,31 +298,28 @@ public class CapaDatos {
             campo.setAccessible(true);
             Object valor = resultado.getObject(nombre);
             if (valor != null) {
-                if (valor.getClass().equals(TIMESTAMP.class)) {
-                    valor = TIMESTAMP.class.cast(valor).timestampValue();
+                Class<?>  tipo = campo.getType();
+                if(esTipoPrimitivo(tipo)) {
+                    Class<?> hechoObjeto = objetoTipoPrimitivo(tipo);
+                    if (hechoObjeto.equals(Integer.class)) {
+                        valor = Integer.parseInt(valor.toString());
+                    } else if (hechoObjeto.equals(Long.class)) {
+                        valor = Long.parseLong(valor.toString());
+                    } else if (hechoObjeto.equals(Double.class)) {
+                        valor = Double.parseDouble(valor.toString());
+                    } else if (hechoObjeto.equals(Float.class)) {
+                        valor = Float.parseFloat(valor.toString());
+                    } else if (hechoObjeto.equals(Boolean.class)) {
+                        valor = Boolean.parseBoolean(valor.toString());
+                    } else if (hechoObjeto.equals(Byte.class)) {
+                        valor = Byte.parseByte(valor.toString());
+                    } else if (hechoObjeto.equals(Character.class)) {
+                        valor = valor.toString().charAt(0);
+                    } else {
+                        valor = Short.parseShort(valor.toString());
+                    }
+                    valor = hechoObjeto.cast(valor);
                 }
-            }
-            Class<?>  tipo = campo.getType();
-            if(esTipoPrimitivo(tipo)) {
-                Class<?> hechoObjeto = objetoTipoPrimitivo(tipo);
-                if (hechoObjeto.equals(Integer.class)) {
-                    valor = Integer.parseInt(valor.toString());
-                } else if (hechoObjeto.equals(Long.class)) {
-                    valor = Long.parseLong(valor.toString());
-                } else if (hechoObjeto.equals(Double.class)) {
-                    valor = Double.parseDouble(valor.toString());
-                } else if (hechoObjeto.equals(Float.class)) {
-                    valor = Float.parseFloat(valor.toString());
-                } else if (hechoObjeto.equals(Boolean.class)) {
-                    valor = Boolean.parseBoolean(valor.toString());
-                } else if (hechoObjeto.equals(Byte.class)) {
-                    valor = Byte.parseByte(valor.toString());
-                } else if (hechoObjeto.equals(Character.class)) {
-                    valor = valor.toString().charAt(0);
-                } else {
-                    valor = Short.parseShort(valor.toString());
-                }
-                valor = hechoObjeto.cast(valor);
             }
             campo.set(objeto, valor);
         }
@@ -360,6 +362,107 @@ public class CapaDatos {
         }
     }
     
+    // Transacciones
+    
+    public void insertT(Object objeto, String nombreTabla) {
+        try {
+            conexion.setAutoCommit(false);
+            PreparedStatement sentencia = insertSQL(objeto, nombreTabla);
+            sentencia.executeUpdate();
+        } catch (SQLException | IllegalArgumentException e) {
+            String string = "Error durante Operación de Transacción (Inserción): " + e.getMessage();
+            throw new RuntimeException(string, e);
+        }
+    }
+    
+    public void updateT(Object objeto, String nombreTabla, String [] clavePrimaria) {
+        try {
+            conexion.setAutoCommit(false);
+            PreparedStatement sentencia = updateSQL(objeto, nombreTabla, clavePrimaria);
+            sentencia.executeUpdate();
+        } catch (SQLException | IllegalArgumentException e) {
+            String string = "Error durante Operación de Transacción (Actualización): " + e.getMessage();
+            throw new RuntimeException(string, e);
+        }
+    }
+    
+    public void deleteT(Object objeto, String nombreTabla, String [] clavePrimaria) {
+        try {
+            conexion.setAutoCommit(false);
+            PreparedStatement sentencia = deleteSQL(objeto, nombreTabla, clavePrimaria);
+            sentencia.executeUpdate();
+        } catch (SQLException | IllegalArgumentException e) {
+            String string = "Error durante Operación de Transacción (Eliminación): " + e.getMessage();
+            throw new RuntimeException(string, e);
+        }
+    }
+    
+    public <T> List <T> selectT(Class<T> tipo, String nombreTabla, String where, String orderBy) {
+        List<T> lista = new ArrayList<>();
+        String sql = "SELECT * FROM " + nombreTabla;
+        if(!(where == null || where.isEmpty())) {
+             sql += " WHERE " + where;
+        }
+        if(!(orderBy == null || orderBy.isEmpty())) {
+             sql += " ORDER BY " + orderBy;
+        }
+        try (Statement sentencia = conexion.createStatement()) {
+            ResultSet resultado = sentencia.executeQuery(sql);
+            while(resultado.next()) {
+                T t = tipo.newInstance();
+                cargarResultadoObjeto(resultado, t);
+                lista.add(t);
+            }
+        } catch(InstantiationException | IllegalAccessException | SQLException e) {
+            throw new RuntimeException("Error durante generación de consulta: " + e.getMessage(), e);
+        }
+        return lista;
+    }
+    
+    public String [] obtenerClavePrimariaT(String nombreTabla) {
+        try {
+            List<String> pk = new ArrayList<>();
+            String sql = "SELECT cols.column_name FROM all_constraints cons, all_cons_columns cols WHERE cols.table_name = '" + nombreTabla.toUpperCase() + "' AND cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner ORDER BY cols.table_name, cols.position";
+            try (Statement sentencia = conexion.createStatement()) {
+                ResultSet resultado = sentencia.executeQuery(sql);
+                while (resultado.next())
+                    pk.add(resultado.getString(1).toLowerCase());
+            }
+            String [] clavePrimaria = pk.toArray(new String[pk.size()]);
+            return clavePrimaria;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error durante obtención de clave primaria: " + e.getMessage(), e);
+        }
+    }
+    
+    public void commitT() {
+        try {
+            conexion.setAutoCommit(false);
+            conexion.commit();
+        } catch (SQLException e) {
+            String string = "Error durante Commit (Transacción): " + e.getMessage();
+            throw new RuntimeException(string, e);
+        }
+    }
+    
+    public void rollbackT() {
+        try {
+            conexion.setAutoCommit(false);
+            conexion.rollback();
+        } catch (SQLException ex) {
+            String string = "Error durante Rollback (Transacción): " + ex.getMessage();
+            throw new RuntimeException(string, ex);
+        }
+    }
+    
+    public void inicioT() {
+        conectarBD();
+    }
+    
+    public void finT() {
+        desconectarBD();
+    }
+    
     // No Genérico (Exclusivo de este programa)
     
     public int nextID (String nombreTabla, String where) {
@@ -372,8 +475,12 @@ public class CapaDatos {
             int max_id = 0;
             try (Statement sentencia = conexion.createStatement()) {
                 ResultSet resultado = sentencia.executeQuery(sql);
-                while(resultado.next())
-                    max_id = Integer.parseInt(resultado.getString(1));
+                while(resultado.next()) {
+                    String proximoId = resultado.getString(1);
+                    if (!(proximoId == null || proximoId.isEmpty())) {
+                        max_id = Integer.parseInt(proximoId);
+                    }
+                }
             }
             desconectarBD();
             return (max_id + 1);
