@@ -5,15 +5,17 @@
  */
 package negocio;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
  * @author USUARIO
  */
 public class Edicion {
+    
+    public Edicion() {}
 
-    public Edicion(String isbn, int libro_id, int editorial_id, int numero, Date fecha, String descripcion) {
+    public Edicion(String isbn, int libro_id, int editorial_id, int numero, Timestamp fecha, String descripcion) {
         this.isbn = isbn;
         this.libro_id = libro_id;
         this.editorial_id = editorial_id;
@@ -22,7 +24,7 @@ public class Edicion {
         this.descripcion = descripcion;
     }
     
-    public Edicion(String isbn, int libro_id, int editorial_id, int numero, Date fecha) {
+    public Edicion(String isbn, int libro_id, int editorial_id, int numero, Timestamp fecha) {
         this.isbn = isbn;
         this.libro_id = libro_id;
         this.editorial_id = editorial_id;
@@ -62,11 +64,11 @@ public class Edicion {
         this.numero = numero;
     }
 
-    public Date getFecha() {
+    public Timestamp getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(Timestamp fecha) {
         this.fecha = fecha;
     }
 
@@ -77,12 +79,17 @@ public class Edicion {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    @Override
+    public String toString() {
+        return "Edicion{" + "isbn=" + isbn + ", libro_id=" + libro_id + ", editorial_id=" + editorial_id + ", numero=" + numero + ", fecha=" + fecha + ", descripcion=" + descripcion + '}';
+    }
     
     private String isbn;
     private int libro_id;
     private int editorial_id;
     private int numero;
-    private Date fecha;
+    private Timestamp fecha;
     private String descripcion;
     
 }

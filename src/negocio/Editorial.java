@@ -5,11 +5,14 @@
  */
 package negocio;
 
+
 /**
  *
  * @author USUARIO
  */
 public class Editorial {
+    
+    public Editorial() {}
     
     public Editorial(int id, String nombre) {
         this.id = id;
@@ -30,6 +33,11 @@ public class Editorial {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return "Editorial{" + "id=" + id + ", nombre=" + nombre + '}';
     }
     
     private int id;

@@ -10,7 +10,9 @@ package negocio;
  * @author USUARIO
  */
 public class Ejemplar {
-
+    
+    public Ejemplar() {}
+    
     public Ejemplar(String edicion_isbn, int id, int planta_id, int estante_id, int prestado, String observaciones) {
         this.edicion_isbn = edicion_isbn;
         this.id = id;
@@ -74,6 +76,11 @@ public class Ejemplar {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    @Override
+    public String toString() {
+        return "Ejemplar{" + "edicion_isbn=" + edicion_isbn + ", id=" + id + ", planta_id=" + planta_id + ", estante_id=" + estante_id + ", prestado=" + prestado + ", observaciones=" + observaciones + '}';
     }
     
     private String edicion_isbn;

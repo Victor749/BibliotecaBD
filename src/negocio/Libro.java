@@ -10,6 +10,8 @@ package negocio;
  * @author USUARIO
  */
 public class Libro {
+    
+    public Libro() {}
 
     public Libro(int id, String titulo, int autor_id) {
         this.id = id;
@@ -39,6 +41,11 @@ public class Libro {
 
     public void setAutor_id(int autor_id) {
         this.autor_id = autor_id;
+    }
+
+    @Override
+    public String toString() {
+        return "Libro{" + "id=" + id + ", titulo=" + titulo + ", autor_id=" + autor_id + '}';
     }
     
     private int id;

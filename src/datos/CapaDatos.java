@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import oracle.sql.TIMESTAMP;
 /**
  *
  * @author USUARIO
@@ -266,6 +267,7 @@ public class CapaDatos {
     
     public <T> List <T> consulta(Class<T> tipo, String nombreTabla, String where) {
         List<T> lista = new ArrayList<>();
+        conectarBD();
         String sql = "SELECT * FROM " + nombreTabla;
         if(!(where == null || where.isEmpty())) {
              sql += " WHERE " + where;
@@ -280,6 +282,7 @@ public class CapaDatos {
         } catch(InstantiationException | IllegalAccessException | SQLException e) {
             throw new RuntimeException("Error durante generación de consulta: " + e.getMessage(), e);
         }
+        desconectarBD();
         return lista;
     }
     
@@ -289,9 +292,31 @@ public class CapaDatos {
             String nombre = campo.getName();
             campo.setAccessible(true);
             Object valor = resultado.getObject(nombre);
+            if (valor != null) {
+                if (valor.getClass().equals(TIMESTAMP.class)) {
+                    valor = TIMESTAMP.class.cast(valor).timestampValue();
+                }
+            }
             Class<?>  tipo = campo.getType();
             if(esTipoPrimitivo(tipo)) {
                 Class<?> hechoObjeto = objetoTipoPrimitivo(tipo);
+                if (hechoObjeto.equals(Integer.class)) {
+                    valor = Integer.parseInt(valor.toString());
+                } else if (hechoObjeto.equals(Long.class)) {
+                    valor = Long.parseLong(valor.toString());
+                } else if (hechoObjeto.equals(Double.class)) {
+                    valor = Double.parseDouble(valor.toString());
+                } else if (hechoObjeto.equals(Float.class)) {
+                    valor = Float.parseFloat(valor.toString());
+                } else if (hechoObjeto.equals(Boolean.class)) {
+                    valor = Boolean.parseBoolean(valor.toString());
+                } else if (hechoObjeto.equals(Byte.class)) {
+                    valor = Byte.parseByte(valor.toString());
+                } else if (hechoObjeto.equals(Character.class)) {
+                    valor = valor.toString().charAt(0);
+                } else {
+                    valor = Short.parseShort(valor.toString());
+                }
                 valor = hechoObjeto.cast(valor);
             }
             campo.set(objeto, valor);

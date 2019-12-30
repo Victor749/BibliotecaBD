@@ -12,6 +12,8 @@ import java.sql.Timestamp;
  * @author USUARIO
  */
 public class Alquiler {
+    
+    public Alquiler() {}
 
     public Alquiler(String usuario_cedula, String edicion_isbn, int ejemplar_id, Timestamp fecha_hora_prestamo, Timestamp fecha_hora_estimada_entrega) {
         this.usuario_cedula = usuario_cedula;
@@ -67,6 +69,11 @@ public class Alquiler {
 
     public void setFecha_hora_entrega(Timestamp fecha_hora_entrega) {
         this.fecha_hora_entrega = fecha_hora_entrega;
+    }
+
+    @Override
+    public String toString() {
+        return "Alquiler{" + "usuario_cedula=" + usuario_cedula + ", edicion_isbn=" + edicion_isbn + ", ejemplar_id=" + ejemplar_id + ", fecha_hora_prestamo=" + fecha_hora_prestamo + ", fecha_hora_estimada_entrega=" + fecha_hora_estimada_entrega + ", fecha_hora_entrega=" + fecha_hora_entrega + '}';
     }
     
     private String usuario_cedula;

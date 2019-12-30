@@ -10,6 +10,8 @@ package negocio;
  * @author USUARIO
  */
 public class Estante {
+    
+    public Estante() {}
 
     public Estante(int planta_id, int id, String nombre) {
         this.planta_id = planta_id;
@@ -39,6 +41,11 @@ public class Estante {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return "Estante{" + "planta_id=" + planta_id + ", id=" + id + ", nombre=" + nombre + '}';
     }
     
     private int planta_id;

@@ -10,6 +10,8 @@ package negocio;
  * @author USUARIO
  */
 public class Usuario {
+    
+    public Usuario() {}
 
     public Usuario(String cedula, String nombre, String direccion, int puede_prestamo) {
         this.cedula = cedula;
@@ -54,6 +56,11 @@ public class Usuario {
 
     public void setPuede_prestamo(int puede_prestamo) {
         this.puede_prestamo = puede_prestamo;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" + "cedula=" + cedula + ", nombre=" + nombre + ", direccion=" + direccion + ", puede_prestamo=" + puede_prestamo + '}';
     }
     
     private String cedula;
