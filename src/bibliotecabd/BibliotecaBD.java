@@ -5,9 +5,9 @@
  */
 package bibliotecabd;
 
-/*import java.util.List;
-import negocio.*;
-import java.util.ArrayList;*/
+import ui.*;
+//import java.util.List;
+//import negocio.*;
 
 /**
  *
@@ -24,7 +24,7 @@ public class BibliotecaBD {
     public static void main(String[] args) {
         // Pruebas Únicamente
         
-        //Transacciones tr = new Transacciones();
+        //CapaNegocio tr = new CapaNegocio();
         
         //CapaDatos cp = new CapaDatos();
         /*cp.nextID("Autor", null)*/
@@ -34,11 +34,11 @@ public class BibliotecaBD {
         //cp.updateBD(objeto, "Alquiler", cp.obtenerClavePrimaria("Alquiler"));
         //cp.deleteBD(objeto, "Alquiler", cp.obtenerClavePrimaria("Alquiler"));
         
-        
         /*List<Alquiler> lista = tr.consultar(Alquiler.class, null, null);
         lista.forEach((objeto1) -> {
             System.out.println(objeto1.toString());
         });*/
+        
 
         //CapaDatos cp = new CapaDatos();
         /*cp.nextID("Edicion", null)*/
@@ -113,6 +113,8 @@ public class BibliotecaBD {
             ejemplares1.add(new Ejemplar("7777777777777", i, 1, 1, 0));
         tr.insertarEjemplares(ejemplares1);*/
         
+        UIMenu ui = new UIMenu();
+        ui.iniciar();
     }
     
 }

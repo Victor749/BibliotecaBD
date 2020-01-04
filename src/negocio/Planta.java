@@ -39,6 +39,11 @@ public class Planta {
         return "Planta{" + "id=" + id + ", nombre=" + nombre + '}';
     }
     
+    public static String[] nombreAtributos() {
+        String[] atributos = {"id", "nombre"};
+        return atributos;
+    }
+    
     private int id;
     private String nombre;
     

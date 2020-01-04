@@ -48,6 +48,11 @@ public class Estante {
         return "Estante{" + "planta_id=" + planta_id + ", id=" + id + ", nombre=" + nombre + '}';
     }
     
+    public static String[] nombreAtributos() {
+        String[] atributos = {"planta_id", "id", "nombre"};
+        return atributos;
+    }
+    
     private int planta_id;
     private int id;
     private String nombre;

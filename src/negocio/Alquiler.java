@@ -74,6 +74,11 @@ public class Alquiler {
         return "Alquiler{" + "usuario_cedula=" + usuario_cedula + ", edicion_isbn=" + edicion_isbn + ", ejemplar_id=" + ejemplar_id + ", fecha_hora_prestamo=" + fecha_hora_prestamo + ", fecha_hora_estimada_entrega=" + fecha_hora_estimada_entrega + ", fecha_hora_entrega=" + fecha_hora_entrega + '}';
     }
     
+    public static String[] nombreAtributos() {
+        String[] atributos = {"usuario_cedula", "edicion_isbn", "ejemplar_id", "fecha_hora_prestamo", "fecha_hora_estimada_entrega", "fecha_hora_entrega"};
+        return atributos;
+    }
+    
     private String usuario_cedula;
     private String edicion_isbn;
     private int ejemplar_id; 

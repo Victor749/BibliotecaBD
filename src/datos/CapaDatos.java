@@ -488,5 +488,5 @@ public class CapaDatos {
             throw new RuntimeException("Error durante obtención de útimo ID: " + e.getMessage(), e);
         }
     }
-
+    
 }

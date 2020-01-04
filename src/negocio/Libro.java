@@ -48,6 +48,11 @@ public class Libro {
         return "Libro{" + "id=" + id + ", titulo=" + titulo + ", autor_id=" + autor_id + '}';
     }
     
+    public static String[] nombreAtributos() {
+        String[] atributos = {"id", "titulo", "autor_id"};
+        return atributos;
+    }
+    
     private int id;
     private String titulo;
     private int autor_id;

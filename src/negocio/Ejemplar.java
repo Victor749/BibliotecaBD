@@ -83,6 +83,11 @@ public class Ejemplar {
         return "Ejemplar{" + "edicion_isbn=" + edicion_isbn + ", id=" + id + ", planta_id=" + planta_id + ", estante_id=" + estante_id + ", prestado=" + prestado + ", observaciones=" + observaciones + '}';
     }
     
+    public static String[] nombreAtributos() {
+        String[] atributos = {"edicion_isbn", "id", "planta_id", "estante_id", "prestado", "observaciones"};
+        return atributos;
+    }
+    
     private String edicion_isbn;
     private int id;
     private int planta_id;

@@ -14,12 +14,12 @@ import java.util.List;
  *
  * @author USUARIO
  */
-public class Transacciones {
+public class CapaNegocio {
     
     private final CapaDatos capaDatos;
     private static final SimpleDateFormat fecha_hora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
-    public Transacciones() {
+    public CapaNegocio() {
         capaDatos = new CapaDatos();
     }
     

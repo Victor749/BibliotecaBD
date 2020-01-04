@@ -142,3 +142,4 @@ update usuario set puede_prestamo = 0 where cedula = '0987654321';
 update alquiler set fecha_hora_entrega = '2019-12-28 11:30:00' where usuario_cedula = '0987654321' and fecha_hora_prestamo = '2019-12-27 11:00:23';
 update usuario set puede_prestamo = 1 where cedula = '0987654321';
 update ejemplar set prestado = 0 where edicion_isbn = '7777777777777' and id = 1;
+commit;

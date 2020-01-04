@@ -63,6 +63,11 @@ public class Usuario {
         return "Usuario{" + "cedula=" + cedula + ", nombre=" + nombre + ", direccion=" + direccion + ", puede_prestamo=" + puede_prestamo + '}';
     }
     
+    public static String[] nombreAtributos() {
+        String[] atributos = {"cedula", "nombre", "direccion", "puede_prestamo"};
+        return atributos;
+    }
+    
     private String cedula;
     private String nombre;
     private String direccion;

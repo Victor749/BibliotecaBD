@@ -83,6 +83,11 @@ public class Edicion {
         return "Edicion{" + "isbn=" + isbn + ", libro_id=" + libro_id + ", editorial_id=" + editorial_id + ", numero=" + numero + ", fecha=" + fecha + ", descripcion=" + descripcion + '}';
     }
     
+    public static String[] nombreAtributos() {
+        String[] atributos = {"isbn", "libro_id", "editorial_id", "numero", "fecha", "descripcion"};
+        return atributos;
+    }
+    
     private String isbn;
     private int libro_id;
     private int editorial_id;
