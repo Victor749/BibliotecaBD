@@ -39,6 +39,7 @@ public class UIUsuarios extends javax.swing.JFrame {
         activarBotones(true);
         mostrarTabla();
         initCombo();
+        this.jTableUsuarios.setEnabled(false);
         negocio = new CapaNegocio();
     }
     
@@ -94,6 +95,18 @@ public class UIUsuarios extends javax.swing.JFrame {
         char[] charArray = cadena.toCharArray();
         for(char c : charArray) {
             if (!(Character.isLetterOrDigit(c) || c == ' '))
+                return false;
+        }
+        return true;
+    }
+    
+    private boolean validar(String cadena) {
+        char[] charArray = cadena.toCharArray();
+        if (charArray.length != 10) {
+            return false;
+        }
+        for(char c : charArray) {
+            if (!Character.isDigit(c))
                 return false;
         }
         return true;
@@ -215,7 +228,7 @@ public class UIUsuarios extends javax.swing.JFrame {
         });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel7.setText("Ordenar por:");
+        jLabel7.setText("Ordenar por");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -330,8 +343,8 @@ public class UIUsuarios extends javax.swing.JFrame {
     private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
         try {
             String cedulaActualizar = JOptionPane.showInputDialog(this, "Ingrese la cédula del usuario a mofificar: ");
-            if (esAlfaNumerico(cedulaActualizar)) {
-                usuarios = negocio.consultar(Usuario.class, "cedula = '" + cedulaActualizar + "'", null);
+            if (validar(cedulaActualizar)) {
+                usuarios = negocio.consultarUsuario(cedulaActualizar);
                 if (!usuarios.isEmpty()) {
                     usuario = usuarios.get(0);
                     usuarios.clear();
@@ -347,7 +360,7 @@ public class UIUsuarios extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "No existe un usuario con la cédula ingresada.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "La cédula no debe contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "La cédula debe tener 10 dígitos y no debe contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, "No se pudo recuperar el usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -357,8 +370,8 @@ public class UIUsuarios extends javax.swing.JFrame {
     private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
         try {
             String cedulaEliminar = JOptionPane.showInputDialog(this, "Ingrese la cédula del usuario a eliminar: ");
-            if (esAlfaNumerico(cedulaEliminar)) {
-                usuarios = negocio.consultar(Usuario.class, "cedula = '" + cedulaEliminar + "'", null);
+            if (validar(cedulaEliminar)) {
+                usuarios = negocio.consultarUsuario(cedulaEliminar);
                 if (!usuarios.isEmpty()) {
                     usuario = usuarios.get(0);
                     usuarios.clear();
@@ -369,7 +382,7 @@ public class UIUsuarios extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "No existe un usuario con la cédula ingresada.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "La cédula no debe contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "La cédula debe tener 10 dígitos y no debe contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, "El usuario no fue eliminado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -378,7 +391,7 @@ public class UIUsuarios extends javax.swing.JFrame {
 
     private void jButtonGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarActionPerformed
         try {
-            if (esAlfaNumerico(jTextFieldCedula.getText()) && esAlfaNumerico(jTextFieldNombre.getText()) && esAlfaNumerico(jTextFieldDireccion.getText())) {
+            if (validar(jTextFieldCedula.getText()) && esAlfaNumerico(jTextFieldNombre.getText()) && esAlfaNumerico(jTextFieldDireccion.getText())) {
                 if (opcion) {
                     negocio.insertar(new Usuario(jTextFieldCedula.getText(), jTextFieldNombre.getText(), jTextFieldDireccion.getText(), 1));
                     JOptionPane.showMessageDialog(this, "Usuario ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
@@ -392,7 +405,7 @@ public class UIUsuarios extends javax.swing.JFrame {
                 this.activarTextos(false);
                 this.vaciarTextos();
             } else {
-                JOptionPane.showMessageDialog(this, "Los datos no deben contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "La cédula debe contener 10 dígitos. Los datos no deben contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, "El usuario no fue grabado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -409,7 +422,7 @@ public class UIUsuarios extends javax.swing.JFrame {
         try {
             String busqueda = jTextFieldBuscar.getText();
             if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                usuarios = negocio.consultar(Usuario.class, "cedula LIKE '%" + busqueda + "%' OR nombre LIKE '%" + busqueda + "%' OR direccion LIKE '%" + busqueda + "%'", Usuario.nombreAtributos()[jComboOrden.getSelectedIndex()]);
+                usuarios = negocio.buscarUsuarios(busqueda, jComboOrden.getSelectedIndex());
                 if (!usuarios.isEmpty()) {
                     this.cargarDatos();
                     usuarios.clear();
@@ -426,7 +439,7 @@ public class UIUsuarios extends javax.swing.JFrame {
 
     private void jButtonMostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMostrarTodosActionPerformed
         try {
-            usuarios = negocio.consultar(Usuario.class, null, Usuario.nombreAtributos()[jComboOrden.getSelectedIndex()]);
+            usuarios = negocio.todosUsuarios(jComboOrden.getSelectedIndex());
             this.cargarDatos();
             usuarios.clear();
         } catch (RuntimeException e) {

@@ -22,14 +22,14 @@ public class UILogistica extends javax.swing.JFrame {
      * Creates new form UIUsuarios
      */
     
-    private DefaultTableModel modeloTabla;
+    private DefaultTableModel modeloTablaPlanta;
     private List<Planta> plantas;
     private Planta planta;
-    private boolean opcion;
-    private DefaultTableModel modeloTabla1;
+    private boolean opcionPlanta;
+    private DefaultTableModel modeloTablaEstante;
     private List<Estante> estantes;
     private Estante estante;
-    private boolean opcion1;
+    private boolean opcionEstante;
     private CapaNegocio negocio;
     
     public UILogistica() {
@@ -40,95 +40,104 @@ public class UILogistica extends javax.swing.JFrame {
         this.setTitle("Gestión de Logística");
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-        activarTextos(false);
-        activarBotones(true);
-        activarTextos1(false);
-        activarBotones1(true);
-        mostrarTabla();
-        initCombo();
+        activarTextosPlanta(false);
+        activarBotonesPlanta(true);
+        activarTextosEstante(false);
+        activarBotonesEstante(true);
+        mostrarTablas();
+        initCombos();
         negocio = new CapaNegocio();
-        jTextFieldId.setEditable(false);
+        jTextFieldIdPlanta.setEditable(false);
+        jTextFieldIdEstante.setEditable(false);
+        this.jTableEstantes.setEnabled(false);
+        this.jTablePlantas.setEnabled(false);
+        cargarComboPlanta();
     }
     
-    private void activarTextos(Boolean estado) {
-        jTextFieldNombre.setEditable(estado);
+    private void activarTextosPlanta(Boolean estado) {
+        jTextFieldNombrePlanta.setEditable(estado);
     }
     
-    private void activarTextos1(Boolean estado) {
-        jTextFieldNombre1.setEditable(estado);
+    private void activarTextosEstante(Boolean estado) {
+        jTextFieldNombreEstante.setEditable(estado);
     }
     
-    private void activarBotones(Boolean estado) {
-        jButtonNuevo.setEnabled(estado);
-        jButtonActualizar.setEnabled(estado);
-        jButtonEliminar.setEnabled(estado);
-        jButtonGrabar.setEnabled(!estado);
-        jButtonCancelar.setEnabled(!estado);
+    private void activarBotonesPlanta(Boolean estado) {
+        jButtonNuevoPlanta.setEnabled(estado);
+        jButtonActualizarPlanta.setEnabled(estado);
+        jButtonEliminarPlanta.setEnabled(estado);
+        jButtonGrabarPlanta.setEnabled(!estado);
+        jButtonCancelarPlanta.setEnabled(!estado);
     }
     
-    private void activarBotones1(Boolean estado) {
-        jButtonNuevo1.setEnabled(estado);
-        jButtonActualizar1.setEnabled(estado);
-        jButtonEliminar1.setEnabled(estado);
-        jButtonGrabar1.setEnabled(!estado);
-        jButtonCancelar1.setEnabled(!estado);
+    private void activarBotonesEstante(Boolean estado) {
+        jButtonNuevoEstante.setEnabled(estado);
+        jButtonActualizarEstante.setEnabled(estado);
+        jButtonEliminarEstante.setEnabled(estado);
+        jButtonGrabarEstante.setEnabled(!estado);
+        jButtonCancelarEstante.setEnabled(!estado);
     }
     
-    private void vaciarTextos() {
-        jTextFieldId.setText("");
-        jTextFieldNombre.setText("");
+    private void vaciarTextosPlanta() {
+        jTextFieldIdPlanta.setText("");
+        jTextFieldNombrePlanta.setText("");
     }
     
-    private void vaciarTextos1() {
-        jTextFieldId1.setText("");
-        jTextFieldNombre1.setText("");
+    private void vaciarTextosEstante() {
+        jTextFieldIdEstante.setText("");
+        jTextFieldNombreEstante.setText("");
         jComboPlanta.setSelectedItem(jComboPlanta.getItemAt(0));
     }
     
-    public void initCombo() {
-        jComboOrden.addItem("Id");
-        jComboOrden.addItem("Nombre");
-        jComboOrden1.addItem("Planta (Id)");
-        jComboOrden1.addItem("Id");
-        jComboOrden1.addItem("Nombre");  
+    public void initCombos() {
+        jComboOrdenPlanta.addItem("Id");
+        jComboOrdenPlanta.addItem("Nombre");
+        jComboOrdenEstante.addItem("Planta (Id)");
+        jComboOrdenEstante.addItem("Id");
+        jComboOrdenEstante.addItem("Nombre");
     }
     
     public void cargarComboPlanta() {
-        
+        jComboPlanta.removeAllItems();
+        plantas = negocio.todasPlantas(0);
+        plantas.forEach((plantaCombo) -> {
+            jComboPlanta.addItem(String.valueOf(plantaCombo.getId()));
+        });
+        plantas.clear();
     }
     
-    private void mostrarTabla() {
+    private void mostrarTablas() {
         String [][] roster = {};
-        String [] columnas = {"Id", "Nombre"};
-        this.modeloTabla = new DefaultTableModel(roster, columnas);
-        jTablePlantas.setModel(modeloTabla);
-        String [] columnas1 = {"Planta (Id)", "Id", "Nombre"};
-        this.modeloTabla1 = new DefaultTableModel(roster, columnas1);
-        jTablePlantas.setModel(modeloTabla1);
+        String [] columnasPlanta = {"Id", "Nombre"};
+        this.modeloTablaPlanta = new DefaultTableModel(roster, columnasPlanta);
+        jTablePlantas.setModel(modeloTablaPlanta);
+        String [] columnasEstante = {"Planta (Id)", "Id", "Nombre"};
+        this.modeloTablaEstante = new DefaultTableModel(roster, columnasEstante);
+        jTableEstantes.setModel(modeloTablaEstante);
     }
     
-    private void cargarDatos() {
-        int rows = this.modeloTabla.getRowCount();
+    private void cargarDatosPlanta() {
+        int rows = this.modeloTablaPlanta.getRowCount();
         for (int i = rows - 1; i >= 0; i--) {
-            this.modeloTabla.removeRow(i);
+            this.modeloTablaPlanta.removeRow(i);
         }
         for (int j = 0; j < plantas.size(); j++) {
-            this.modeloTabla.insertRow(this.modeloTabla.getRowCount(), new Object[]{});
-            this.modeloTabla.setValueAt(String.valueOf(plantas.get(j).getId()), this.modeloTabla.getRowCount() - 1, 0);
-            this.modeloTabla.setValueAt(plantas.get(j).getNombre(), this.modeloTabla.getRowCount() - 1, 1);
+            this.modeloTablaPlanta.insertRow(this.modeloTablaPlanta.getRowCount(), new Object[]{});
+            this.modeloTablaPlanta.setValueAt(String.valueOf(plantas.get(j).getId()), this.modeloTablaPlanta.getRowCount() - 1, 0);
+            this.modeloTablaPlanta.setValueAt(plantas.get(j).getNombre(), this.modeloTablaPlanta.getRowCount() - 1, 1);
         }
     }
     
-    private void cargarDatos1() {
-        int rows = this.modeloTabla1.getRowCount();
+    private void cargarDatosEstante() {
+        int rows = this.modeloTablaEstante.getRowCount();
         for (int i = rows - 1; i >= 0; i--) {
-            this.modeloTabla1.removeRow(i);
+            this.modeloTablaEstante.removeRow(i);
         }
         for (int j = 0; j < estantes.size(); j++) {
-            this.modeloTabla1.insertRow(this.modeloTabla1.getRowCount(), new Object[]{});
-            this.modeloTabla1.setValueAt(String.valueOf(estantes.get(j).getPlanta_id()), this.modeloTabla1.getRowCount() - 1, 0);
-            this.modeloTabla1.setValueAt(String.valueOf(estantes.get(j).getId()), this.modeloTabla1.getRowCount() - 1, 1);
-            this.modeloTabla1.setValueAt(estantes.get(j).getNombre(), this.modeloTabla1.getRowCount() - 1, 2);
+            this.modeloTablaEstante.insertRow(this.modeloTablaEstante.getRowCount(), new Object[]{});
+            this.modeloTablaEstante.setValueAt(String.valueOf(estantes.get(j).getPlanta_id()), this.modeloTablaEstante.getRowCount() - 1, 0);
+            this.modeloTablaEstante.setValueAt(String.valueOf(estantes.get(j).getId()), this.modeloTablaEstante.getRowCount() - 1, 1);
+            this.modeloTablaEstante.setValueAt(estantes.get(j).getNombre(), this.modeloTablaEstante.getRowCount() - 1, 2);
         }
     }
     
@@ -152,42 +161,42 @@ public class UILogistica extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextFieldId = new javax.swing.JTextField();
+        jTextFieldIdPlanta = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextFieldNombre = new javax.swing.JTextField();
-        jButtonNuevo = new javax.swing.JButton();
-        jButtonActualizar = new javax.swing.JButton();
-        jButtonEliminar = new javax.swing.JButton();
-        jButtonGrabar = new javax.swing.JButton();
-        jButtonCancelar = new javax.swing.JButton();
+        jTextFieldNombrePlanta = new javax.swing.JTextField();
+        jButtonNuevoPlanta = new javax.swing.JButton();
+        jButtonActualizarPlanta = new javax.swing.JButton();
+        jButtonGrabarPlanta = new javax.swing.JButton();
+        jButtonCancelarPlanta = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTablePlantas = new javax.swing.JTable();
-        jButtonBuscar = new javax.swing.JButton();
-        jTextFieldBuscar = new javax.swing.JTextField();
+        jButtonBuscarPlanta = new javax.swing.JButton();
+        jTextFieldBuscarPlanta = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jButtonMostrarTodos = new javax.swing.JButton();
-        jComboOrden = new javax.swing.JComboBox<>();
+        jButtonMostrarTodosPlanta = new javax.swing.JButton();
+        jComboOrdenPlanta = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
-        jButtonGrabar1 = new javax.swing.JButton();
-        jButtonCancelar1 = new javax.swing.JButton();
+        jButtonGrabarEstante = new javax.swing.JButton();
+        jButtonCancelarEstante = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableEstantes = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        jButtonBuscar1 = new javax.swing.JButton();
-        jTextFieldId1 = new javax.swing.JTextField();
-        jTextFieldBuscar1 = new javax.swing.JTextField();
+        jButtonBuscarEstante = new javax.swing.JButton();
+        jTextFieldIdEstante = new javax.swing.JTextField();
+        jTextFieldBuscarEstante = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextFieldNombre1 = new javax.swing.JTextField();
-        jButtonMostrarTodos1 = new javax.swing.JButton();
-        jButtonNuevo1 = new javax.swing.JButton();
-        jComboOrden1 = new javax.swing.JComboBox<>();
-        jButtonActualizar1 = new javax.swing.JButton();
+        jTextFieldNombreEstante = new javax.swing.JTextField();
+        jButtonMostrarTodosEstante = new javax.swing.JButton();
+        jButtonNuevoEstante = new javax.swing.JButton();
+        jComboOrdenEstante = new javax.swing.JComboBox<>();
+        jButtonActualizarEstante = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
-        jButtonEliminar1 = new javax.swing.JButton();
+        jButtonEliminarEstante = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jComboPlanta = new javax.swing.JComboBox<>();
+        jButtonEliminarPlanta = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -197,43 +206,36 @@ public class UILogistica extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("Id:");
 
-        jTextFieldId.setToolTipText("");
+        jTextFieldIdPlanta.setToolTipText("");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("Nombre:");
 
-        jButtonNuevo.setText("Nuevo");
-        jButtonNuevo.addActionListener(new java.awt.event.ActionListener() {
+        jButtonNuevoPlanta.setText("Nuevo");
+        jButtonNuevoPlanta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNuevoActionPerformed(evt);
+                jButtonNuevoPlantaActionPerformed(evt);
             }
         });
 
-        jButtonActualizar.setText("Actualizar");
-        jButtonActualizar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonActualizarPlanta.setText("Actualizar");
+        jButtonActualizarPlanta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonActualizarActionPerformed(evt);
+                jButtonActualizarPlantaActionPerformed(evt);
             }
         });
 
-        jButtonEliminar.setText("Eliminar");
-        jButtonEliminar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonGrabarPlanta.setText("Grabar");
+        jButtonGrabarPlanta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEliminarActionPerformed(evt);
+                jButtonGrabarPlantaActionPerformed(evt);
             }
         });
 
-        jButtonGrabar.setText("Grabar");
-        jButtonGrabar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCancelarPlanta.setText("Cancelar");
+        jButtonCancelarPlanta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGrabarActionPerformed(evt);
-            }
-        });
-
-        jButtonCancelar.setText("Cancelar");
-        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCancelarActionPerformed(evt);
+                jButtonCancelarPlantaActionPerformed(evt);
             }
         });
 
@@ -250,37 +252,37 @@ public class UILogistica extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTablePlantas);
 
-        jButtonBuscar.setText("Buscar");
-        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonBuscarPlanta.setText("Buscar");
+        jButtonBuscarPlanta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBuscarActionPerformed(evt);
+                jButtonBuscarPlantaActionPerformed(evt);
             }
         });
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel6.setText("Buscar por Id o Nombre");
 
-        jButtonMostrarTodos.setText("Mostrar Todas");
-        jButtonMostrarTodos.addActionListener(new java.awt.event.ActionListener() {
+        jButtonMostrarTodosPlanta.setText("Mostrar Todas");
+        jButtonMostrarTodosPlanta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonMostrarTodosActionPerformed(evt);
+                jButtonMostrarTodosPlantaActionPerformed(evt);
             }
         });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel7.setText("Ordenar por:");
+        jLabel7.setText("Ordenar por");
 
-        jButtonGrabar1.setText("Grabar");
-        jButtonGrabar1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonGrabarEstante.setText("Grabar");
+        jButtonGrabarEstante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGrabar1ActionPerformed(evt);
+                jButtonGrabarEstanteActionPerformed(evt);
             }
         });
 
-        jButtonCancelar1.setText("Cancelar");
-        jButtonCancelar1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCancelarEstante.setText("Cancelar");
+        jButtonCancelarEstante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCancelar1ActionPerformed(evt);
+                jButtonCancelarEstanteActionPerformed(evt);
             }
         });
 
@@ -300,14 +302,14 @@ public class UILogistica extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setText("Id:");
 
-        jButtonBuscar1.setText("Buscar");
-        jButtonBuscar1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonBuscarEstante.setText("Buscar");
+        jButtonBuscarEstante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBuscar1ActionPerformed(evt);
+                jButtonBuscarEstanteActionPerformed(evt);
             }
         });
 
-        jTextFieldId1.setToolTipText("");
+        jTextFieldIdEstante.setToolTipText("");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel5.setText("Nombre:");
@@ -315,34 +317,34 @@ public class UILogistica extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel8.setText("Buscar por Id de Planta, Id o Nombre");
 
-        jButtonMostrarTodos1.setText("Mostrar Todos");
-        jButtonMostrarTodos1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonMostrarTodosEstante.setText("Mostrar Todos");
+        jButtonMostrarTodosEstante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonMostrarTodos1ActionPerformed(evt);
+                jButtonMostrarTodosEstanteActionPerformed(evt);
             }
         });
 
-        jButtonNuevo1.setText("Nuevo");
-        jButtonNuevo1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonNuevoEstante.setText("Nuevo");
+        jButtonNuevoEstante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNuevo1ActionPerformed(evt);
+                jButtonNuevoEstanteActionPerformed(evt);
             }
         });
 
-        jButtonActualizar1.setText("Actualizar");
-        jButtonActualizar1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonActualizarEstante.setText("Actualizar");
+        jButtonActualizarEstante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonActualizar1ActionPerformed(evt);
+                jButtonActualizarEstanteActionPerformed(evt);
             }
         });
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel9.setText("Ordenar por:");
+        jLabel9.setText("Ordenar por");
 
-        jButtonEliminar1.setText("Eliminar");
-        jButtonEliminar1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonEliminarEstante.setText("Eliminar");
+        jButtonEliminarEstante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEliminar1ActionPerformed(evt);
+                jButtonEliminarEstanteActionPerformed(evt);
             }
         });
 
@@ -350,11 +352,18 @@ public class UILogistica extends javax.swing.JFrame {
         jLabel10.setText("Estantes");
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel11.setText("Planta:");
+        jLabel11.setText("Planta (Id):");
 
-        jComboPlanta.addActionListener(new java.awt.event.ActionListener() {
+        jComboPlanta.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jComboPlantaFocusGained(evt);
+            }
+        });
+
+        jButtonEliminarPlanta.setText("Eliminar");
+        jButtonEliminarPlanta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboPlantaActionPerformed(evt);
+                jButtonEliminarPlantaActionPerformed(evt);
             }
         });
 
@@ -362,34 +371,12 @@ public class UILogistica extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(37, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(35, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(187, 187, 187)
-                        .addComponent(jButtonCancelar1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(jButtonGrabar1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(200, 200, 200))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonMostrarTodos1)
-                        .addGap(257, 257, 257))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jComboOrden1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jButtonBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel4)
@@ -397,91 +384,110 @@ public class UILogistica extends javax.swing.JFrame {
                                     .addComponent(jLabel10))
                                 .addGap(10, 10, 10)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextFieldNombre1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldId1)
+                                    .addComponent(jTextFieldNombreEstante, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                                    .addComponent(jTextFieldIdEstante)
                                     .addComponent(jComboPlanta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButtonActualizar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButtonNuevo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButtonEliminar1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(187, 187, 187)
-                                    .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(39, 39, 39)
-                                    .addComponent(jButtonGrabar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel1))
-                                        .addGap(10, 10, 10)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextFieldNombre, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jTextFieldId))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jButtonActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButtonNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButtonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButtonActualizarEstante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonNuevoEstante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonEliminarEstante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldBuscarEstante, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextFieldBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel6))
+                                        .addComponent(jComboOrdenEstante, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel7)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jComboOrden, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButtonMostrarTodos)
-                                    .addGap(226, 226, 226))))
-                        .addGap(31, 31, 31))))
+                                        .addComponent(jButtonBuscarEstante, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel9)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldBuscarPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jComboOrdenPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jButtonBuscarPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButtonMostrarTodosPlanta)
+                                .addGap(226, 226, 226))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2))
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldIdPlanta)
+                                    .addComponent(jTextFieldNombrePlanta))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButtonNuevoPlanta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonActualizarPlanta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonEliminarPlanta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButtonCancelarPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonGrabarPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(189, 189, 189))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButtonCancelarEstante, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonGrabarEstante, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(194, 194, 194)))
+                        .addGap(31, 31, 31))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButtonMostrarTodosEstante)
+                        .addGap(253, 253, 253))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(6, 6, 6)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonNuevo))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextFieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonActualizar))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonEliminar)
-                    .addComponent(jButtonCancelar)
-                    .addComponent(jButtonGrabar))
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonBuscar)
-                    .addComponent(jTextFieldBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButtonMostrarTodos)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(133, 133, 133)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButtonBuscarPlanta)
+                            .addComponent(jTextFieldBuscarPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboOrdenPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonMostrarTodosPlanta))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jTextFieldIdPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonNuevoPlanta))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jTextFieldNombrePlanta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonActualizarPlanta))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButtonEliminarPlanta)
+                            .addComponent(jButtonCancelarPlanta)
+                            .addComponent(jButtonGrabarPlanta))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -490,60 +496,60 @@ public class UILogistica extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jTextFieldId1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldIdEstante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextFieldNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextFieldNombreEstante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButtonCancelarEstante)
+                            .addComponent(jButtonGrabarEstante))
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButtonNuevo1)
+                        .addComponent(jButtonNuevoEstante)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonActualizar1)
+                        .addComponent(jButtonActualizarEstante)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonEliminar1)))
+                        .addComponent(jButtonEliminarEstante)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonCancelar1)
-                    .addComponent(jButtonGrabar1))
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonBuscar1)
-                    .addComponent(jTextFieldBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboOrden1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonBuscarEstante)
+                    .addComponent(jTextFieldBuscarEstante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboOrdenEstante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButtonMostrarTodos1)
+                .addComponent(jButtonMostrarTodosEstante)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
-        this.activarBotones(false);
-        this.activarTextos(true);
-        opcion = true;
-        this.jTextFieldId.setText(String.valueOf(negocio.proximoID(Planta.class, null)));
-    }//GEN-LAST:event_jButtonNuevoActionPerformed
+    private void jButtonNuevoPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoPlantaActionPerformed
+        this.activarBotonesPlanta(false);
+        this.activarTextosPlanta(true);
+        opcionPlanta = true;
+        this.jTextFieldIdPlanta.setText(String.valueOf(negocio.proximoID(Planta.class, null)));
+    }//GEN-LAST:event_jButtonNuevoPlantaActionPerformed
 
-    private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
+    private void jButtonActualizarPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarPlantaActionPerformed
         try {
             int idActualizar = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese el Id de la planta a mofificar: "));
-            plantas = negocio.consultar(Planta.class, "id = " + idActualizar, null);
+            plantas = negocio.consultarPlanta(idActualizar);
             if (!plantas.isEmpty()) {
                 planta = plantas.get(0);
                 plantas.clear();
                 JOptionPane.showMessageDialog(this, "Modifique los datos de la planta en la ventana principal y luego presione Grabar.", "Nota", JOptionPane.INFORMATION_MESSAGE);
-                this.activarBotones(false);
-                this.activarTextos(true);
-                jTextFieldId.setText(String.valueOf(planta.getId()));
-                jTextFieldNombre.setText(planta.getNombre());
-                opcion = false;
+                this.activarBotonesPlanta(false);
+                this.activarTextosPlanta(true);
+                jTextFieldIdPlanta.setText(String.valueOf(planta.getId()));
+                jTextFieldNombrePlanta.setText(planta.getNombre());
+                opcionPlanta = false;
             } else {
                 JOptionPane.showMessageDialog(this, "No existe una planta con el Id ingresado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
@@ -554,70 +560,43 @@ public class UILogistica extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "No se pudo recuperar la planta: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_jButtonActualizarActionPerformed
+    }//GEN-LAST:event_jButtonActualizarPlantaActionPerformed
 
-    private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
+    private void jButtonGrabarPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarPlantaActionPerformed
         try {
-            int idEliminar = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese el id del editorial a editorial: "));
-            plantas = negocio.consultar(Planta.class, "id = " + idEliminar, null);
-            if (!plantas.isEmpty()) {
-                planta = plantas.get(0);
-                plantas.clear();
-                negocio.eliminar(planta);
-                JOptionPane.showMessageDialog(this, "Editorial eliminado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
-                this.vaciarTextos();
-            } else {
-                JOptionPane.showMessageDialog(this, "No existe un editorial con el Id ingresado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }
-        } catch (Exception e) {
-            if (e.getClass().equals(NumberFormatException.class)) {
-                JOptionPane.showMessageDialog(this, "El Id debe ser un entero", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo recuperar el editorial: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_jButtonEliminarActionPerformed
-
-    private void jButtonGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarActionPerformed
-        try {
-            if (esAlfaNumerico(jTextFieldNombre.getText())) {
-                if (opcion) {
-                    negocio.insertar(new Planta(Integer.parseInt(jTextFieldId.getText()), jTextFieldNombre.getText()));
-                    JOptionPane.showMessageDialog(this, "Editorial ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+            if (esAlfaNumerico(jTextFieldNombrePlanta.getText())) {
+                if (opcionPlanta) {
+                    negocio.insertar(new Planta(Integer.parseInt(jTextFieldIdPlanta.getText()), jTextFieldNombrePlanta.getText()));
+                    JOptionPane.showMessageDialog(this, "Planta ingresada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    planta.setNombre(jTextFieldNombre.getText());
+                    planta.setNombre(jTextFieldNombrePlanta.getText());
                     negocio.actualizar(planta);
-                    JOptionPane.showMessageDialog(this, "Editorial actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Planta actualizada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
-                this.activarBotones(true);
-                this.activarTextos(false);
-                this.vaciarTextos();
+                this.activarBotonesPlanta(true);
+                this.activarTextosPlanta(false);
+                this.vaciarTextosPlanta();
             } else {
                 JOptionPane.showMessageDialog(this, "Los datos no deben contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, "El editorial no fue grabado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La planta no fue grabada: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButtonGrabarActionPerformed
+    }//GEN-LAST:event_jButtonGrabarPlantaActionPerformed
 
-    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
-        this.activarBotones(true);
-        this.activarTextos(false);
-        this.vaciarTextos();
-    }//GEN-LAST:event_jButtonCancelarActionPerformed
+    private void jButtonCancelarPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarPlantaActionPerformed
+        this.activarBotonesPlanta(true);
+        this.activarTextosPlanta(false);
+        this.vaciarTextosPlanta();
+    }//GEN-LAST:event_jButtonCancelarPlantaActionPerformed
 
-    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+    private void jButtonBuscarPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarPlantaActionPerformed
         try {
-            String busqueda = jTextFieldBuscar.getText();
+            String busqueda = jTextFieldBuscarPlanta.getText();
             if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                try {
-                    int id = Integer.parseInt(busqueda);
-                    plantas = negocio.consultar(Planta.class, "id = " + String.valueOf(id) + " OR nombre LIKE '%" + busqueda + "%'", Planta.nombreAtributos()[jComboOrden.getSelectedIndex()]);
-                } catch (NumberFormatException e) {
-                    plantas = negocio.consultar(Planta.class, "nombre LIKE '%" + busqueda + "%'", Planta.nombreAtributos()[jComboOrden.getSelectedIndex()]);
-                }
+                plantas = negocio.buscarPlantas(busqueda, jComboOrdenPlanta.getSelectedIndex());
                 if (!plantas.isEmpty()) {
-                    this.cargarDatos();
+                    this.cargarDatosPlanta();
                     plantas.clear();
                 } else {
                     JOptionPane.showMessageDialog(this, "No existen resultados para la búsqueda.", "Nota", JOptionPane.INFORMATION_MESSAGE);
@@ -626,51 +605,160 @@ public class UILogistica extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "La búsqueda no debe contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }       
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de editoriales: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de plantas: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButtonBuscarActionPerformed
+    }//GEN-LAST:event_jButtonBuscarPlantaActionPerformed
 
-    private void jButtonMostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMostrarTodosActionPerformed
+    private void jButtonMostrarTodosPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMostrarTodosPlantaActionPerformed
         try {
-            plantas = negocio.consultar(Planta.class, null, Planta.nombreAtributos()[jComboOrden.getSelectedIndex()]);
-            this.cargarDatos();
+            plantas = negocio.todasPlantas(jComboOrdenPlanta.getSelectedIndex());
+            this.cargarDatosPlanta();
             plantas.clear();
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de editoriales: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de plantas: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButtonMostrarTodosActionPerformed
+    }//GEN-LAST:event_jButtonMostrarTodosPlantaActionPerformed
 
-    private void jButtonGrabar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabar1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonGrabar1ActionPerformed
+    private void jButtonGrabarEstanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarEstanteActionPerformed
+        try {
+            if (esAlfaNumerico(jTextFieldNombreEstante.getText())) {
+                int id_planta = Integer.parseInt(jComboPlanta.getSelectedItem().toString());
+                if (opcionEstante) {
+                    negocio.insertar(new Estante(id_planta, Integer.parseInt(jTextFieldIdEstante.getText()), jTextFieldNombreEstante.getText()));
+                    JOptionPane.showMessageDialog(this, "Estante ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    estante.setNombre(jTextFieldNombreEstante.getText());
+                    negocio.actualizar(estante);
+                    JOptionPane.showMessageDialog(this, "Estante actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                }
+                this.activarBotonesEstante(true);
+                this.activarTextosEstante(false);
+                this.vaciarTextosEstante();
+            } else {
+                JOptionPane.showMessageDialog(this, "Los datos no deben contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, "El estante no fue grabado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonGrabarEstanteActionPerformed
 
-    private void jButtonCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelar1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonCancelar1ActionPerformed
+    private void jButtonCancelarEstanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarEstanteActionPerformed
+        this.activarBotonesEstante(true);
+        this.activarTextosEstante(false);
+        this.vaciarTextosEstante();
+    }//GEN-LAST:event_jButtonCancelarEstanteActionPerformed
 
-    private void jButtonBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscar1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonBuscar1ActionPerformed
+    private void jButtonBuscarEstanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarEstanteActionPerformed
+        try {
+            String busqueda = jTextFieldBuscarEstante.getText();
+            if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
+                estantes = negocio.buscarEstantes(busqueda, jComboOrdenEstante.getSelectedIndex());
+                if (!estantes.isEmpty()) {
+                    this.cargarDatosEstante();
+                    estantes.clear();
+                } else {
+                    JOptionPane.showMessageDialog(this, "No existen resultados para la búsqueda.", "Nota", JOptionPane.INFORMATION_MESSAGE);
+                }   
+            } else {
+                JOptionPane.showMessageDialog(this, "La búsqueda no debe contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }       
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de estantes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonBuscarEstanteActionPerformed
 
-    private void jButtonMostrarTodos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMostrarTodos1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonMostrarTodos1ActionPerformed
+    private void jButtonMostrarTodosEstanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMostrarTodosEstanteActionPerformed
+        try {
+            estantes = negocio.todosEstantes(jComboOrdenEstante.getSelectedIndex());
+            this.cargarDatosEstante();
+            estantes.clear();
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de estantes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonMostrarTodosEstanteActionPerformed
 
-    private void jButtonNuevo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevo1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonNuevo1ActionPerformed
+    private void jButtonEliminarEstanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarEstanteActionPerformed
+        try {
+            int idEliminar = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese el id del estante a eliminar: "));
+            int idPlanta = Integer.parseInt(jComboPlanta.getSelectedItem().toString());
+             estantes = negocio.consultarEstante(idPlanta, idEliminar);
+            if (!estantes.isEmpty()) {
+                estante = estantes.get(0);
+                estantes.clear();
+                negocio.eliminar(estante);
+                JOptionPane.showMessageDialog(this, "Estante eliminado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                this.vaciarTextosEstante();
+            } else {
+                JOptionPane.showMessageDialog(this, "En la planta indicada no existe un estante con el Id ingresado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            if (e.getClass().equals(NumberFormatException.class)) {
+                JOptionPane.showMessageDialog(this, "El Id debe ser un entero", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo recuperar el estante: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jButtonEliminarEstanteActionPerformed
 
-    private void jButtonActualizar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizar1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonActualizar1ActionPerformed
+    private void jButtonActualizarEstanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarEstanteActionPerformed
+        try {
+            int idActualizar = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese el Id del estante a mofificar: "));
+            int idPlanta = Integer.parseInt(jComboPlanta.getSelectedItem().toString());
+            estantes = negocio.consultarEstante(idPlanta, idActualizar);
+            if (!estantes.isEmpty()) {
+                estante = estantes.get(0);
+                estantes.clear();
+                JOptionPane.showMessageDialog(this, "Modifique los datos del estante en la ventana principal y luego presione Grabar.", "Nota", JOptionPane.INFORMATION_MESSAGE);
+                this.activarBotonesEstante(false);
+                this.activarTextosEstante(true);
+                jTextFieldIdEstante.setText(String.valueOf(estante.getId()));
+                jTextFieldNombreEstante.setText(estante.getNombre());
+                opcionEstante = false;
+            } else {
+                JOptionPane.showMessageDialog(this, "En la planta indicada no existe un estante con el Id ingresado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            if (e.getClass().equals(NumberFormatException.class)) {
+                JOptionPane.showMessageDialog(this, "El Id debe ser un entero", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo recuperar el estante: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jButtonActualizarEstanteActionPerformed
 
-    private void jButtonEliminar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminar1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonEliminar1ActionPerformed
+    private void jButtonNuevoEstanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoEstanteActionPerformed
+        int id_planta = Integer.parseInt(jComboPlanta.getSelectedItem().toString());
+        this.activarBotonesEstante(false);
+        this.activarTextosEstante(true);
+        opcionEstante = true;
+        this.jTextFieldIdEstante.setText(String.valueOf(negocio.proximoID(Estante.class, id_planta)));
+    }//GEN-LAST:event_jButtonNuevoEstanteActionPerformed
 
-    private void jComboPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboPlantaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboPlantaActionPerformed
+    private void jComboPlantaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboPlantaFocusGained
+        cargarComboPlanta();
+    }//GEN-LAST:event_jComboPlantaFocusGained
+
+    private void jButtonEliminarPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarPlantaActionPerformed
+        try {
+            int idEliminar = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese el id de la planta a eliminar: "));
+            plantas = negocio.consultarPlanta(idEliminar);
+            if (!plantas.isEmpty()) {
+                planta = plantas.get(0);
+                plantas.clear();
+                negocio.eliminar(planta);
+                JOptionPane.showMessageDialog(this, "Planta eliminada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                this.vaciarTextosPlanta();
+            } else {
+                JOptionPane.showMessageDialog(this, "No existe una planta con el Id ingresado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            if (e.getClass().equals(NumberFormatException.class)) {
+                JOptionPane.showMessageDialog(this, "El Id debe ser un entero", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo recuperar la planta: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jButtonEliminarPlantaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -708,22 +796,22 @@ public class UILogistica extends javax.swing.JFrame {
     }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonActualizar;
-    private javax.swing.JButton jButtonActualizar1;
-    private javax.swing.JButton jButtonBuscar;
-    private javax.swing.JButton jButtonBuscar1;
-    private javax.swing.JButton jButtonCancelar;
-    private javax.swing.JButton jButtonCancelar1;
-    private javax.swing.JButton jButtonEliminar;
-    private javax.swing.JButton jButtonEliminar1;
-    private javax.swing.JButton jButtonGrabar;
-    private javax.swing.JButton jButtonGrabar1;
-    private javax.swing.JButton jButtonMostrarTodos;
-    private javax.swing.JButton jButtonMostrarTodos1;
-    private javax.swing.JButton jButtonNuevo;
-    private javax.swing.JButton jButtonNuevo1;
-    private javax.swing.JComboBox<String> jComboOrden;
-    private javax.swing.JComboBox<String> jComboOrden1;
+    private javax.swing.JButton jButtonActualizarEstante;
+    private javax.swing.JButton jButtonActualizarPlanta;
+    private javax.swing.JButton jButtonBuscarEstante;
+    private javax.swing.JButton jButtonBuscarPlanta;
+    private javax.swing.JButton jButtonCancelarEstante;
+    private javax.swing.JButton jButtonCancelarPlanta;
+    private javax.swing.JButton jButtonEliminarEstante;
+    private javax.swing.JButton jButtonEliminarPlanta;
+    private javax.swing.JButton jButtonGrabarEstante;
+    private javax.swing.JButton jButtonGrabarPlanta;
+    private javax.swing.JButton jButtonMostrarTodosEstante;
+    private javax.swing.JButton jButtonMostrarTodosPlanta;
+    private javax.swing.JButton jButtonNuevoEstante;
+    private javax.swing.JButton jButtonNuevoPlanta;
+    private javax.swing.JComboBox<String> jComboOrdenEstante;
+    private javax.swing.JComboBox<String> jComboOrdenPlanta;
     private javax.swing.JComboBox<String> jComboPlanta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -740,11 +828,11 @@ public class UILogistica extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableEstantes;
     private javax.swing.JTable jTablePlantas;
-    private javax.swing.JTextField jTextFieldBuscar;
-    private javax.swing.JTextField jTextFieldBuscar1;
-    private javax.swing.JTextField jTextFieldId;
-    private javax.swing.JTextField jTextFieldId1;
-    private javax.swing.JTextField jTextFieldNombre;
-    private javax.swing.JTextField jTextFieldNombre1;
+    private javax.swing.JTextField jTextFieldBuscarEstante;
+    private javax.swing.JTextField jTextFieldBuscarPlanta;
+    private javax.swing.JTextField jTextFieldIdEstante;
+    private javax.swing.JTextField jTextFieldIdPlanta;
+    private javax.swing.JTextField jTextFieldNombreEstante;
+    private javax.swing.JTextField jTextFieldNombrePlanta;
     // End of variables declaration//GEN-END:variables
 }

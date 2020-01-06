@@ -43,9 +43,12 @@ public class UIMenu extends javax.swing.JFrame {
         jMenuItemAutores = new javax.swing.JMenuItem();
         jMenuItemEditoriales = new javax.swing.JMenuItem();
         jMenuItemLibros = new javax.swing.JMenuItem();
+        jMenuItemEdiciones = new javax.swing.JMenuItem();
+        jMenuItemEjemplares = new javax.swing.JMenuItem();
         jMenuItemLogistica = new javax.swing.JMenuItem();
         jMenuItemPrestamos = new javax.swing.JMenuItem();
-        jAcercaDe = new javax.swing.JMenu();
+        jMenuAyuda = new javax.swing.JMenu();
+        jMenuItemAcercaDe = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,6 +63,11 @@ public class UIMenu extends javax.swing.JFrame {
         jMenu.setText("Menú");
 
         jMenuItemGestor.setText("Gestor de Consultas");
+        jMenuItemGestor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemGestorActionPerformed(evt);
+            }
+        });
         jMenu.add(jMenuItemGestor);
 
         jMenuItemUsuarios.setText("Usuarios");
@@ -87,7 +95,28 @@ public class UIMenu extends javax.swing.JFrame {
         jMenu.add(jMenuItemEditoriales);
 
         jMenuItemLibros.setText("Libros");
+        jMenuItemLibros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemLibrosActionPerformed(evt);
+            }
+        });
         jMenu.add(jMenuItemLibros);
+
+        jMenuItemEdiciones.setText("Ediciones");
+        jMenuItemEdiciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemEdicionesActionPerformed(evt);
+            }
+        });
+        jMenu.add(jMenuItemEdiciones);
+
+        jMenuItemEjemplares.setText("Ejemplares");
+        jMenuItemEjemplares.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemEjemplaresActionPerformed(evt);
+            }
+        });
+        jMenu.add(jMenuItemEjemplares);
 
         jMenuItemLogistica.setText("Logística");
         jMenuItemLogistica.addActionListener(new java.awt.event.ActionListener() {
@@ -98,12 +127,26 @@ public class UIMenu extends javax.swing.JFrame {
         jMenu.add(jMenuItemLogistica);
 
         jMenuItemPrestamos.setText("Préstamos");
+        jMenuItemPrestamos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemPrestamosActionPerformed(evt);
+            }
+        });
         jMenu.add(jMenuItemPrestamos);
 
         jMenuBar1.add(jMenu);
 
-        jAcercaDe.setText("Acerca De");
-        jMenuBar1.add(jAcercaDe);
+        jMenuAyuda.setText("Ayuda");
+
+        jMenuItemAcercaDe.setText("Acerca De");
+        jMenuItemAcercaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemAcercaDeActionPerformed(evt);
+            }
+        });
+        jMenuAyuda.add(jMenuItemAcercaDe);
+
+        jMenuBar1.add(jMenuAyuda);
 
         setJMenuBar(jMenuBar1);
 
@@ -157,6 +200,38 @@ public class UIMenu extends javax.swing.JFrame {
         ui.iniciar();
     }//GEN-LAST:event_jMenuItemEditorialesActionPerformed
 
+    private void jMenuItemLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLibrosActionPerformed
+        /*UILibros ui = new UILibros();
+        ui.iniciar();*/
+        UILibrosAlternativa ui = new UILibrosAlternativa();
+        ui.iniciar();
+    }//GEN-LAST:event_jMenuItemLibrosActionPerformed
+
+    private void jMenuItemGestorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGestorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemGestorActionPerformed
+
+    private void jMenuItemPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPrestamosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemPrestamosActionPerformed
+
+    private void jMenuItemAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAcercaDeActionPerformed
+        UIAcercaDe ui = new UIAcercaDe();
+        ui.iniciar();
+    }//GEN-LAST:event_jMenuItemAcercaDeActionPerformed
+
+    private void jMenuItemEjemplaresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEjemplaresActionPerformed
+        UIEjemplares ui = new UIEjemplares();
+        ui.iniciar();
+    }//GEN-LAST:event_jMenuItemEjemplaresActionPerformed
+
+    private void jMenuItemEdicionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEdicionesActionPerformed
+        /*UIEdiciones ui = new UIEdiciones();
+        ui.iniciar();*/
+        UIEdicionesAlternativa ui = new UIEdicionesAlternativa();
+        ui.iniciar();
+    }//GEN-LAST:event_jMenuItemEdicionesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -193,14 +268,17 @@ public class UIMenu extends javax.swing.JFrame {
     }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu jAcercaDe;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu;
+    private javax.swing.JMenu jMenuAyuda;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItemAcercaDe;
     private javax.swing.JMenuItem jMenuItemAutores;
+    private javax.swing.JMenuItem jMenuItemEdiciones;
     private javax.swing.JMenuItem jMenuItemEditoriales;
+    private javax.swing.JMenuItem jMenuItemEjemplares;
     private javax.swing.JMenuItem jMenuItemGestor;
     private javax.swing.JMenuItem jMenuItemLibros;
     private javax.swing.JMenuItem jMenuItemLogistica;

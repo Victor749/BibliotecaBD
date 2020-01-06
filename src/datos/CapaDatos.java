@@ -92,9 +92,11 @@ public class CapaDatos {
                 desconectarBD();
             } catch (SQLException ex) {
                 String string = "Error durante rollback: " + ex.getMessage();
+                desconectarBD();
                 throw new RuntimeException(string, ex);
             }
             String string = "Error durante ejecución de sentencia INSERT SQL: " + e.getMessage();
+            desconectarBD();
             throw new RuntimeException(string, e);
         }
     }
@@ -189,9 +191,11 @@ public class CapaDatos {
                 desconectarBD();
             } catch (SQLException ex) {
                 String string = "Error durante rollback: " + ex.getMessage();
+                desconectarBD();
                 throw new RuntimeException(string, ex);
             }
             String string = "Error durante ejecución de sentencia UPDATE SQL: " + e.getMessage();
+            desconectarBD();
             throw new RuntimeException(string, e);
         }
     }
@@ -260,9 +264,11 @@ public class CapaDatos {
                 desconectarBD();
             } catch (SQLException ex) {
                 String string = "Error durante rollback: " + ex.getMessage();
+                desconectarBD();
                 throw new RuntimeException(string, ex);
             }
             String string = "Error durante ejecución de sentencia DELETE SQL: " + e.getMessage();
+            desconectarBD();
             throw new RuntimeException(string, e);
         }
     }
@@ -285,6 +291,35 @@ public class CapaDatos {
                 lista.add(t);
             }
         } catch(InstantiationException | IllegalAccessException | SQLException e) {
+            desconectarBD();
+            throw new RuntimeException("Error durante generación de consulta: " + e.getMessage(), e);
+        }
+        desconectarBD();
+        return lista;
+    }
+    
+    public <T> List <T> selectBD(Class<T> tipo, String nombreTabla, String where, String orderBy, int limit) {
+        List<T> lista = new ArrayList<>();
+        conectarBD();
+        String sql = "SELECT * FROM " + nombreTabla;
+        if(!(where == null || where.isEmpty())) {
+             sql += " WHERE " + where;
+        }
+        if(!(orderBy == null || orderBy.isEmpty())) {
+             sql += " ORDER BY " + orderBy;
+        }
+        if(limit != 0) {
+             sql +=  " FETCH NEXT " + String.valueOf(limit) + " ROWS ONLY" ;
+        }
+        try (Statement sentencia = conexion.createStatement()) {
+            ResultSet resultado = sentencia.executeQuery(sql);
+            while(resultado.next()) {
+                T t = tipo.newInstance();
+                cargarResultadoObjeto(resultado, t);
+                lista.add(t);
+            }
+        } catch(InstantiationException | IllegalAccessException | SQLException e) {
+            desconectarBD();
             throw new RuntimeException("Error durante generación de consulta: " + e.getMessage(), e);
         }
         desconectarBD();
@@ -358,6 +393,7 @@ public class CapaDatos {
             String [] clavePrimaria = pk.toArray(new String[pk.size()]);
             return clavePrimaria;
         } catch (SQLException e) {
+            desconectarBD();
             throw new RuntimeException("Error durante obtención de clave primaria: " + e.getMessage(), e);
         }
     }
@@ -485,6 +521,7 @@ public class CapaDatos {
             desconectarBD();
             return (max_id + 1);
         } catch (SQLException e) {
+            desconectarBD();
             throw new RuntimeException("Error durante obtención de útimo ID: " + e.getMessage(), e);
         }
     }

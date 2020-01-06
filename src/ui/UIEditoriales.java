@@ -41,6 +41,7 @@ public class UIEditoriales extends javax.swing.JFrame {
         initCombo();
         negocio = new CapaNegocio();
         jTextFieldId.setEditable(false);
+        this.jTableEditoriales.setEnabled(false);
     }
     
     private void activarTextos(Boolean estado) {
@@ -200,7 +201,7 @@ public class UIEditoriales extends javax.swing.JFrame {
         });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel7.setText("Ordenar por:");
+        jLabel7.setText("Ordenar por");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -303,7 +304,7 @@ public class UIEditoriales extends javax.swing.JFrame {
     private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
         try {
             int idActualizar = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese el Id del editorial a mofificar: "));
-            editoriales = negocio.consultar(Editorial.class, "id = " + idActualizar, null);
+            editoriales = negocio.consultarEditorial(idActualizar);
             if (!editoriales.isEmpty()) {
                 editorial = editoriales.get(0);
                 editoriales.clear();
@@ -327,8 +328,8 @@ public class UIEditoriales extends javax.swing.JFrame {
 
     private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
         try {
-            int idEliminar = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese el id del editorial a editorial: "));
-            editoriales = negocio.consultar(Editorial.class, "id = " + idEliminar, null);
+            int idEliminar = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese el id del editorial a eliminar: "));
+            editoriales = negocio.consultarEditorial(idEliminar);
             if (!editoriales.isEmpty()) {
                 editorial = editoriales.get(0);
                 editoriales.clear();
@@ -379,12 +380,7 @@ public class UIEditoriales extends javax.swing.JFrame {
         try {
             String busqueda = jTextFieldBuscar.getText();
             if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                try {
-                    int id = Integer.parseInt(busqueda);
-                    editoriales = negocio.consultar(Editorial.class, "id = " + String.valueOf(id) + " OR nombre LIKE '%" + busqueda + "%'", Editorial.nombreAtributos()[jComboOrden.getSelectedIndex()]);
-                } catch (NumberFormatException e) {
-                    editoriales = negocio.consultar(Editorial.class, "nombre LIKE '%" + busqueda + "%'", Editorial.nombreAtributos()[jComboOrden.getSelectedIndex()]);
-                }
+                editoriales = negocio.buscarEditoriales(busqueda, jComboOrden.getSelectedIndex());
                 if (!editoriales.isEmpty()) {
                     this.cargarDatos();
                     editoriales.clear();
@@ -401,7 +397,7 @@ public class UIEditoriales extends javax.swing.JFrame {
 
     private void jButtonMostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMostrarTodosActionPerformed
         try {
-            editoriales = negocio.consultar(Editorial.class, null, Editorial.nombreAtributos()[jComboOrden.getSelectedIndex()]);
+            editoriales = negocio.todosEditoriales(jComboOrden.getSelectedIndex());
             this.cargarDatos();
             editoriales.clear();
         } catch (RuntimeException e) {
