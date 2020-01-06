@@ -27,7 +27,7 @@ public class CapaDatos {
     private void conectarBD() {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
-            conexion = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","usuario","1234");
+            conexion = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","usuario1","1234");
         } catch(SQLException | ClassNotFoundException | IllegalArgumentException e) {
             String mensaje = "No se puede conectar a la BD: " + e.getMessage();
             throw new RuntimeException(mensaje, e);
@@ -524,6 +524,18 @@ public class CapaDatos {
             desconectarBD();
             throw new RuntimeException("Error durante obtención de útimo ID: " + e.getMessage(), e);
         }
+    }
+    
+    public ResultSet makeQuery(String sql) throws SQLException{ //This method should go in CapaDatos
+            
+            this.conectarBD();
+            
+            Statement st = conexion.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
+            this.desconectarBD();
+            
+            return rs;
     }
     
 }
