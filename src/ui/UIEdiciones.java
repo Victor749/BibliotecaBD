@@ -50,10 +50,10 @@ public class UIEdiciones extends javax.swing.JFrame {
         initCombo();
         negocio = new CapaNegocio();
         this.jTableEdiciones.setEnabled(false);
-        this.jTextFieldIsbn.setEditable(false);
         textAutoCompleterLibro = new TextAutoCompleter(jTextFieldLibro);
         textAutoCompleterEditorial = new TextAutoCompleter(jTextFieldEditorial);
         this.jDateChooserFecha.setDateFormatString("yyyy-MM-dd");
+        this.jTextFieldIsbn.setEditable(false);
     }
     
     private void activarTextos(Boolean estado) {
@@ -407,7 +407,7 @@ public class UIEdiciones extends javax.swing.JFrame {
         this.activarBotones(false);
         this.activarTextos(true);
         opcion = true;
-        jTextFieldIsbn.setEditable(true);
+        this.jTextFieldIsbn.setEditable(true);
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
@@ -421,7 +421,6 @@ public class UIEdiciones extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Modifique los datos de la edición en la ventana principal y luego presione Grabar.", "Nota", JOptionPane.INFORMATION_MESSAGE);
                     this.activarBotones(false);
                     this.activarTextos(true);
-                    jTextFieldIsbn.setEditable(false);
                     jTextFieldIsbn.setText(edicion.getIsbn());
                     Libro libro = negocio.consultarLibro(edicion.getLibro_id()).get(0);
                     jTextFieldLibro.setText(libro.getTitulo());
@@ -469,7 +468,7 @@ public class UIEdiciones extends javax.swing.JFrame {
 
     private void jButtonGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarActionPerformed
         try {
-            if (esAlfaNumerico(jTextFieldLibro.getText()) && validar(this.jTextFieldIsbn.getText()) && esAlfaNumerico(jTextFieldEditorial.getText()) && esAlfaNumerico(jTextFieldDescripcion.getText()) && entero(this.jTextFieldNumero.getText())) {
+            if (esAlfaNumerico(jTextFieldLibro.getText()) && validar(this.jTextFieldIsbn.getText()) && esAlfaNumerico(jTextFieldEditorial.getText()) && entero(this.jTextFieldNumero.getText())) {
                 List<Libro> librosTemp = negocio.consultarLibro(jTextFieldLibro.getText());
                 if (!librosTemp.isEmpty()) {
                     List<Editorial> editorialesTemp = negocio.consultarEditorial(jTextFieldEditorial.getText());

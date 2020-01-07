@@ -5,8 +5,6 @@
  */
 package ui;
 
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -17,8 +15,6 @@ import javax.swing.table.DefaultTableModel;
 import negocio.CapaNegocio;
 import negocio.Edicion;
 import negocio.Ejemplar;
-import negocio.Estante;
-import negocio.Planta;
 
 /**
  *
@@ -32,8 +28,6 @@ public class UIEjemplares extends javax.swing.JFrame {
     
     private DefaultTableModel modeloTabla;
     private List<Ejemplar> ejemplares;
-    private List<Planta> plantas;
-    private List<Estante> estantes;
     private Ejemplar ejemplar;
     private boolean opcion;
     private CapaNegocio negocio;
@@ -57,8 +51,8 @@ public class UIEjemplares extends javax.swing.JFrame {
     }
     
     private void activarTextos(Boolean estado) {
-        this.jComboPlanta.setEditable(estado);
-        this.jComboEstante.setEditable(estado);
+        this.jTextFieldPlanta.setEditable(estado);
+        this.jTextFieldEstante.setEditable(estado);
         this.jTextFieldObservaciones.setEditable(estado);
     }
     
@@ -73,8 +67,8 @@ public class UIEjemplares extends javax.swing.JFrame {
     private void vaciarTextos() {
         jTextFieldIsbn.setText("");
         jTextFieldId.setText("");
-        this.jComboPlanta.removeAllItems();
-        this.jComboEstante.removeAllItems();
+        this.jTextFieldPlanta.setText("");
+        this.jTextFieldEstante.setText("");
         this.jTextFieldObservaciones.setText("");
         this.jLabelInformeIsbn.setText("");
     }
@@ -86,24 +80,6 @@ public class UIEjemplares extends javax.swing.JFrame {
         jComboOrden.addItem("Estante (Id)");
         jComboOrden.addItem("Prestado");
         jComboOrden.addItem("Observaciones");
-    }
-    
-    public void cargarComboPlanta() {
-        jComboPlanta.removeAllItems();
-        plantas = negocio.todasPlantas(0);
-        plantas.forEach((plantaCombo) -> {
-            jComboPlanta.addItem(String.valueOf(plantaCombo.getId()));
-        });
-        plantas.clear();
-    }
-    
-    public void cargarComboEstante() {
-        jComboEstante.removeAllItems();
-        estantes = negocio.consultarEstantes(Integer.parseInt(jComboPlanta.getSelectedItem().toString()));
-        estantes.forEach((estanteCombo) -> {
-            jComboEstante.addItem(String.valueOf(estanteCombo.getId()));
-        });
-        estantes.clear();
     }
     
     private void mostrarTabla() {
@@ -193,10 +169,10 @@ public class UIEjemplares extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jButtonVerEdiciones = new javax.swing.JButton();
         jTextFieldObservaciones = new javax.swing.JTextField();
-        jComboPlanta = new javax.swing.JComboBox<>();
-        jComboEstante = new javax.swing.JComboBox<>();
         jButtonVerLogisitca = new javax.swing.JButton();
         jLabelInformeIsbn = new javax.swing.JLabel();
+        jTextFieldPlanta = new javax.swing.JTextField();
+        jTextFieldEstante = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -303,12 +279,6 @@ public class UIEjemplares extends javax.swing.JFrame {
             }
         });
 
-        jComboPlanta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboPlantaActionPerformed(evt);
-            }
-        });
-
         jButtonVerLogisitca.setText("Ver Logística");
         jButtonVerLogisitca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -366,8 +336,8 @@ public class UIEjemplares extends javax.swing.JFrame {
                                     .addComponent(jTextFieldId)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(jComboEstante, javax.swing.GroupLayout.Alignment.LEADING, 0, 458, Short.MAX_VALUE)
-                                            .addComponent(jComboPlanta, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addComponent(jTextFieldEstante, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextFieldPlanta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jButtonVerLogisitca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -409,12 +379,12 @@ public class UIEjemplares extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jComboPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonVerLogisitca))
+                            .addComponent(jButtonVerLogisitca)
+                            .addComponent(jTextFieldPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jComboEstante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextFieldEstante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonActualizar)
                         .addGap(18, 18, 18)
@@ -452,9 +422,7 @@ public class UIEjemplares extends javax.swing.JFrame {
         this.activarBotones(false);
         this.activarTextos(true);
         opcion = true;
-        jTextFieldIsbn.setEditable(true);
-        cargarComboPlanta();
-        cargarComboEstante();
+        this.jTextFieldIsbn.setEditable(true);
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
@@ -482,13 +450,10 @@ public class UIEjemplares extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Modifique los datos de la edición en la ventana principal y luego presione Grabar.", "Nota", JOptionPane.INFORMATION_MESSAGE);
                     this.activarBotones(false);
                     this.activarTextos(true);
-                    jTextFieldIsbn.setEditable(false);
                     jTextFieldIsbn.setText(ejemplar.getEdicion_isbn());
                     jTextFieldId.setText(String.valueOf(ejemplar.getId()));
-                    cargarComboPlanta();
-                    this.jComboPlanta.setSelectedItem(String.valueOf(ejemplar.getPlanta_id()));
-                    this.cargarComboEstante();
-                    this.jComboEstante.setSelectedItem(String.valueOf(ejemplar.getEstante_id()));
+                    this.jTextFieldPlanta.setText(String.valueOf(ejemplar.getPlanta_id()));
+                    this.jTextFieldEstante.setText(String.valueOf(ejemplar.getEstante_id()));
                     this.jTextFieldObservaciones.setText(ejemplar.getObservaciones());
                     opcion = false;
                 } else {
@@ -524,9 +489,13 @@ public class UIEjemplares extends javax.swing.JFrame {
                 if (!ejemplares.isEmpty()) {
                     ejemplar = ejemplares.get(0);
                     ejemplares.clear();
-                    negocio.eliminar(ejemplar);
-                    JOptionPane.showMessageDialog(this, "Ejemplar eliminado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
-                    this.vaciarTextos();
+                    if (ejemplar.getPrestado() == 0) {
+                        negocio.eliminar(ejemplar);
+                        JOptionPane.showMessageDialog(this, "Ejemplar eliminado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                        this.vaciarTextos();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No se puede eliminar el ejemplar debido a que un usuario lo tiene en préstamo.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    }       
                 } else {
                     JOptionPane.showMessageDialog(this, "No existe un ejemplar con el ISBN e Id ingresados.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 }
@@ -540,13 +509,13 @@ public class UIEjemplares extends javax.swing.JFrame {
 
     private void jButtonGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarActionPerformed
         try {
-            if (validar(this.jTextFieldIsbn.getText()) && esAlfaNumerico(jTextFieldObservaciones.getText())) {
+            if (validar(this.jTextFieldIsbn.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()), Integer.parseInt(this.jComboEstante.getSelectedItem().toString()), 0, this.jTextFieldObservaciones.getText()));
+                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jTextFieldPlanta.getText()), Integer.parseInt(this.jTextFieldEstante.getText()), 0, this.jTextFieldObservaciones.getText()));
                     JOptionPane.showMessageDialog(this, "Ejemplar ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    ejemplar.setPlanta_id(Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()));
-                    ejemplar.setEstante_id(Integer.parseInt(this.jComboEstante.getSelectedItem().toString()));
+                    ejemplar.setPlanta_id(Integer.parseInt(this.jTextFieldPlanta.getText()));
+                    ejemplar.setEstante_id(Integer.parseInt(this.jTextFieldEstante.getText()));
                     ejemplar.setObservaciones(this.jTextFieldObservaciones.getText());
                     negocio.actualizar(ejemplar);
                     JOptionPane.showMessageDialog(this, "Ejemplar actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
@@ -556,7 +525,7 @@ public class UIEjemplares extends javax.swing.JFrame {
                 this.vaciarTextos();
                 this.jTextFieldIsbn.setEditable(false);
             } else {
-                JOptionPane.showMessageDialog(this, "El ISBN debe tener 13 dígitos. Los datos no deben contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El ISBN debe tener 13 dígitos. Los Ids de planta y estante deben ser enteros. Los datos no deben contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, "El ejemplar no fue grabado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -610,10 +579,6 @@ public class UIEjemplares extends javax.swing.JFrame {
         UILogistica ui = new UILogistica();
         ui.iniciar();
     }//GEN-LAST:event_jButtonVerLogisitcaActionPerformed
-
-    private void jComboPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboPlantaActionPerformed
-        cargarComboEstante();
-    }//GEN-LAST:event_jComboPlantaActionPerformed
 
     private void jTextFielIsbnKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFielIsbnKeyReleased
         if(this.jTextFieldIsbn.getText().length() == 13) {
@@ -676,9 +641,7 @@ public class UIEjemplares extends javax.swing.JFrame {
     private javax.swing.JButton jButtonNuevo;
     private javax.swing.JButton jButtonVerEdiciones;
     private javax.swing.JButton jButtonVerLogisitca;
-    private javax.swing.JComboBox<String> jComboEstante;
     private javax.swing.JComboBox<String> jComboOrden;
-    private javax.swing.JComboBox<String> jComboPlanta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -692,8 +655,10 @@ public class UIEjemplares extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableEdiciones;
     private javax.swing.JTextField jTextFieldBuscar;
+    private javax.swing.JTextField jTextFieldEstante;
     private javax.swing.JTextField jTextFieldId;
     private javax.swing.JTextField jTextFieldIsbn;
     private javax.swing.JTextField jTextFieldObservaciones;
+    private javax.swing.JTextField jTextFieldPlanta;
     // End of variables declaration//GEN-END:variables
 }

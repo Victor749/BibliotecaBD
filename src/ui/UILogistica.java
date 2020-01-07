@@ -354,12 +354,6 @@ public class UILogistica extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel11.setText("Planta (Id):");
 
-        jComboPlanta.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jComboPlantaFocusGained(evt);
-            }
-        });
-
         jButtonEliminarPlanta.setText("Eliminar");
         jButtonEliminarPlanta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -454,7 +448,6 @@ public class UILogistica extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(133, 133, 133)
@@ -567,6 +560,7 @@ public class UILogistica extends javax.swing.JFrame {
             if (esAlfaNumerico(jTextFieldNombrePlanta.getText())) {
                 if (opcionPlanta) {
                     negocio.insertar(new Planta(Integer.parseInt(jTextFieldIdPlanta.getText()), jTextFieldNombrePlanta.getText()));
+                    cargarComboPlanta();
                     JOptionPane.showMessageDialog(this, "Planta ingresada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     planta.setNombre(jTextFieldNombrePlanta.getText());
@@ -734,10 +728,6 @@ public class UILogistica extends javax.swing.JFrame {
         this.jTextFieldIdEstante.setText(String.valueOf(negocio.proximoID(Estante.class, id_planta)));
     }//GEN-LAST:event_jButtonNuevoEstanteActionPerformed
 
-    private void jComboPlantaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboPlantaFocusGained
-        cargarComboPlanta();
-    }//GEN-LAST:event_jComboPlantaFocusGained
-
     private void jButtonEliminarPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarPlantaActionPerformed
         try {
             int idEliminar = Integer.parseInt(JOptionPane.showInputDialog(this, "Ingrese el id de la planta a eliminar: "));
@@ -746,6 +736,7 @@ public class UILogistica extends javax.swing.JFrame {
                 planta = plantas.get(0);
                 plantas.clear();
                 negocio.eliminar(planta);
+                cargarComboPlanta();
                 JOptionPane.showMessageDialog(this, "Planta eliminada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 this.vaciarTextosPlanta();
             } else {

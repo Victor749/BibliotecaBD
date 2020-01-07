@@ -40,11 +40,11 @@ public class UIUsuarios extends javax.swing.JFrame {
         mostrarTabla();
         initCombo();
         this.jTableUsuarios.setEnabled(false);
+        jTextFieldCedula.setEditable(false);
         negocio = new CapaNegocio();
     }
     
     private void activarTextos(Boolean estado) {
-        jTextFieldCedula.setEditable(estado);
         jTextFieldNombre.setEditable(estado);
         jTextFieldDireccion.setEditable(estado);
     }
@@ -338,6 +338,7 @@ public class UIUsuarios extends javax.swing.JFrame {
         this.activarBotones(false);
         this.activarTextos(true);
         opcion = true;
+        jTextFieldCedula.setEditable(true);
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
@@ -351,7 +352,6 @@ public class UIUsuarios extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Modifique los datos del usuario en la ventana principal y luego presione Grabar.", "Nota", JOptionPane.INFORMATION_MESSAGE);
                     this.activarBotones(false);
                     this.activarTextos(true);
-                    jTextFieldCedula.setEditable(false);
                     jTextFieldCedula.setText(usuario.getCedula());
                     jTextFieldNombre.setText(usuario.getNombre());
                     jTextFieldDireccion.setText(usuario.getDireccion());
@@ -375,9 +375,13 @@ public class UIUsuarios extends javax.swing.JFrame {
                 if (!usuarios.isEmpty()) {
                     usuario = usuarios.get(0);
                     usuarios.clear();
-                    negocio.eliminar(usuario);
-                    JOptionPane.showMessageDialog(this, "Usuario eliminado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
-                    this.vaciarTextos();
+                    if (usuario.getPuede_prestamo() == 1) {
+                        negocio.eliminar(usuario);
+                        JOptionPane.showMessageDialog(this, "Usuario eliminado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                        this.vaciarTextos();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No se puede eliminar al usuario debido a que tiene un préstamo pendiente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "No existe un usuario con la cédula ingresada.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 }
@@ -404,6 +408,7 @@ public class UIUsuarios extends javax.swing.JFrame {
                 this.activarBotones(true);
                 this.activarTextos(false);
                 this.vaciarTextos();
+                jTextFieldCedula.setEditable(false);
             } else {
                 JOptionPane.showMessageDialog(this, "La cédula debe contener 10 dígitos. Los datos no deben contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
@@ -416,6 +421,7 @@ public class UIUsuarios extends javax.swing.JFrame {
         this.activarBotones(true);
         this.activarTextos(false);
         this.vaciarTextos();
+        jTextFieldCedula.setEditable(false);
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed

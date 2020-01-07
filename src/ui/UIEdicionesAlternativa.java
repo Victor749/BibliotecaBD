@@ -43,8 +43,8 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         initCombo();
         negocio = new CapaNegocio();
         this.jTableEdiciones.setEnabled(false);
-        this.jTextFieldIsbn.setEditable(false);
         this.jDateChooserFecha.setDateFormatString("yyyy-MM-dd");
+        this.jTextFieldIsbn.setEditable(false);
     }
     
     private void activarTextos(Boolean estado) {
@@ -401,7 +401,7 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         this.activarBotones(false);
         this.activarTextos(true);
         opcion = true;
-        jTextFieldIsbn.setEditable(true);
+        this.jTextFieldIsbn.setEditable(true);
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
@@ -415,7 +415,6 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Modifique los datos de la edición en la ventana principal y luego presione Grabar.", "Nota", JOptionPane.INFORMATION_MESSAGE);
                     this.activarBotones(false);
                     this.activarTextos(true);
-                    jTextFieldIsbn.setEditable(false);
                     jTextFieldIsbn.setText(edicion.getIsbn());
                     jTextFieldLibro.setText(String.valueOf(edicion.getLibro_id()));
                     jTextFieldEditorial.setText(String.valueOf(edicion.getEditorial_id()));
@@ -461,7 +460,7 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
 
     private void jButtonGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarActionPerformed
         try {
-            if (validar(jTextFieldIsbn.getText()) && esAlfaNumerico(jTextFieldDescripcion.getText())) {
+            if (validar(jTextFieldIsbn.getText())) {
                 GregorianCalendar calendar = (GregorianCalendar) this.jDateChooserFecha.getCalendar();
                 SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
                 fmt.setCalendar(calendar);

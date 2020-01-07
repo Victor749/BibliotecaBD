@@ -128,8 +128,8 @@ create table alquiler
   fecha_hora_estimada_entrega varchar2(20) not null,
   fecha_hora_entrega varchar2(20),
   constraint alquiler_pk primary key (usuario_cedula , edicion_isbn, ejemplar_id, fecha_hora_prestamo),
-  constraint fk_usuario foreign key (usuario_cedula) references usuario(cedula),
-  constraint fk_ejemplar foreign key (edicion_isbn, ejemplar_id) references ejemplar(edicion_isbn, id)
+  constraint fk_usuario foreign key (usuario_cedula) references usuario(cedula) on delete cascade,
+  constraint fk_ejemplar foreign key (edicion_isbn, ejemplar_id) references ejemplar(edicion_isbn, id) on delete cascade
 );
 insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '1111111111111', 1, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
 update ejemplar set prestado = 1 where edicion_isbn = '1111111111111' and id = 1;
