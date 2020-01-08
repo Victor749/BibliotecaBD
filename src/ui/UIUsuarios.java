@@ -144,6 +144,7 @@ public class UIUsuarios extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Gestión de Usuarios");
@@ -376,9 +377,12 @@ public class UIUsuarios extends javax.swing.JFrame {
                     usuario = usuarios.get(0);
                     usuarios.clear();
                     if (usuario.getPuede_prestamo() == 1) {
-                        negocio.eliminar(usuario);
-                        JOptionPane.showMessageDialog(this, "Usuario eliminado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
-                        this.vaciarTextos();
+                        int respuesta = JOptionPane.showConfirmDialog(null, "Al borrar un usuario también se borrarán todos los registros de préstamos del mismo.\n¿Está seguro de que quiere continuar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            negocio.eliminar(usuario);
+                            JOptionPane.showMessageDialog(this, "Usuario eliminado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                            this.vaciarTextos();
+                        } 
                     } else {
                         JOptionPane.showMessageDialog(this, "No se puede eliminar al usuario debido a que tiene un préstamo pendiente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                     }

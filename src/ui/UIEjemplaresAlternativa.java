@@ -5,36 +5,39 @@
  */
 package ui;
 
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
 import java.util.List;
+import javax.swing.Box;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import negocio.CapaNegocio;
 import negocio.Edicion;
+import negocio.Ejemplar;
 
 /**
  *
  * @author USUARIO
  */
-public class UIEdicionesAlternativa extends javax.swing.JFrame {
+public class UIEjemplaresAlternativa extends javax.swing.JFrame {
 
     /**
      * Creates new form UIUsuarios
      */
     
     private DefaultTableModel modeloTabla;
-    private List<Edicion> ediciones;
-    private Edicion edicion;
+    private List<Ejemplar> ejemplares;
+    private Ejemplar ejemplar;
     private boolean opcion;
     private CapaNegocio negocio;
     
-    public UIEdicionesAlternativa() {
+    public UIEjemplaresAlternativa() {
         initComponents();
     }
     
     public void iniciar() {
-        this.setTitle("Gestión de Ediciones");
+        this.setTitle("Gestión de Ejemplares");
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         activarTextos(false);
@@ -43,16 +46,14 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         initCombo();
         negocio = new CapaNegocio();
         this.jTableEdiciones.setEnabled(false);
-        this.jDateChooserFecha.setDateFormatString("yyyy-MM-dd");
         this.jTextFieldIsbn.setEditable(false);
+        this.jTextFieldId.setEditable(false);
     }
     
     private void activarTextos(Boolean estado) {
-        jTextFieldLibro.setEditable(estado);
-        jTextFieldEditorial.setEditable(estado);
-        this.jTextFieldNumero.setEditable(estado);
-        this.jDateChooserFecha.setEnabled(estado);
-        this.jTextFieldDescripcion.setEditable(estado);
+        this.jTextFieldPlanta.setEditable(estado);
+        this.jTextFieldEstante.setEditable(estado);
+        this.jTextFieldObservaciones.setEditable(estado);
     }
     
     private void activarBotones(Boolean estado) {
@@ -65,25 +66,25 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
     
     private void vaciarTextos() {
         jTextFieldIsbn.setText("");
-        jTextFieldLibro.setText("");
-        jTextFieldEditorial.setText("");
-        this.jTextFieldNumero.setText("");
-        this.jDateChooserFecha.setToolTipText("");
-        jDateChooserFecha.setDate(null);
-        this.jTextFieldDescripcion.setText("");
+        jTextFieldId.setText("");
+        this.jTextFieldPlanta.setText("");
+        this.jTextFieldEstante.setText("");
+        this.jTextFieldObservaciones.setText("");
+        this.jLabelInformeIsbn.setText("");
     }
     
     public void initCombo() {
         jComboOrden.addItem("ISBN");
-        jComboOrden.addItem("Libro (Id)");
-        jComboOrden.addItem("Editorial (Id)");
-        jComboOrden.addItem("Número");
-        jComboOrden.addItem("Fecha");
+        jComboOrden.addItem("Id");
+        jComboOrden.addItem("Planta (Id)");
+        jComboOrden.addItem("Estante (Id)");
+        jComboOrden.addItem("Prestado");
+        jComboOrden.addItem("Observaciones");
     }
     
     private void mostrarTabla() {
         String [][] roster = {};
-        String [] columnas = {"ISBN", "Libro (Id)", "Editorial (Id)", "Número", "Fecha", "Descripción"};
+        String [] columnas = {"ISBN", "Id", "Planta (Id)", "Estante (Id)", "Prestado", "Observaciones"};
         this.modeloTabla = new DefaultTableModel(roster, columnas);
         jTableEdiciones.setModel(modeloTabla);
     }
@@ -93,14 +94,14 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         for (int i = rows - 1; i >= 0; i--) {
             this.modeloTabla.removeRow(i);
         }
-        for (int j = 0; j < ediciones.size(); j++) {
+        for (int j = 0; j < ejemplares.size(); j++) {
             this.modeloTabla.insertRow(this.modeloTabla.getRowCount(), new Object[]{});
-            this.modeloTabla.setValueAt(ediciones.get(j).getIsbn(), this.modeloTabla.getRowCount() - 1, 0);
-            this.modeloTabla.setValueAt(String.valueOf(ediciones.get(j).getLibro_id()), this.modeloTabla.getRowCount() - 1, 1);
-            this.modeloTabla.setValueAt(String.valueOf(ediciones.get(j).getEditorial_id()), this.modeloTabla.getRowCount() - 1, 2);
-            this.modeloTabla.setValueAt(String.valueOf(ediciones.get(j).getNumero()), this.modeloTabla.getRowCount() - 1, 3);
-            this.modeloTabla.setValueAt(ediciones.get(j).getFecha(), this.modeloTabla.getRowCount() - 1, 4);
-            this.modeloTabla.setValueAt(ediciones.get(j).getDescripcion(), this.modeloTabla.getRowCount() - 1, 5);
+            this.modeloTabla.setValueAt(ejemplares.get(j).getEdicion_isbn(), this.modeloTabla.getRowCount() - 1, 0);
+            this.modeloTabla.setValueAt(String.valueOf(ejemplares.get(j).getId()), this.modeloTabla.getRowCount() - 1, 1);
+            this.modeloTabla.setValueAt(String.valueOf(ejemplares.get(j).getPlanta_id()), this.modeloTabla.getRowCount() - 1, 2);
+            this.modeloTabla.setValueAt(String.valueOf(ejemplares.get(j).getEstante_id()), this.modeloTabla.getRowCount() - 1, 3);
+            this.modeloTabla.setValueAt(String.valueOf(ejemplares.get(j).getPrestado()), this.modeloTabla.getRowCount() - 1, 4);
+            this.modeloTabla.setValueAt(ejemplares.get(j).getObservaciones(), this.modeloTabla.getRowCount() - 1, 5);
         }
     }
     
@@ -124,6 +125,16 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         }
         return true;
     }
+    
+    private boolean entero(String cadena) {
+        try {
+            int parseInt = Integer.parseInt(cadena);
+            return true;
+        } catch(NumberFormatException e) {
+            return false;
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -138,8 +149,7 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTextFieldIsbn = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextFieldLibro = new javax.swing.JTextField();
-        jTextFieldEditorial = new javax.swing.JTextField();
+        jTextFieldId = new javax.swing.JTextField();
         jButtonNuevo = new javax.swing.JButton();
         jButtonActualizar = new javax.swing.JButton();
         jButtonEliminar = new javax.swing.JButton();
@@ -155,28 +165,33 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextFieldNumero = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jDateChooserFecha = new com.toedter.calendar.JDateChooser();
-        jLabel9 = new javax.swing.JLabel();
-        jTextFieldDescripcion = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jButtonVerLibros = new javax.swing.JButton();
-        jButtonVerEditoriales = new javax.swing.JButton();
+        jButtonVerEdiciones = new javax.swing.JButton();
+        jTextFieldObservaciones = new javax.swing.JTextField();
+        jButtonVerLogisitca = new javax.swing.JButton();
+        jLabelInformeIsbn = new javax.swing.JLabel();
+        jTextFieldPlanta = new javax.swing.JTextField();
+        jTextFieldEstante = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Gestión de Ediciones");
+        jLabel1.setText("Gestión de Ejemplares");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("ISBN:");
 
         jTextFieldIsbn.setToolTipText("");
+        jTextFieldIsbn.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFielIsbnKeyReleased(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel3.setText("Libro (Id):");
+        jLabel3.setText("Id:");
 
         jButtonNuevo.setText("Nuevo");
         jButtonNuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -234,7 +249,7 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         });
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel6.setText("Buscar por ISBN, Id de Libro, Id de Editorial, Número, Fecha o Descripción");
+        jLabel6.setText("Buscar por ISBN, Id de Ejemplar, Id de Planta, Id de Estante u Observaciones");
 
         jButtonMostrarTodos.setText("Mostrar Todos");
         jButtonMostrarTodos.addActionListener(new java.awt.event.ActionListener() {
@@ -247,33 +262,33 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         jLabel7.setText("Ordenar por");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel4.setText("Editorial (Id):");
+        jLabel4.setText("Planta (Id):");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel5.setText("Número:");
+        jLabel5.setText("Estante (Id):");
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel8.setText("Fecha:");
-
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel9.setText("*Descripción:");
+        jLabel8.setText("*Observaciones:");
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel10.setText("(*) Indica un campo opcional.");
 
-        jButtonVerLibros.setText("Ver Libros");
-        jButtonVerLibros.addActionListener(new java.awt.event.ActionListener() {
+        jButtonVerEdiciones.setText("Ver Ediciones");
+        jButtonVerEdiciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonVerLibrosActionPerformed(evt);
+                jButtonVerEdicionesActionPerformed(evt);
             }
         });
 
-        jButtonVerEditoriales.setText("Ver Editoriales");
-        jButtonVerEditoriales.addActionListener(new java.awt.event.ActionListener() {
+        jButtonVerLogisitca.setText("Ver Logística");
+        jButtonVerLogisitca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonVerEditorialesActionPerformed(evt);
+                jButtonVerLogisitcaActionPerformed(evt);
             }
         });
+
+        jLabelInformeIsbn.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        jLabelInformeIsbn.setForeground(new java.awt.Color(255, 51, 51));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -288,7 +303,7 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
                             .addComponent(jTextFieldBuscar)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6)
-                                .addGap(0, 162, Short.MAX_VALUE)))
+                                .addGap(0, 151, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
@@ -306,28 +321,32 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(jLabel4)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9))
+                            .addComponent(jLabel8))
                         .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldDescripcion)
-                            .addComponent(jTextFieldIsbn, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldNumero, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jDateChooserFecha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jTextFieldEditorial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldLibro, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelInformeIsbn)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButtonVerLibros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButtonVerEditoriales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonGrabar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(jTextFieldObservaciones, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jTextFieldIsbn, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jButtonVerEdiciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jTextFieldId)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(jTextFieldEstante, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextFieldPlanta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jButtonVerLogisitca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButtonGrabar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addGap(31, 31, 31))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -348,38 +367,40 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextFieldIsbn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonNuevo))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextFieldLibro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonActualizar)
-                    .addComponent(jButtonVerLibros))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonEliminar)
-                    .addComponent(jTextFieldEditorial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jButtonVerEditoriales))
-                .addGap(18, 18, 18)
+                    .addComponent(jButtonNuevo)
+                    .addComponent(jButtonVerEdiciones))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelInformeIsbn)
+                .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonGrabar)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel5)
-                        .addComponent(jTextFieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jButtonVerLogisitca)
+                            .addComponent(jTextFieldPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jTextFieldEstante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonActualizar)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonEliminar)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonGrabar)))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jDateChooserFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jTextFieldDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancelar)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
@@ -392,7 +413,7 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonMostrarTodos)
-                .addGap(23, 23, 23))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pack();
@@ -407,30 +428,40 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
 
     private void jButtonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActualizarActionPerformed
         try {
-            String isbnActualizar = JOptionPane.showInputDialog(this, "Ingrese el ISBN de la edición a mofificar: ");
-            if (validar(isbnActualizar)) {
-                ediciones = negocio.consultarEdicion(isbnActualizar);
-                if (!ediciones.isEmpty()) {
-                    edicion = ediciones.get(0);
-                    ediciones.clear();
+            JTextField campoISBN = new JTextField(13);
+            JTextField campoId = new JTextField(4);
+            JPanel panel = new JPanel();
+            panel.add(new JLabel("ISBN: "));
+            panel.add(campoISBN);
+            panel.add(Box.createHorizontalStrut(15)); 
+            panel.add(new JLabel("Id: "));
+            panel.add(campoId);
+            int result = JOptionPane.showConfirmDialog(this, panel, "Ingrese ISBN e Id", JOptionPane.OK_CANCEL_OPTION);
+            String isbnActualizar = "";
+            String id = "";
+            if (result == JOptionPane.OK_OPTION) {
+               isbnActualizar = campoISBN.getText();
+               id = campoId.getText();
+            }
+            if (validar(isbnActualizar) && entero(id)) {
+                ejemplares = negocio.consultarEjemplar(isbnActualizar, Integer.parseInt(id));
+                if (!ejemplares.isEmpty()) {
+                    ejemplar = ejemplares.get(0);
+                    ejemplares.clear();
                     JOptionPane.showMessageDialog(this, "Modifique los datos de la edición en la ventana principal y luego presione Grabar.", "Nota", JOptionPane.INFORMATION_MESSAGE);
                     this.activarBotones(false);
                     this.activarTextos(true);
-                    jTextFieldIsbn.setText(edicion.getIsbn());
-                    jTextFieldLibro.setText(String.valueOf(edicion.getLibro_id()));
-                    jTextFieldEditorial.setText(String.valueOf(edicion.getEditorial_id()));
-                    this.jTextFieldNumero.setText(String.valueOf(edicion.getNumero()));
-                    this.jTextFieldDescripcion.setText(edicion.getDescripcion());
-                    int anio = Integer.parseInt(edicion.getFecha().substring(0, 4));
-                    int mes = Integer.parseInt(edicion.getFecha().substring(5, 7));
-                    int dia = Integer.parseInt(edicion.getFecha().substring(9));
-                    this.jDateChooserFecha.setCalendar(new GregorianCalendar(anio, mes - 1, dia));
+                    jTextFieldIsbn.setText(ejemplar.getEdicion_isbn());
+                    jTextFieldId.setText(String.valueOf(ejemplar.getId()));
+                    this.jTextFieldPlanta.setText(String.valueOf(ejemplar.getPlanta_id()));
+                    this.jTextFieldEstante.setText(String.valueOf(ejemplar.getEstante_id()));
+                    this.jTextFieldObservaciones.setText(ejemplar.getObservaciones());
                     opcion = false;
                 } else {
-                    JOptionPane.showMessageDialog(this, "No existe una edición con el ISBN ingresado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No existe un ejemplar con el ISBN e Id ingresados.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "El ISBN debe tener 13 dígitos y no puede contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El ISBN debe tener 13 dígitos y no puede contener caracteres especiales. El Id debe ser un entero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, "No se pudo recuperar la edición: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -439,58 +470,69 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
 
     private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
         try {
-            String isbnEliminar = JOptionPane.showInputDialog(this, "Ingrese el ISBN de la edición a eliminar: ");
-            if (validar(isbnEliminar)) {
-                ediciones = negocio.consultarEdicion(isbnEliminar);
-                if (!ediciones.isEmpty()) {
-                    edicion = ediciones.get(0);
-                    ediciones.clear();
-                    negocio.eliminar(edicion);
-                    JOptionPane.showMessageDialog(this, "Edición eliminada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
-                    this.vaciarTextos();
+            JTextField campoISBN = new JTextField(13);
+            JTextField campoId = new JTextField(4);
+            JPanel panel = new JPanel();
+            panel.add(new JLabel("ISBN: "));
+            panel.add(campoISBN);
+            panel.add(Box.createHorizontalStrut(15)); 
+            panel.add(new JLabel("Id: "));
+            panel.add(campoId);
+            int result = JOptionPane.showConfirmDialog(this, panel, "Ingrese ISBN e Id", JOptionPane.OK_CANCEL_OPTION);
+            String isbnEliminar = "";
+            String id = "";
+            if (result == JOptionPane.OK_OPTION) {
+               isbnEliminar = campoISBN.getText();
+               id = campoId.getText();
+            }
+            if (validar(isbnEliminar) && entero(id)) {
+                ejemplares = negocio.consultarEjemplar(isbnEliminar, Integer.parseInt(id));
+                if (!ejemplares.isEmpty()) {
+                    ejemplar = ejemplares.get(0);
+                    ejemplares.clear();
+                    if (ejemplar.getPrestado() == 0) {
+                        int respuesta = JOptionPane.showConfirmDialog(null, "Al borrar un ejemplar también se borrarán todos los registros de préstamos del mismo.\n¿Está seguro de que quiere continuar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            negocio.eliminar(ejemplar);
+                            JOptionPane.showMessageDialog(this, "Ejemplar eliminado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                            this.vaciarTextos();
+                        }   
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No se puede eliminar el ejemplar debido a que un usuario lo tiene en préstamo.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    }       
                 } else {
-                    JOptionPane.showMessageDialog(this, "No existe una edición con el ISBN ingresado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No existe un ejemplar con el ISBN e Id ingresados.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "El ISBN debe tener 13 dígitos y no puede contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El ISBN debe tener 13 dígitos y no puede contener caracteres especiales. El Id debe ser un entero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, "No se pudo recuperar la edición: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo recuperar el ejemplar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonEliminarActionPerformed
 
     private void jButtonGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarActionPerformed
         try {
-            if (validar(jTextFieldIsbn.getText())) {
-                GregorianCalendar calendar = (GregorianCalendar) this.jDateChooserFecha.getCalendar();
-                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-                fmt.setCalendar(calendar);
-                String fecha = fmt.format(calendar.getTime());
+            if (validar(this.jTextFieldIsbn.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Edicion(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldLibro.getText()), Integer.parseInt(this.jTextFieldEditorial.getText()), Integer.parseInt(this.jTextFieldNumero.getText()), fecha, this.jTextFieldDescripcion.getText()));
-                    JOptionPane.showMessageDialog(this, "Edición ingresada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jTextFieldPlanta.getText()), Integer.parseInt(this.jTextFieldEstante.getText()), 0, this.jTextFieldObservaciones.getText()));
+                    JOptionPane.showMessageDialog(this, "Ejemplar ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    edicion.setLibro_id(Integer.parseInt(this.jTextFieldLibro.getText()));
-                    edicion.setEditorial_id(Integer.parseInt(this.jTextFieldEditorial.getText()));
-                    edicion.setNumero(Integer.parseInt(this.jTextFieldNumero.getText()));
-                    edicion.setFecha(fecha);
-                    edicion.setDescripcion(this.jTextFieldDescripcion.getText());
-                    negocio.actualizar(edicion);
-                    JOptionPane.showMessageDialog(this, "Edición actualizada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                    ejemplar.setPlanta_id(Integer.parseInt(this.jTextFieldPlanta.getText()));
+                    ejemplar.setEstante_id(Integer.parseInt(this.jTextFieldEstante.getText()));
+                    ejemplar.setObservaciones(this.jTextFieldObservaciones.getText());
+                    negocio.actualizar(ejemplar);
+                    JOptionPane.showMessageDialog(this, "Ejemplar actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
                 this.activarBotones(true);
                 this.activarTextos(false);
                 this.vaciarTextos();
                 this.jTextFieldIsbn.setEditable(false);
             } else {
-                JOptionPane.showMessageDialog(this, "El ISBN debe tener 13 dígitos. El número de edición debe ser un entero. Los datos no deben contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El ISBN debe tener 13 dígitos. Los Ids de planta y estante deben ser enteros. Los datos no deben contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
-        } catch (Exception e) {
-            if (e.getClass().equals(NumberFormatException.class)) {
-                JOptionPane.showMessageDialog(this, "El Id del libro, de editorial y el número deben ser enteros.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "La edición no fue grabada: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, "El ejemplar no fue grabado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonGrabarActionPerformed
 
@@ -505,10 +547,10 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         try {
             String busqueda = jTextFieldBuscar.getText();
             if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                ediciones = negocio.buscarEdiciones(busqueda, jComboOrden.getSelectedIndex());
-                if (!ediciones.isEmpty()) {
+                ejemplares = negocio.buscarEjemplares(busqueda, jComboOrden.getSelectedIndex());
+                if (!ejemplares.isEmpty()) {
                     this.cargarDatos();
-                    ediciones.clear();
+                    ejemplares.clear();
                 } else {
                     JOptionPane.showMessageDialog(this, "No existen resultados para la búsqueda.", "Nota", JOptionPane.INFORMATION_MESSAGE);
                 }   
@@ -516,29 +558,47 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "La búsqueda no debe contener caracteres especiales.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }       
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de ediciones: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de ejemplares: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jButtonMostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMostrarTodosActionPerformed
         try {
-            ediciones = negocio.todasEdiciones(jComboOrden.getSelectedIndex());
+            ejemplares = negocio.todosEjemplares(jComboOrden.getSelectedIndex());
             this.cargarDatos();
-            ediciones.clear();
+            ejemplares.clear();
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de ediciones: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo recuperar la lista de ejemplares: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButtonMostrarTodosActionPerformed
 
-    private void jButtonVerLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerLibrosActionPerformed
-        UILibrosAlternativa ui = new UILibrosAlternativa();
+    private void jButtonVerEdicionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerEdicionesActionPerformed
+        UIEdicionesAlternativa ui = new UIEdicionesAlternativa();
         ui.iniciar();
-    }//GEN-LAST:event_jButtonVerLibrosActionPerformed
+        /*UIEdiciones ui = new UIEdiciones();
+        ui.iniciar();*/
+    }//GEN-LAST:event_jButtonVerEdicionesActionPerformed
 
-    private void jButtonVerEditorialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerEditorialesActionPerformed
-        UIEditoriales ui = new UIEditoriales();
+    private void jButtonVerLogisitcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerLogisitcaActionPerformed
+        UILogistica ui = new UILogistica();
         ui.iniciar();
-    }//GEN-LAST:event_jButtonVerEditorialesActionPerformed
+    }//GEN-LAST:event_jButtonVerLogisitcaActionPerformed
+
+    private void jTextFielIsbnKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFielIsbnKeyReleased
+        if(this.jTextFieldIsbn.getText().length() == 13) {
+            List<Edicion> ediciones = negocio.consultarEdicion(this.jTextFieldIsbn.getText());
+            if (ediciones.isEmpty()) {
+                this.jLabelInformeIsbn.setText("* Ingrese un ISBN válido.");
+                this.jTextFieldId.setText("");
+            } else {
+                this.jLabelInformeIsbn.setText("");
+                this.jTextFieldId.setText(String.valueOf(negocio.proximoID(Ejemplar.class, ediciones.get(0).getIsbn())));
+            }
+        } else {
+            this.jLabelInformeIsbn.setText("* Un ISBN tiene 13 dígitos.");
+            this.jTextFieldId.setText("");
+        }
+    }//GEN-LAST:event_jTextFielIsbnKeyReleased
 
     /**
      * @param args the command line arguments
@@ -583,10 +643,9 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
     private javax.swing.JButton jButtonGrabar;
     private javax.swing.JButton jButtonMostrarTodos;
     private javax.swing.JButton jButtonNuevo;
-    private javax.swing.JButton jButtonVerEditoriales;
-    private javax.swing.JButton jButtonVerLibros;
+    private javax.swing.JButton jButtonVerEdiciones;
+    private javax.swing.JButton jButtonVerLogisitca;
     private javax.swing.JComboBox<String> jComboOrden;
-    private com.toedter.calendar.JDateChooser jDateChooserFecha;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -596,14 +655,14 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelInformeIsbn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableEdiciones;
     private javax.swing.JTextField jTextFieldBuscar;
-    private javax.swing.JTextField jTextFieldDescripcion;
-    private javax.swing.JTextField jTextFieldEditorial;
+    private javax.swing.JTextField jTextFieldEstante;
+    private javax.swing.JTextField jTextFieldId;
     private javax.swing.JTextField jTextFieldIsbn;
-    private javax.swing.JTextField jTextFieldLibro;
-    private javax.swing.JTextField jTextFieldNumero;
+    private javax.swing.JTextField jTextFieldObservaciones;
+    private javax.swing.JTextField jTextFieldPlanta;
     // End of variables declaration//GEN-END:variables
 }

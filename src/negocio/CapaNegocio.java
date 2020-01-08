@@ -75,21 +75,22 @@ public class CapaNegocio {
         return capaDatos.nextID(nombreTabla, where);
     }
     
-    public int hacerPrestamo(Usuario usuario, List<Ejemplar> lista, String fecha_hora_estimada_entrega) {
+    public String hacerPrestamo(Usuario usuario, List<Ejemplar> lista, String fecha_hora_estimada_entrega) {
         try {
             if (usuario.getPuede_prestamo() == 1) {
                 capaDatos.inicioT();
                 String fecha_hora_prestamo = fecha_hora.format(new Timestamp(System.currentTimeMillis()));
                 String nombreTabla = Ejemplar.class.getSimpleName();
+                String [] clavePrimariaEjemplar = capaDatos.obtenerClavePrimariaT(nombreTabla);
                 for (Ejemplar ejemplar : lista) {
                     if (ejemplar.getPrestado() == 1) {
                         capaDatos.rollbackT();
                         capaDatos.finT();
-                        return 2; // Un libro ya está prestado
+                        return "ISBN: " + ejemplar.getEdicion_isbn() + " Id: " + ejemplar.getId(); // Un libro ya está prestado
                     } else {
                         ejemplar.setPrestado(1);
                         capaDatos.insertT(new Alquiler(usuario.getCedula(), ejemplar.getEdicion_isbn(), ejemplar.getId(), fecha_hora_prestamo, fecha_hora_estimada_entrega), Alquiler.class.getSimpleName());
-                        capaDatos.updateT(ejemplar, nombreTabla, capaDatos.obtenerClavePrimariaT(nombreTabla));
+                        capaDatos.updateT(ejemplar, nombreTabla, clavePrimariaEjemplar);
                     }
                 }
                 usuario.setPuede_prestamo(0);
@@ -97,9 +98,9 @@ public class CapaNegocio {
                 capaDatos.updateT(usuario, nombreTabla, capaDatos.obtenerClavePrimariaT(nombreTabla));
                 capaDatos.commitT();
                 capaDatos.finT();
-                return 0; // Éxito
+                return "OK"; // Éxito
             } else {
-                return 1; // El usuario tiene un préstamo pendiente
+                return "U"; // El usuario tiene un préstamo pendiente
             }
         } catch(Exception e) {
             capaDatos.rollbackT();
@@ -117,15 +118,17 @@ public class CapaNegocio {
                 usuario.setPuede_prestamo(1);
                 capaDatos.updateT(usuario, nombreTabla, capaDatos.obtenerClavePrimariaT(nombreTabla));
                 nombreTabla = Alquiler.class.getSimpleName();
+                String [] clavePrimariaAlquiler = capaDatos.obtenerClavePrimariaT(nombreTabla);
                 for (Alquiler alquiler : lista) {
                     alquiler.setFecha_hora_entrega(fecha_hora_entrega);
-                    capaDatos.updateT(alquiler, nombreTabla, capaDatos.obtenerClavePrimariaT(nombreTabla));
+                    capaDatos.updateT(alquiler, nombreTabla, clavePrimariaAlquiler);
                 }
                 nombreTabla = Ejemplar.class.getSimpleName();
+                String [] clavePrimariaEjemplar = capaDatos.obtenerClavePrimariaT(nombreTabla);
                 for (Alquiler alquiler : lista) {
-                    Ejemplar ejemplar = this.consultarT(Ejemplar.class, Edicion.nombreAtributos()[0] + " = '" + alquiler.getEdicion_isbn() + "' AND " + Edicion.nombreAtributos()[1] + " = " + alquiler.getEjemplar_id(), null).get(0);
+                    Ejemplar ejemplar = this.consultarT(Ejemplar.class, Ejemplar.nombreAtributos()[0] + " = '" + alquiler.getEdicion_isbn() + "' AND " + Ejemplar.nombreAtributos()[1] + " = " + alquiler.getEjemplar_id(), null).get(0);
                     ejemplar.setPrestado(0);
-                    capaDatos.updateT(ejemplar, nombreTabla, capaDatos.obtenerClavePrimariaT(nombreTabla));
+                    capaDatos.updateT(ejemplar, nombreTabla, clavePrimariaEjemplar);
                 }
                 capaDatos.commitT();
                 capaDatos.finT();
@@ -321,6 +324,11 @@ public class CapaNegocio {
         return lista;
     }
     
+    public List<Ejemplar> consultarEjemplares(String isbn) {
+        List<Ejemplar> lista = consultar(Ejemplar.class, Ejemplar.nombreAtributos()[0] + " = '" + isbn + "'", null);
+        return lista;
+    }
+    
     public List<Ejemplar> buscarEjemplares(String busqueda, int orden) {
         List<Ejemplar> lista;
         try {
@@ -334,6 +342,22 @@ public class CapaNegocio {
     
     public List<Ejemplar> todosEjemplares(int orden) {
         List<Ejemplar> lista = consultar(Ejemplar.class, null, Ejemplar.nombreAtributos()[orden]);
+        return lista;
+    }
+    
+    public List<Alquiler> consultarAlquiler(String usuario_cedula) {
+        List<Alquiler> lista = consultar(Alquiler.class, Alquiler.nombreAtributos()[0] + " = '" + usuario_cedula + "' AND " + Alquiler.nombreAtributos()[5] + " IS NULL", null);
+        return lista;
+    }
+    
+    public List<Alquiler> buscarAlquileres(String busqueda, int orden) {
+        List<Alquiler> lista;
+        lista = consultar(Alquiler.class, Alquiler.nombreAtributos()[0] + " LIKE '%" + busqueda + "%' OR " + Alquiler.nombreAtributos()[1] + " LIKE '%" + busqueda + "%' OR " + Alquiler.nombreAtributos()[3] + " LIKE '%" + busqueda + "%' OR " + Alquiler.nombreAtributos()[4] + " LIKE '%" + busqueda + "%' OR " + Alquiler.nombreAtributos()[5] + " LIKE '%" + busqueda + "%'", Alquiler.nombreAtributos()[orden]);
+        return lista;
+    }
+    
+    public List <Alquiler> todosAlquileres(int orden) {
+        List<Alquiler> lista = consultar(Alquiler.class, null, Alquiler.nombreAtributos()[orden]);
         return lista;
     }
   

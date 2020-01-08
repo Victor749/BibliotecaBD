@@ -51,6 +51,7 @@ public class UIMenu extends javax.swing.JFrame {
         jMenuItemAcercaDe = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Stencil", 0, 24)); // NOI18N
         jLabel1.setText("bibliotecaria");
@@ -201,10 +202,10 @@ public class UIMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemEditorialesActionPerformed
 
     private void jMenuItemLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLibrosActionPerformed
-        /*UILibros ui = new UILibros();
-        ui.iniciar();*/
-        UILibrosAlternativa ui = new UILibrosAlternativa();
+        UILibros ui = new UILibros();
         ui.iniciar();
+       /*UILibrosAlternativa ui = new UILibrosAlternativa();
+        ui.iniciar();*/
     }//GEN-LAST:event_jMenuItemLibrosActionPerformed
 
     private void jMenuItemGestorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGestorActionPerformed
@@ -212,7 +213,8 @@ public class UIMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemGestorActionPerformed
 
     private void jMenuItemPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPrestamosActionPerformed
-        // TODO add your handling code here:
+        UIPrestamos ui = new UIPrestamos();
+        ui.iniciar();
     }//GEN-LAST:event_jMenuItemPrestamosActionPerformed
 
     private void jMenuItemAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAcercaDeActionPerformed
@@ -223,13 +225,15 @@ public class UIMenu extends javax.swing.JFrame {
     private void jMenuItemEjemplaresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEjemplaresActionPerformed
         UIEjemplares ui = new UIEjemplares();
         ui.iniciar();
+        /*UIEjemplaresAlternativa ui = new UIEjemplaresAlternativa();
+        ui.iniciar();*/
     }//GEN-LAST:event_jMenuItemEjemplaresActionPerformed
 
     private void jMenuItemEdicionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEdicionesActionPerformed
-        /*UIEdiciones ui = new UIEdiciones();
-        ui.iniciar();*/
-        UIEdicionesAlternativa ui = new UIEdicionesAlternativa();
+        UIEdiciones ui = new UIEdiciones();
         ui.iniciar();
+        /*UIEdicionesAlternativa ui = new UIEdicionesAlternativa();
+        ui.iniciar();*/
     }//GEN-LAST:event_jMenuItemEdicionesActionPerformed
 
     /**

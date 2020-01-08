@@ -42,6 +42,7 @@ public class UIAcercaDe extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/logou.png"))); // NOI18N
 
@@ -84,7 +85,7 @@ public class UIAcercaDe extends javax.swing.JFrame {
                         .addGap(108, 108, 108)
                         .addComponent(jLabel5))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(131, 131, 131)
+                        .addGap(130, 130, 130)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel7)
                             .addComponent(jLabel6))))
@@ -105,11 +106,11 @@ public class UIAcercaDe extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addGap(26, 26, 26)
                 .addComponent(jLabel5)
-                .addGap(27, 27, 27)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel7)
-                .addGap(45, 45, 45))
+                .addGap(54, 54, 54))
         );
 
         pack();
