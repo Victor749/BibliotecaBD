@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author USUARIO
@@ -359,6 +360,79 @@ public class CapaDatos {
         return lista;
     }
     
+    // Arma la condición Where para una búsqueda en una tabla
+    public String searchWhere(Class<?> clase, String busqueda) {
+        StringBuilder where = new StringBuilder();
+        int searchInt;
+        try {
+            searchInt = Integer.parseInt(busqueda);
+        } catch (NumberFormatException e) {
+            searchInt = -1;
+        }
+        for(Field campo : clase.getDeclaredFields()) {
+            String nombre = campo.getName();
+            String par;
+            if (campo.getType().equals(String.class)) {
+                par = "UPPER(" + nombre + ") LIKE UPPER('%" + busqueda + "%')";
+            } else {
+                if (searchInt != -1) {
+                    par = nombre + " = " + searchInt;
+                }  else {
+                    par = "";
+                }  
+            }
+            if(where.length() > 1 && !par.equals("")) {
+                where.append(" OR ");
+            }
+            where.append(par);
+        }
+        return where.toString();
+    }
+    
+    // Arma la condición Where para obtener un objeto específico
+    public String queryOneWhereString(Class<?> clase, String [] clavePrimaria, String [] clavePrimariaValues) {
+        StringBuilder where = new StringBuilder();
+        int i = 0;
+        for(Field campo : clase.getDeclaredFields()) {
+            String nombre = campo.getName();
+            String par;
+            if(compCadenaArreglo(nombre, clavePrimaria)) {
+                if (campo.getType().equals(String.class)) {
+                    par = nombre + " = '" + clavePrimariaValues[i] + "'";
+                } else {
+                    par = nombre + " = " + clavePrimariaValues[i];
+                }
+                if(where.length() > 1) {
+                    where.append(" AND ");
+                }
+                where.append(par);
+                i++;
+            }
+        }
+        return where.toString();
+    }
+    
+    // Arma la condición Where una consulta con una condición simple =
+    public String queryWhereString(Class<?> clase, String condicionName, String condicionValue) {
+        try {
+            Field campo = clase.getDeclaredField(condicionName);
+            String where;
+            if (campo.getType().equals(String.class)) {
+                where = condicionName + " = '" + condicionValue + "'";
+            } else {
+                where = condicionName + " = " + condicionValue;
+            }
+            return where;
+        } catch (NoSuchFieldException | SecurityException e) {
+            throw new RuntimeException("Campo con nombre no existente: " + e.getMessage(), e);
+        }
+    }
+    
+    // Arma la condición Where una consulta con una condición simple Like
+    public String queryWhereLikeString(Class<?> clase, String condicionName, String condicionValue) {
+        return "UPPER(" + condicionName + ") LIKE UPPER('%" + condicionValue + "%')";
+    }
+    
     // Carga los campos de un ResultSet en un objeto
     private void cargarResultadoObjeto(ResultSet resultado, Object objeto) throws IllegalArgumentException, IllegalAccessException, SQLException { 
         Class<?> clase = objeto.getClass();
@@ -580,6 +654,12 @@ public class CapaDatos {
             desconectarBD();
             throw new RuntimeException("Error durante obtención de útimo ID: " + e.getMessage(), e);
         }
+    }
+    
+    // Dada dos columnas, forma una consulta para ver si el valor de la segunda columna es nulo
+    // para cierto valor de la primera columna
+    public String queryGivenOneOtherNull(String columna1, String columna2, String valorColumna1) {
+        return columna1 + " = '" + valorColumna1 + "' AND " + columna2 + " IS NULL";
     }
     
     public ResultSet makeQuery(String sql) throws SQLException{ 

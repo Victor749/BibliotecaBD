@@ -75,7 +75,7 @@ public class CapaNegocio {
         String nombreTabla = clase.getSimpleName();
         String where = null;
         if (!(valorAtributoEntidadFuerte == null || valorAtributoEntidadFuerte.isEmpty())) {
-            where = capaDatos.obtenerClavePrimaria(nombreTabla)[0] + " = '" + valorAtributoEntidadFuerte + "'";
+            where = capaDatos.queryWhereString(clase, capaDatos.obtenerClavePrimaria(nombreTabla)[0], valorAtributoEntidadFuerte);
         }
         return capaDatos.nextID(nombreTabla, where);
     }
@@ -86,7 +86,7 @@ public class CapaNegocio {
         String nombreTabla = clase.getSimpleName();
         String where = null;
         if (valorAtributoEntidadFuerte != 0) {
-            where = capaDatos.obtenerClavePrimaria(nombreTabla)[0] + " = " + valorAtributoEntidadFuerte;
+            where = capaDatos.queryWhereString(clase, capaDatos.obtenerClavePrimaria(nombreTabla)[0], String.valueOf(valorAtributoEntidadFuerte));
         }
         return capaDatos.nextID(nombreTabla, where);
     }
@@ -146,7 +146,8 @@ public class CapaNegocio {
                 nombreTabla = Ejemplar.class.getSimpleName();
                 String [] clavePrimariaEjemplar = capaDatos.obtenerClavePrimariaT(nombreTabla);
                 for (Alquiler alquiler : lista) {
-                    Ejemplar ejemplar = this.consultarT(Ejemplar.class, Ejemplar.nombreAtributos()[0] + " = '" + alquiler.getEdicion_isbn() + "' AND " + Ejemplar.nombreAtributos()[1] + " = " + alquiler.getEjemplar_id(), null).get(0);
+                    String [] valores = {alquiler.getEdicion_isbn(), String.valueOf(alquiler.getEjemplar_id())};
+                    Ejemplar ejemplar = this.consultarT(Ejemplar.class, capaDatos.queryOneWhereString(Ejemplar.class, clavePrimariaEjemplar, valores)/*Ejemplar.nombreAtributos()[0] + " = '" + alquiler.getEdicion_isbn() + "' AND " + Ejemplar.nombreAtributos()[1] + " = " + alquiler.getEjemplar_id()*/, null).get(0);
                     ejemplar.setPrestado(0);
                     capaDatos.updateT(ejemplar, nombreTabla, clavePrimariaEjemplar);
                 }
@@ -167,12 +168,13 @@ public class CapaNegocio {
     // Se usan los métodos de consulta anteriormente definidos
     
     public List<Usuario> consultarUsuario(String cedula) {
-        List<Usuario> lista = consultar(Usuario.class, Usuario.nombreAtributos()[0] + " = '" + cedula + "'", null);
+        String [] valores = {cedula};
+        List<Usuario> lista = consultar(Usuario.class, capaDatos.queryOneWhereString(Usuario.class, capaDatos.obtenerClavePrimaria(Usuario.class.getSimpleName()), valores), null);
         return lista;
     }
     
     public List<Usuario> buscarUsuarios(String busqueda, int orden) {
-        List<Usuario> lista = consultar(Usuario.class, "UPPER(" + Usuario.nombreAtributos()[0] + ") LIKE UPPER('%" + busqueda + "%') OR " + "UPPER(" +  Usuario.nombreAtributos()[1] + ") LIKE UPPER('%" + busqueda + "%') OR " + "UPPER(" + Usuario.nombreAtributos()[2] + ") LIKE UPPER('%" + busqueda + "%')", Usuario.nombreAtributos()[orden]);
+        List<Usuario> lista = consultar(Usuario.class, capaDatos.searchWhere(Usuario.class, busqueda), Usuario.nombreAtributos()[orden]);
         return lista;
     }
     
@@ -182,28 +184,24 @@ public class CapaNegocio {
     }
     
     public List<Autor> consultarAutor(int id) {
-        List<Autor> lista = consultar(Autor.class, Autor.nombreAtributos()[0] + " = " + id, null);
+        String [] valores = {String.valueOf(id)};
+        List<Autor> lista = consultar(Autor.class, capaDatos.queryOneWhereString(Autor.class, capaDatos.obtenerClavePrimaria(Autor.class.getSimpleName()), valores), null);
         return lista;
     }
     
     public List<Autor> consultarAutor(String nombre) {
-        List<Autor> lista = consultar(Autor.class, Autor.nombreAtributos()[1] + " = '" + nombre + "'", null);
+        List<Autor> lista = consultar(Autor.class, capaDatos.queryWhereString(Autor.class, Autor.nombreAtributos()[1], nombre), null);
         return lista;
     }
     
     public List<Autor> consultarAutores(String busqueda, int limite) {
-        List<Autor> lista = consultar(Autor.class, Autor.nombreAtributos()[1] + " LIKE '%" + busqueda + "%'", Autor.nombreAtributos()[1], limite);
+        List<Autor> lista = consultar(Autor.class, capaDatos.queryWhereLikeString(Autor.class, Autor.nombreAtributos()[1], busqueda), Autor.nombreAtributos()[1], limite);
         return lista;
     }
     
     public List<Autor> buscarAutores(String busqueda, int orden) {
         List<Autor> lista;
-        try {
-            int id = Integer.parseInt(busqueda);
-            lista = consultar(Autor.class, Autor.nombreAtributos()[0] + " = " + String.valueOf(id) + " OR " + "UPPER(" + Autor.nombreAtributos()[1] + ") LIKE UPPER('%" + busqueda + "%')", Autor.nombreAtributos()[orden]);
-        } catch (NumberFormatException e) {
-            lista = consultar(Autor.class, "UPPER(" + Autor.nombreAtributos()[1] + ") LIKE UPPER('%" + busqueda + "%')", Autor.nombreAtributos()[orden]);
-        }
+        lista = consultar(Autor.class, capaDatos.searchWhere(Autor.class, busqueda), Autor.nombreAtributos()[orden]);
         return lista;
     }
     
@@ -213,28 +211,24 @@ public class CapaNegocio {
     }
     
     public List<Editorial> consultarEditorial(int id) {
-        List<Editorial> lista = consultar(Editorial.class, Editorial.nombreAtributos()[0] + " = " + id, null);
+        String [] valores = {String.valueOf(id)};
+        List<Editorial> lista = consultar(Editorial.class, capaDatos.queryOneWhereString(Editorial.class, capaDatos.obtenerClavePrimaria(Editorial.class.getSimpleName()), valores), null);
         return lista;
     }
     
     public List<Editorial> consultarEditorial(String nombre) {
-        List<Editorial> lista = consultar(Editorial.class, Editorial.nombreAtributos()[1] + " = '" + nombre + "'", null);
+        List<Editorial> lista = consultar(Editorial.class, capaDatos.queryWhereString(Editorial.class, Editorial.nombreAtributos()[1], nombre), null);
         return lista;
     }
     
     public List<Editorial> consultarEditoriales(String busqueda, int limite) {
-        List<Editorial> lista = consultar(Editorial.class, Editorial.nombreAtributos()[1] + " LIKE '%" + busqueda + "%'", Editorial.nombreAtributos()[1], limite);
+        List<Editorial> lista = consultar(Editorial.class, capaDatos.queryWhereLikeString(Editorial.class, Editorial.nombreAtributos()[1], busqueda), Editorial.nombreAtributos()[1], limite);
         return lista;
     }
     
     public List<Editorial> buscarEditoriales(String busqueda, int orden) {
         List<Editorial> lista;
-        try {
-            int id = Integer.parseInt(busqueda);
-            lista = consultar(Editorial.class, Editorial.nombreAtributos()[0] + " = " + String.valueOf(id) + " OR " + "UPPER(" + Editorial.nombreAtributos()[1] + ") LIKE UPPER('%" + busqueda + "%')", Editorial.nombreAtributos()[orden]);
-        } catch (NumberFormatException e) {
-            lista = consultar(Editorial.class, "UPPER(" + Editorial.nombreAtributos()[1] + ") LIKE UPPER('%" + busqueda + "%')", Editorial.nombreAtributos()[orden]);
-        }
+        lista = consultar(Editorial.class, capaDatos.searchWhere(Editorial.class, busqueda), Editorial.nombreAtributos()[orden]);
         return lista;
     }
     
@@ -244,18 +238,14 @@ public class CapaNegocio {
     }
     
     public List<Planta> consultarPlanta(int id) {
-        List<Planta> lista = consultar(Planta.class, Planta.nombreAtributos()[0] + " = " + id, null);
+        String [] valores = {String.valueOf(id)};
+        List<Planta> lista = consultar(Planta.class, capaDatos.queryOneWhereString(Planta.class, capaDatos.obtenerClavePrimaria(Planta.class.getSimpleName()), valores), null);
         return lista;
     }
     
     public List<Planta> buscarPlantas(String busqueda, int orden) {
         List<Planta> lista;
-        try {
-            int id = Integer.parseInt(busqueda);
-            lista = consultar(Planta.class, Planta.nombreAtributos()[0] + " = " + String.valueOf(id) + " OR " + "UPPER(" + Planta.nombreAtributos()[1] + ") LIKE UPPER('%" + busqueda + "%')", Planta.nombreAtributos()[orden]);
-        } catch (NumberFormatException e) {
-            lista = consultar(Planta.class, "UPPER(" + Planta.nombreAtributos()[1] + ") LIKE UPPER('%" + busqueda + "%')", Planta.nombreAtributos()[orden]);
-        }
+        lista = consultar(Planta.class, capaDatos.searchWhere(Planta.class, busqueda), Planta.nombreAtributos()[orden]);
         return lista;
     }
     
@@ -265,23 +255,19 @@ public class CapaNegocio {
     }
     
     public List<Estante> consultarEstante(int idPlanta, int id) {
-        List<Estante> lista = consultar(Estante.class, Estante.nombreAtributos()[0] + " = " + idPlanta + " AND " + Estante.nombreAtributos()[1] + " = " + id, null);
+        String [] valores = {String.valueOf(idPlanta), String.valueOf(id)};
+        List<Estante> lista = consultar(Estante.class, capaDatos.queryOneWhereString(Estante.class, capaDatos.obtenerClavePrimaria(Estante.class.getSimpleName()), valores), null);
         return lista;
     }
     
     public List<Estante> consultarEstantes(int idPlanta) {
-        List<Estante> lista = consultar(Estante.class, Estante.nombreAtributos()[0] + " = " + idPlanta, null);
+        List<Estante> lista = consultar(Estante.class, capaDatos.queryWhereString(Estante.class, Estante.nombreAtributos()[0], String.valueOf(idPlanta)), null);
         return lista;
     }
     
     public List<Estante> buscarEstantes(String busqueda, int orden) {
         List<Estante> lista;
-        try {
-            int id = Integer.parseInt(busqueda);
-            lista = consultar(Estante.class, Estante.nombreAtributos()[0] + " = " + String.valueOf(id) + " OR " + Estante.nombreAtributos()[1] + " = " + String.valueOf(id) + " OR " + "UPPER(" + Estante.nombreAtributos()[2] + ") LIKE UPPER('%" + busqueda + "%')", Estante.nombreAtributos()[orden]);
-        } catch (NumberFormatException e) {
-            lista = consultar(Estante.class, "UPPER(" + Estante.nombreAtributos()[2] + ") LIKE UPPER('%" + busqueda + "%')", Estante.nombreAtributos()[orden]);
-        }
+        lista = consultar(Estante.class, capaDatos.searchWhere(Estante.class, busqueda), Estante.nombreAtributos()[orden]);
         return lista;
     }
     
@@ -291,28 +277,24 @@ public class CapaNegocio {
     }
     
     public List<Libro> consultarLibro(int id) {
-        List<Libro> lista = consultar(Libro.class, Libro.nombreAtributos()[0] + " = " + id, null);
+        String [] valores = {String.valueOf(id)};
+        List<Libro> lista = consultar(Libro.class, capaDatos.queryOneWhereString(Libro.class, capaDatos.obtenerClavePrimaria(Libro.class.getSimpleName()), valores), null);
         return lista;
     }
     
     public List<Libro> consultarLibro(String nombre) {
-        List<Libro> lista = consultar(Libro.class, Libro.nombreAtributos()[1] + " = '" + nombre + "'", null);
+        List<Libro> lista = consultar(Libro.class, capaDatos.queryWhereString(Libro.class, Libro.nombreAtributos()[1], nombre), null);
         return lista;
     }
     
     public List<Libro> consultarLibros(String busqueda, int limite) {
-        List<Libro> lista = consultar(Libro.class, Libro.nombreAtributos()[1] + " LIKE '%" + busqueda + "%'", Libro.nombreAtributos()[1], limite);
+        List<Libro> lista = consultar(Libro.class, capaDatos.queryWhereLikeString(Libro.class, Libro.nombreAtributos()[1], busqueda), Libro.nombreAtributos()[1], limite);
         return lista;
     }
     
     public List<Libro> buscarLibros(String busqueda, int orden) {
         List<Libro> lista;
-        try {
-            int id = Integer.parseInt(busqueda);
-            lista = consultar(Libro.class, Libro.nombreAtributos()[0] + " = " + String.valueOf(id) + " OR " + "UPPER(" + Libro.nombreAtributos()[1] + ") LIKE UPPER('%" + busqueda + "%')" + Libro.nombreAtributos()[2] + " = " + String.valueOf(id), Libro.nombreAtributos()[orden]);
-        } catch (NumberFormatException e) {
-            lista = consultar(Libro.class, "UPPER(" + Libro.nombreAtributos()[1] + ") LIKE UPPER('%" + busqueda + "%')", Libro.nombreAtributos()[orden]);
-        }
+        lista = consultar(Libro.class, capaDatos.searchWhere(Libro.class, busqueda), Libro.nombreAtributos()[orden]);
         return lista;
     }
     
@@ -322,18 +304,14 @@ public class CapaNegocio {
     }
     
     public List<Edicion> consultarEdicion(String isbn) {
-        List<Edicion> lista = consultar(Edicion.class, Edicion.nombreAtributos()[0] + " = '" + isbn + "'", null);
+        String [] valores = {isbn};
+        List<Edicion> lista = consultar(Edicion.class, capaDatos.queryOneWhereString(Edicion.class, capaDatos.obtenerClavePrimaria(Edicion.class.getSimpleName()), valores), null);
         return lista;
     }
     
     public List<Edicion> buscarEdiciones(String busqueda, int orden) {
         List<Edicion> lista;
-        try {
-            int id = Integer.parseInt(busqueda);
-            lista = consultar(Edicion.class, Edicion.nombreAtributos()[0] + " LIKE '%" + busqueda + "%' OR " + Edicion.nombreAtributos()[1] + " = " + String.valueOf(id) + " OR " + Edicion.nombreAtributos()[2] + " = " + String.valueOf(id) + " OR " + Edicion.nombreAtributos()[3] + " = " + String.valueOf(id) + " OR UPPER(" + Edicion.nombreAtributos()[4] + ") LIKE UPPER('%" + busqueda + "%')" + " OR UPPER(" + Edicion.nombreAtributos()[5] + ") LIKE UPPER('%" + busqueda + "%')", Edicion.nombreAtributos()[orden]);
-        } catch (NumberFormatException e) {
-            lista = consultar(Edicion.class, Edicion.nombreAtributos()[0] + " LIKE '%" + busqueda + "%'" + " OR UPPER(" + Edicion.nombreAtributos()[4] + ") LIKE UPPER('%" + busqueda + "%')" + " OR UPPER(" + Edicion.nombreAtributos()[5] + ") LIKE UPPER('%" + busqueda + "%')", Edicion.nombreAtributos()[orden]);
-        }
+        lista = consultar(Edicion.class, capaDatos.searchWhere(Edicion.class, busqueda), Edicion.nombreAtributos()[orden]);
         return lista;
     }
     
@@ -343,23 +321,19 @@ public class CapaNegocio {
     }
     
     public List<Ejemplar> consultarEjemplar(String isbn, int id) {
-        List<Ejemplar> lista = consultar(Ejemplar.class, Ejemplar.nombreAtributos()[0] + " = '" + isbn + "' AND " + Ejemplar.nombreAtributos()[1] + " = " + String.valueOf(id), null);
+        String [] valores = {isbn, String.valueOf(id)};
+        List<Ejemplar> lista = consultar(Ejemplar.class, capaDatos.queryOneWhereString(Ejemplar.class, capaDatos.obtenerClavePrimaria(Ejemplar.class.getSimpleName()), valores), null);
         return lista;
     }
     
     public List<Ejemplar> consultarEjemplares(String isbn) {
-        List<Ejemplar> lista = consultar(Ejemplar.class, Ejemplar.nombreAtributos()[0] + " = '" + isbn + "'", null);
+        List<Ejemplar> lista = consultar(Ejemplar.class, capaDatos.queryWhereString(Ejemplar.class, Ejemplar.nombreAtributos()[0], isbn), null);
         return lista;
     }
     
     public List<Ejemplar> buscarEjemplares(String busqueda, int orden) {
         List<Ejemplar> lista;
-        try {
-            int id = Integer.parseInt(busqueda);
-            lista = consultar(Ejemplar.class, Ejemplar.nombreAtributos()[0] + " LIKE '%" + busqueda + "%' OR " + Ejemplar.nombreAtributos()[1] + " = " + String.valueOf(id) + " OR " + Ejemplar.nombreAtributos()[2] + " = " + String.valueOf(id) + " OR " + Ejemplar.nombreAtributos()[3] + " = " + String.valueOf(id) + " OR UPPER(" + Ejemplar.nombreAtributos()[5] + ") LIKE UPPER('%" + busqueda + "%')", Ejemplar.nombreAtributos()[orden]);
-        } catch (NumberFormatException e) {
-            lista = consultar(Ejemplar.class, Ejemplar.nombreAtributos()[0] + " LIKE '%" + busqueda + "%'" + " OR UPPER(" + Ejemplar.nombreAtributos()[5] + ") LIKE UPPER('%" + busqueda + "%')", Ejemplar.nombreAtributos()[orden]);
-        }
+        lista = consultar(Ejemplar.class, capaDatos.searchWhere(Ejemplar.class, busqueda), Ejemplar.nombreAtributos()[orden]);
         return lista;
     }
     
@@ -369,13 +343,13 @@ public class CapaNegocio {
     }
     
     public List<Alquiler> consultarAlquiler(String usuario_cedula) {
-        List<Alquiler> lista = consultar(Alquiler.class, Alquiler.nombreAtributos()[0] + " = '" + usuario_cedula + "' AND " + Alquiler.nombreAtributos()[5] + " IS NULL", null);
+        List<Alquiler> lista = consultar(Alquiler.class, capaDatos.queryGivenOneOtherNull(Alquiler.nombreAtributos()[0], Alquiler.nombreAtributos()[5], usuario_cedula), null);
         return lista;
     }
     
     public List<Alquiler> buscarAlquileres(String busqueda, int orden) {
         List<Alquiler> lista;
-        lista = consultar(Alquiler.class, Alquiler.nombreAtributos()[0] + " LIKE '%" + busqueda + "%' OR " + Alquiler.nombreAtributos()[1] + " LIKE '%" + busqueda + "%' OR " + Alquiler.nombreAtributos()[3] + " LIKE '%" + busqueda + "%' OR " + Alquiler.nombreAtributos()[4] + " LIKE '%" + busqueda + "%' OR " + Alquiler.nombreAtributos()[5] + " LIKE '%" + busqueda + "%'", Alquiler.nombreAtributos()[orden]);
+        lista = consultar(Alquiler.class, capaDatos.searchWhere(Alquiler.class, busqueda), Alquiler.nombreAtributos()[orden]);
         return lista;
     }
     
