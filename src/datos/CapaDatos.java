@@ -22,18 +22,23 @@ public class CapaDatos {
     
     // Capa de Datos Genérica
     
+    // Objeto de conexion con la base de datos
     private Connection conexion;
     
+    // Conectar con la base de datos
     private void conectarBD() {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             conexion = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","usuario","1234");
         } catch(SQLException | ClassNotFoundException | IllegalArgumentException e) {
             String mensaje = "No se puede conectar a la BD: " + e.getMessage();
+            // El manejo de excepciones en todo el programa se hace de esta forma
             throw new RuntimeException(mensaje, e);
+            // Permite mostrar las excepciones entre las capas a través de las capas
         }
     }
     
+    // Desconectar de la base de datos
     private void desconectarBD() {
         try {
             conexion.close();
@@ -43,6 +48,8 @@ public class CapaDatos {
         }
     }   
     
+    // Método para formar una sentencia Insert Genérica
+    // Se utiliza el comodín ? para luego  agregar el nombre y valor de los campos
     private String sentenciaInsertSQL(Class<?> clase, String nombreTabla) {
         StringBuilder campos = new StringBuilder();
         StringBuilder valores = new StringBuilder();
@@ -58,6 +65,9 @@ public class CapaDatos {
         return sql; 
     }
     
+    // Método que prepara un PreparedStatement para hacer una inserción con los nombres y valores de los campos de un objeto
+    // Se utiliza la clase java.lang.reflection.Field para hacer una reflexion del objeto en tiempo de ejecución
+    // El nombre de los atributos de los objetos se deben corresponder con los nombres de las columnas de las tablas en la BD
     private PreparedStatement insertSQL(Object objeto, String nombreTabla) {
         PreparedStatement sentencia = null;
         try {
@@ -78,6 +88,11 @@ public class CapaDatos {
         return sentencia;
     }
     
+    // Los métodos que terminen con BD se conectan y desconectan de la base da datos
+    // Además hacen un commit por una única operación
+    
+    // Método genérico para inserción de un objeto
+    // Accesible desde la capa de negocio
     public void insertBD(Object objeto, String nombreTabla) {
         try {
             conectarBD();
@@ -101,6 +116,8 @@ public class CapaDatos {
         }
     }
     
+    // Método que comprueba si una cadena esta dentro de un arreglo
+    // Se usa para determinar si un campo es parte de la clave primaria de una tabla
     private boolean compCadenaArreglo(String cadena, String [] arreglo) {
         for (String partePK : arreglo) {
             if (cadena.equals(partePK)) {
@@ -110,6 +127,10 @@ public class CapaDatos {
         return false;
     }
     
+    // Método para formar una sentencia Update Genérica
+    // Cada update se realiza indicando el valor de la clave primaria de cada objeto (Where)
+    // Esto permite actualizar cada objeto de manera individual
+    // Más abajo se describe el método para obtener la clave primaria
     private String sentenciaUpdateSQL(Class<?> clase, String nombreTabla, String [] clavePrimaria) {
         StringBuilder sets = new StringBuilder();
         StringBuilder where = new StringBuilder();
@@ -136,6 +157,8 @@ public class CapaDatos {
         return sql;
     }
     
+    // Método que prepara un PreparedStatement para hacer una actualización con los nombres y valores de los campos de un objeto
+    // Se utiliza la clase Field (Reflection)
     private PreparedStatement updateSQL(Object objeto, String nombreTabla, String [] clavePrimaria) {
         PreparedStatement sentencia = null;
         try {
@@ -177,6 +200,8 @@ public class CapaDatos {
         return sentencia;
     }
     
+    // Método genérico para actualización de un objeto
+    // Accesible desde la capa de negocio
     public void updateBD(Object objeto, String nombreTabla, String [] clavePrimaria) {
         try {
             conectarBD();
@@ -200,6 +225,8 @@ public class CapaDatos {
         }
     }
     
+    // Método para formar una sentencia Delete Genérica
+    // Se utiliza la clase Field (Reflection)
     private String sentenciaDeleteSQL(Class<?> clase, String nombreTabla, String [] clavePrimaria) {
         StringBuilder where = new StringBuilder();
         for(Field campo : clase.getDeclaredFields()) {
@@ -220,6 +247,7 @@ public class CapaDatos {
         return sql;
     }
     
+    // Método que prepara un PreparedStatement para hacer una eliminación con los nombres y valores de los campos de un objeto
     private PreparedStatement deleteSQL(Object objeto, String nombreTabla, String [] clavePrimaria) {
         PreparedStatement sentencia = null;
         try {
@@ -250,6 +278,8 @@ public class CapaDatos {
         return sentencia;
     }
     
+    // Método genérico para eliminación de un objeto
+    // Accesible desde la capa de negocio
     public void deleteBD(Object objeto, String nombreTabla, String [] clavePrimaria) {
         try {
             conectarBD();
@@ -273,6 +303,8 @@ public class CapaDatos {
         }
     }
     
+    // Consulta genérica que devuelve una lista de objetos genéricos
+    // Se le indica una condición (where) y el orden
     public <T> List <T> selectBD(Class<T> tipo, String nombreTabla, String where, String orderBy) {
         List<T> lista = new ArrayList<>();
         conectarBD();
@@ -298,6 +330,7 @@ public class CapaDatos {
         return lista;
     }
     
+    // Método extra que permite limitar el número de tuplas que devuelva la consulta
     public <T> List <T> selectBD(Class<T> tipo, String nombreTabla, String where, String orderBy, int limit) {
         List<T> lista = new ArrayList<>();
         conectarBD();
@@ -326,6 +359,7 @@ public class CapaDatos {
         return lista;
     }
     
+    // Carga los campos de un ResultSet en un objeto
     private void cargarResultadoObjeto(ResultSet resultado, Object objeto) throws IllegalArgumentException, IllegalAccessException, SQLException { 
         Class<?> clase = objeto.getClass();
         for(Field campo : clase.getDeclaredFields()) {
@@ -360,10 +394,14 @@ public class CapaDatos {
         }
     }
     
+    // Determina si un objeto es de tipo primitivo
     private boolean esTipoPrimitivo(Class<?> tipo) {
         return (tipo == int.class || tipo == long.class || tipo == double.class  || tipo == float.class || tipo == boolean.class || tipo == byte.class || tipo == char.class || tipo == short.class);
     }
  
+    // Empaqueta un valor de tipo primitivo en un objeto
+    // La clase Field requiere que todo sea un objeto
+    // Por eso se requiere este empaquetamiento
     private Class<?> objetoTipoPrimitivo (Class<?> tipo) {
         if(tipo == int.class){return Integer.class;}
         else if(tipo == long.class){return Long.class;}
@@ -379,6 +417,8 @@ public class CapaDatos {
         }
     }
     
+    // Método que consulta la clave primaria de una tabla
+    // como un arreglo de String
     public String [] obtenerClavePrimaria(String nombreTabla) {
         try {
             List<String> pk = new ArrayList<>();
@@ -398,8 +438,13 @@ public class CapaDatos {
         }
     }
     
-    // Transacciones
+    // Operaciones para Transacciones
     
+    // Se distinguen de las operaciones anteriores debido a que el commit no debe hacerse automaticamente en cada operación
+    // Se usa el método setAutoCommit()
+    // Para poder controlar la atomicidad de la transacción desde la capa de negocio se deben usar estos métodos
+    // Tienen una T al final
+
     public void insertT(Object objeto, String nombreTabla) {
         try {
             conexion.setAutoCommit(false);
@@ -471,6 +516,10 @@ public class CapaDatos {
         }
     }
     
+    // Métodos accesibles desde la capa de negocio
+    // para poder controlar el flujo de una transacción
+    
+    // Commit accesible desde capa de negocio
     public void commitT() {
         try {
             conexion.setAutoCommit(false);
@@ -481,6 +530,7 @@ public class CapaDatos {
         }
     }
     
+    // Rollback accesible desde capa de negocio
     public void rollbackT() {
         try {
             conexion.setAutoCommit(false);
@@ -491,16 +541,22 @@ public class CapaDatos {
         }
     }
     
+    // Conectar al inicio de transaccion
     public void inicioT() {
         conectarBD();
     }
     
+    // Desconectar al fin de transaccion
     public void finT() {
         desconectarBD();
     }
     
+    
     // No Genérico (Exclusivo de este programa)
     
+    
+    // Método para obtener el próximo Id de una entidad específica
+    // Realiza una consulta del máximo Id presente en la tabla de dicha entidad
     public int nextID (String nombreTabla, String where) {
         try {
             conectarBD();
@@ -526,15 +582,11 @@ public class CapaDatos {
         }
     }
     
-    public ResultSet makeQuery(String sql) throws SQLException{ //This method should go in CapaDatos
-            
+    public ResultSet makeQuery(String sql) throws SQLException{ 
             this.conectarBD();
-            
             Statement st = conexion.createStatement();
             ResultSet rs = st.executeQuery(sql);
-            
             this.desconectarBD();
-            
             return rs;
     }
     

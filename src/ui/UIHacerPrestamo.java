@@ -6,6 +6,7 @@
 package ui;
 
 import com.toedter.components.JSpinField;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -32,6 +33,7 @@ public class UIHacerPrestamo extends javax.swing.JFrame {
     private Usuario usuario;
     private CapaNegocio negocio;
     private DefaultTableModel modeloTabla;
+    private static final SimpleDateFormat fecha_hora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
     public UIHacerPrestamo() {
         initComponents();
@@ -449,19 +451,23 @@ public class UIHacerPrestamo extends javax.swing.JFrame {
                 hora.add(hhmmss);
             });
             fecha += " " + hora.get(0) + ":" + hora.get(1) + ":" + hora.get(2);
-            String resultado = negocio.hacerPrestamo(usuario, ejemplares, fecha);
-            switch (resultado) {
-                case "OK":
-                    JOptionPane.showMessageDialog(this, "Préstamo efectuado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
-                    this.dispose();
-                    break;
-                case "U":
-                    JOptionPane.showMessageDialog(this, "No se pudo hacer el préstamo. El usuario tiene un préstamo pendiente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(this, "No se pudo hacer el préstamo. Hay un libro que ya está prestado: " + resultado, "Advertencia", JOptionPane.WARNING_MESSAGE);
-                    break;
-            }
+            if (fecha.compareTo(fecha_hora.format(new Timestamp(System.currentTimeMillis()))) <= 0) {
+                JOptionPane.showMessageDialog(this, "Ingrese una fecha y hora válidas.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            } else {
+                String resultado = negocio.hacerPrestamo(usuario, ejemplares, fecha);
+                switch (resultado) {
+                    case "OK":
+                        JOptionPane.showMessageDialog(this, "Préstamo efectuado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
+                        this.dispose();
+                        break;
+                    case "U":
+                        JOptionPane.showMessageDialog(this, "No se pudo hacer el préstamo. El usuario tiene un préstamo pendiente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(this, "No se pudo hacer el préstamo. Hay un libro que ya está prestado: " + resultado, "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        break;
+                }
+            }  
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, "No se pudo efectuar el préstamo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

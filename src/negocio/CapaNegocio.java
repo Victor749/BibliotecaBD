@@ -16,45 +16,60 @@ import java.util.List;
  */
 public class CapaNegocio {
     
-    private final CapaDatos capaDatos;
+    private final CapaDatos capaDatos; // Instancia de la Capa de Datos
     private static final SimpleDateFormat fecha_hora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
     public CapaNegocio() {
         capaDatos = new CapaDatos();
     }
     
+    // Los métodos genéricos para CRUD a nivel de Capa de Negocio
+    // Hacen un mapeo básico del nombre de la tablas, el cual es 
+    // el mismo que el nombre de las clases
+    
+    // Envia a la capa de datos un objeto para insertar
     public void insertar(Object objeto) {
         capaDatos.insertBD(objeto, objeto.getClass().getSimpleName());
     }
     
+    // Envia a la capa de datos un objeto para actualizar
     public void actualizar(Object objeto) {
         String nombreTabla = objeto.getClass().getSimpleName();
         capaDatos.updateBD(objeto, nombreTabla, capaDatos.obtenerClavePrimaria(nombreTabla));
     }
     
+    // Envia a la capa de datos un objeto para eliminar
     public void eliminar(Object objeto) {
         String nombreTabla = objeto.getClass().getSimpleName();
         capaDatos.deleteBD(objeto, nombreTabla, capaDatos.obtenerClavePrimaria(nombreTabla));
     }
     
+    // Métodos para reazlizar consultas de la BD
+    // La capa de datos devuelve una lista de objetos genéricos
+    
+    // Se pasan de atributos una cadena con las condiciones (where) de la consulta y una cadena que indica el orden de la misma
     private <T> List <T> consultar(Class<T> clase, String where, String orderBy) {
         String nombreTabla = clase.getSimpleName();
         List<T> lista = capaDatos.selectBD(clase, nombreTabla, where, orderBy);
         return lista;
     }
     
+    // También se puede limitar el número de tuplas que devuelve la consulta
     private <T> List <T> consultar(Class<T> clase, String where, String orderBy, int limit) {
         String nombreTabla = clase.getSimpleName();
         List<T> lista = capaDatos.selectBD(clase, nombreTabla, where, orderBy, limit);
         return lista;
     }
     
+    // Para consultar en medio de una transacción
+    // Ya que los otros métodos se conectan y desconectan de la base de datos
     private <T> List <T> consultarT(Class<T> clase, String where, String orderBy) {
         String nombreTabla = clase.getSimpleName();
         List<T> lista = capaDatos.selectT(clase, nombreTabla, where, orderBy);
         return lista;
     }
     
+    // Obtiene el proximo id de una entidad determinada
     // valorAtributoEntidadFuerte = null para Entidad Fuerte
     public int proximoID(Class<?> clase, String valorAtributoEntidadFuerte) {
         String nombreTabla = clase.getSimpleName();
@@ -65,6 +80,7 @@ public class CapaNegocio {
         return capaDatos.nextID(nombreTabla, where);
     }
     
+    // Obtiene el proximo id de una entidad determinada
     // valorAtributoEntidadFuerte = 0 para Entidad Fuerte
     public int proximoID(Class<?> clase, int valorAtributoEntidadFuerte) {
         String nombreTabla = clase.getSimpleName();
@@ -75,6 +91,9 @@ public class CapaNegocio {
         return capaDatos.nextID(nombreTabla, where);
     }
     
+    // Transacciones
+    
+    // Transacción para hacer préstamo
     public String hacerPrestamo(Usuario usuario, List<Ejemplar> lista, String fecha_hora_estimada_entrega) {
         try {
             if (usuario.getPuede_prestamo() == 1) {
@@ -109,6 +128,7 @@ public class CapaNegocio {
         }
     }
     
+    // Transacción para devolver préstamo
     public int devolverPrestamo(Usuario usuario, List<Alquiler> lista) {
         try {
             if (usuario.getPuede_prestamo() == 0) {
@@ -142,6 +162,9 @@ public class CapaNegocio {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+    
+    // Consultas específicas para alimentar la UI
+    // Se usan los métodos de consulta anteriormente definidos
     
     public List<Usuario> consultarUsuario(String cedula) {
         List<Usuario> lista = consultar(Usuario.class, Usuario.nombreAtributos()[0] + " = '" + cedula + "'", null);
