@@ -210,6 +210,8 @@ public class UIMenu extends javax.swing.JFrame {
 
     private void jMenuItemGestorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGestorActionPerformed
         // TODO add your handling code here:
+        Querys gestor = new Querys();
+        gestor.iniciar();
     }//GEN-LAST:event_jMenuItemGestorActionPerformed
 
     private void jMenuItemPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPrestamosActionPerformed

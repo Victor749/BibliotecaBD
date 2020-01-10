@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -662,12 +663,94 @@ public class CapaDatos {
         return columna1 + " = '" + valorColumna1 + "' AND " + columna2 + " IS NULL";
     }
     
-    public ResultSet makeQuery(String sql) throws SQLException{ 
+    
+    
+       //se regresa la la informacion necesaria para la creacion de una tabla
+    public ArrayList<Object> makeQueryForTable(String sqlStatement) throws SQLException{ //This method should go in CapaDatos
+            
             this.conectarBD();
+            
             Statement st = conexion.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+            Statement st2 = conexion.createStatement();
+            
+            
+            ResultSet rs = st.executeQuery(sqlStatement);
+            ResultSet rs2 = st2.executeQuery(sqlStatement);
+            
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+            String[] columnas = new String[columnsNumber];
+            for (int i = 1; i <= columnsNumber; i++) {
+                    columnas[i-1] = rsmd.getColumnName(i) ;
+            }
+
+            int rowsNumber=0;
+            while(rs2.next()){
+                String[] arreglo = new String[columnsNumber];
+                for (int i = 1; i <= columnsNumber; i++) {
+                    rs2.getString(i);
+                }   
+                rowsNumber++;
+            }
+            String[][] matriz = new String[rowsNumber][columnsNumber];
+            int i=0;
+            while(rs.next()){
+                String[] arreglo = new String[columnsNumber];
+                for (int j = 1; j <= columnsNumber; j++) {
+                    matriz[i][j-1] = rs.getString(j);
+                }  
+                i++;
+            }
+
+            ArrayList<Object> response = new ArrayList<Object>();
+            response.add(columnas);
+            response.add(matriz);            
+            
             this.desconectarBD();
-            return rs;
+            
+            return response;
+    }
+    
+    //se regresa la  informacion necesaria para llenar un combo 
+    public ArrayList<String> makeQueryForCombo(String sqlStatement) throws SQLException{ //This method should go in CapaDatos
+            
+            this.conectarBD();
+            
+            Statement st = conexion.createStatement();
+            ResultSet rs = st.executeQuery(sqlStatement);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+            
+            ArrayList<String> response = new ArrayList<String>();
+            
+            for (int i = 1; i <= columnsNumber; i++) {
+                    response.add(rsmd.getColumnName(i));
+            }
+
+            this.desconectarBD();
+            
+            return response;
+    }
+    
+    //se regresa la  informacion necesaria para llenar un comboEL combo FOR de la interfaz de usuario
+    public ArrayList<String> makeQueryForComboFOR(String sqlStatement) throws SQLException{ //This method should go in CapaDatos
+            
+            this.conectarBD();
+            
+            Statement st = conexion.createStatement();
+            ResultSet rs = st.executeQuery(sqlStatement);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+            
+            ArrayList<String> response = new ArrayList<String>();
+            
+            while(rs.next()){
+                response.add(rs.getString(1));
+            }
+
+            this.desconectarBD();
+            
+            return response;
     }
     
 }

@@ -1,6 +1,3 @@
-//Añade INNER JOIN y ORDER BY y ON
-//no hagas que el * se añada en una sentencia que no sea SELECT
-//make yNOToNOT_ParamOpcionales unnecessary
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -9,7 +6,7 @@
  */
 package ui;
 
-import datos.CapaDatos;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -61,47 +58,65 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import negocio.Enlace;
+
  
 
 public class Querys extends JFrame {
-    
-    Icon addIcon = new ImageIcon("src/Vista/botonAnadir.png");
-    Icon addIconPressed = new ImageIcon("src/Vista/botonAnadirPressed.png");
-    Icon removeIcon = new ImageIcon("src/Vista/botonQuitar.png");
-    Icon removeIconPressed = new ImageIcon("src/Vista/botonQuitarPressed.png");
-    
+
+
+    // Se cargan los iconos para la interfaz de usuario en las siguientes variables
+
+    Icon addIcon = new ImageIcon("src/ui/botonAnadir.png");
+    Icon addIconPressed = new ImageIcon("src/ui/botonAnadirPressed.png");
+    Icon removeIcon = new ImageIcon("src/ui/botonQuitar.png");
+    Icon removeIconPressed = new ImageIcon("src/ui/botonQuitarPressed.png");
+    Icon queryIcon = new ImageIcon("src/ui/query.png");
+    Icon queryIconPressed = new ImageIcon("src/ui/queryPressed.png");
+    Icon refreshIcon = new ImageIcon("src/ui/refresh.png");
+    Icon refreshIconPressed = new ImageIcon("src/ui/refreshPressed.png");
+
+    // Se declara el JFrame que se utilizara como la interfaz de la vista
     static Querys myFrame;
+    //Se inicializa la variable de la cantidad de sub-frames que se usara
     static int countMe = 0;
     JPanel mainPanel;
     //static Connection con;
     JComboBox fromTable;
     
-    static CapaDatos capaDatos = null;
-    JTextArea consola = new JTextArea();
+    // Se inicia el enlace a la capa de negocio que hace referencia a la capa de datos
+    static Enlace enlace = new Enlace();
+    JTextField consola = new JTextField();
     JScrollPane sp = new JScrollPane();
     JTable tabla = new JTable();
     
-    
+    //Estas listas son las encargadas en mantener la concistencia de la interfaz a crear
     ArrayList<subPanel> listElementsStatement = new ArrayList<subPanel>();
     ArrayList<JComboBox> comboBoxesParam = new ArrayList<JComboBox>();
     ArrayList<JComboBox> comboBoxesSELECT = new ArrayList<JComboBox>();
+    ArrayList<JComboBox> comboBoxesINNERJOIN = new ArrayList<JComboBox>();
+
+    //
+    JInternalFrame internalFrame = null;
     
-    
-    public static void main(String[] args) {
+    //metodo que se llama para inicializar la interfaz
+    public void iniciar() {
         
-        capaDatos = new CapaDatos();
+        //capaDatos = new CapaDatos();
         //capaDatos.conectarBD();
         //con = capaDatos.getConexion();
         
         SwingUtilities.invokeLater(() -> {
             try {
+                //Se llama al metodo para crear y mostrar la interfaz
                 createAndShowGUI();
             } catch (SQLException ex) {
                 Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
- 
+
+
     private static void createAndShowGUI() throws SQLException {
         myFrame = new Querys();
         myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -109,28 +124,32 @@ public class Querys extends JFrame {
         //myFrame.setRelativeTo(null);
         myFrame.setVisible(true);
     }
- 
+
+    //Se coloca en el JFrame que es la interfaz de usuario las partes mas importantes
+    //como el como el Panel que contendra los subpanels y la cabecera ademas de la
+    // del text fiel que contendra la sentencia a crear y sus botones de actualizacion y de solicitud para mostrar el resultado
     private void prepareUI() throws SQLException {
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         
-        
+        //combo principal de donde se muestra las sentencias a crear
         JComboBox combo = new JComboBox();
         
          
-        JButton buttonRemoveAll = new JButton("Remove All");
-        buttonRemoveAll.addActionListener(new ActionListener() {
+//        JButton buttonRemoveAll = new JButton("Remove All");
+//        buttonRemoveAll.addActionListener(new ActionListener() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                countMe=0;
+//                mainPanel.removeAll();
+//                myFrame.pack();
+//            }
+//        });
  
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                countMe=0;
-                mainPanel.removeAll();
-                myFrame.pack();
-            }
-        });
- 
-        
-                
+
+
+        //Se añade las partes aneteriormente menciaonados
         getContentPane().add(mainPanel, BorderLayout.CENTER);
         getContentPane().add(new subPanel(1, -1), BorderLayout.PAGE_START);
         getContentPane().add(new subPanel(0, -1), BorderLayout.PAGE_END);
@@ -142,48 +161,34 @@ public class Querys extends JFrame {
    private void setRelativeTo(Object object) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
    }
- /*
-    private class subPanel extends JPanel {
-         
-        subPanel me;
- 
-        public subPanel() {
-            super();
-            me = this;
-            
-            JLabel myLabel = new JLabel("Hello subPanel(): " + countMe++);
-            add(myLabel);
-            JButton myButtonRemoveMe = new JButton("remove me");
-            myButtonRemoveMe.addActionListener(new ActionListener(){
- 
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    me.getParent().remove(me);
-                    myFrame.pack();
-                }
-            });
-            add(myButtonRemoveMe);
-        }
-    } */
-   
+
+   //Clase anidada que nos servira para crear subpaneles que podran anadirse al mainpanel ya anadido al Frame
    private class subPanel extends JPanel {
-         
+
+
+        //
         subPanel me;
+        //index dependera de la variable countMe de la clase externa
         int index;
+        //bandera para situaciones donde el mismo comportamiento olo debe suceder una vez
         int flag;
         String toSend = "";
+        JComboBox INNERJOINTables;
         
-        
+        //Constructor de clase anidada
         public subPanel(int key, int index) throws SQLException {
+            //se llama al consturctor de la clase padre
             super();
             me = this;
             this.index = index;
             System.out.println("Se ha introducido un nuevo panel: "+ String.valueOf(index));
-            
+
+            //si el constructor se manda con un cero es para crear el subpanel que sera
+            //la linea mas baja donde nuestra sentencia aparecera actualizada y lista para enviar
             if(key == 0){
                 
-                JButton botonActualizar = new JButton("Actualizar");
-                JButton botonSEND = new JButton("SEND");
+                JButton botonActualizar = createBotonActualizar();
+                JButton botonSEND = createBotonSend();
                 
                 JTextArea areaTexto = new JTextArea();
                 areaTexto.setText("<<Actualize una vez configurada su consulta>>");
@@ -193,25 +198,25 @@ public class Querys extends JFrame {
                 add(botonActualizar);
                 add(botonSEND);
                 
-                areaTexto.getDocument().addDocumentListener(new DocumentListener(){
-                    @Override
-                    public void insertUpdate(DocumentEvent de) {
-                        myFrame.pack();
-                    }
-
-                    @Override
-                    public void removeUpdate(DocumentEvent de) {
-                        myFrame.pack();
-                    }
-
-                    @Override
-                    public void changedUpdate(DocumentEvent de) {
-                        
-                    }
-                    
-                });
+//                areaTexto.getDocument().addDocumentListener(new DocumentListener(){
+//                    @Override
+//                    public void insertUpdate(DocumentEvent de) {
+//                        myFrame.pack();
+//                    }
+//
+//                    @Override
+//                    public void removeUpdate(DocumentEvent de) {
+//                        myFrame.pack();
+//                    }
+//
+//                    @Override
+//                    public void changedUpdate(DocumentEvent de) {
+//
+//                    }
+//
+//                });
                 
-            
+                //si se preciona el boton actualizar se actualiza la sentencia creada en el area de texo
                 botonActualizar.addActionListener(new ActionListener(){
                     @Override
                     public void actionPerformed(ActionEvent ae) {
@@ -242,7 +247,10 @@ public class Querys extends JFrame {
                         areaTexto.setText(toSend);
                     }
                 });
-                
+
+                //Se hace la consulta a la base de datos y se despliega el resultado
+                //en una tabla
+
                 botonSEND.addActionListener(new ActionListener(){
                     @Override
                     public void actionPerformed(ActionEvent ae) {
@@ -250,73 +258,68 @@ public class Querys extends JFrame {
                         
                         try {
                             
-                            ResultSet rs = capaDatos.makeQuery(query);
-                            ResultSet rs2 = capaDatos.makeQuery(query);
-                            ResultSetMetaData rsmd = rs.getMetaData();
-                            int columnsNumber = rsmd.getColumnCount();
-                            String[] columnas = new String[columnsNumber];
-                            for (int i = 1; i <= columnsNumber; i++) {
-                                    columnas[i-1] = rsmd.getColumnName(i) ;
-                            }
+                            myFrame.remove(sp);
                             
-                            int rowsNumber=0;
-                            while(rs2.next()){
-                                String[] arreglo = new String[columnsNumber];
-                                for (int i = 1; i <= columnsNumber; i++) {
-                                    rs2.getString(i);
-                                }   
-                                rowsNumber++;
-                            }
-                            String[][] matriz = new String[rowsNumber][columnsNumber];
-                            int i=0;
-                            while(rs.next()){
-                                String[] arreglo = new String[columnsNumber];
-                                for (int j = 1; j <= columnsNumber; j++) {
-                                    matriz[i][j-1] = rs.getString(j);
-                                }  
-                                i++;
-                            }
+                            sp.removeAll();
+                            tabla.removeAll();
                             
-                            System.out.println("Hola estas en esta linea");
-                            tabla = new JTable(matriz, columnas);
+                            ArrayList<Object> response = enlace.solicitarConsultaParaTabla(query);
+                            
+                            
+                            
+                            tabla = new JTable((String[][])response.get(1), (String[])response.get(0));
                             sp = new JScrollPane(tabla);
+                            //tabla.setPreferredScrollableViewportSize(new java.awt.Dimension(800, 300));
+                            
+                            
+                            tabla.setPreferredSize(new java.awt.Dimension((((String[])response.get(0)).length)*125, 300));
+                            sp.setPreferredSize(new java.awt.Dimension((((String[])response.get(0)).length)*125, 300));
+                            
+                            
                             consola.setText("El comando es válido, resultado mostrado");
                             myFrame.add(sp, BorderLayout.BEFORE_LINE_BEGINS);
                             myFrame.pack();
+                            System.out.println("holaaaaaaaaaaaddsa tt");
                             
                         } catch (Exception ex) {
-                            tabla.removeAll();
+                            //Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
+                            sp.removeAll();
                             myFrame.remove(sp);
+                            consola.setPreferredSize(new java.awt.Dimension(300, 200));
                             consola.setText(ex.toString());
                             consola.setBorder( BorderFactory.createLineBorder(Color.GRAY, 4));
                             myFrame.add(consola, BorderLayout.AFTER_LINE_ENDS );
                             myFrame.pack();
                         }
-                        
-                        
-                        
-                    }
-                    
+                    }     
                 });
-                
+                //Si se manda al constructor con llave 1 es para crear el subpanel que ira a la cabecera, donde se muestra
+                // los comando posibles a insertar y la opcion de insertarlos
             }else if(key==1){
                 JComboBox combo = new JComboBox();
                 
-                
+                //Se anade comandos al combo para mostrarlos
                 combo.addItem("WHERE");
                 combo.addItem("WHERE NOT");
                 combo.addItem("AND(...)");
                 combo.addItem("AND NOT(...)");
                 combo.addItem("OR(...)");
                 combo.addItem("OR NOT(...)");
-                combo.addItem("ORDER BY ___ ASC");
-                combo.addItem("ORDER BY ___ DESC");
+                combo.addItem("ORDER BY ___ [ASC|DESC]");
+                combo.addItem("INNER JOIN ___ ON");
                 combo.addItem("SELECT ___ FROM ___");
+                combo.addItem("SELECT AVG(___) FROM ___");
+                combo.addItem("SELECT COUNT(___) FROM ___");
+                combo.addItem("SELECT SUM(___) FROM ___");
+                combo.addItem("SELECT MIN(___) FROM ___");
+                combo.addItem("SELECT MAX(___) FROM ___");
+                combo.addItem("GROUP BY(____)");
                 
                 JButton boton = createBotonAnadir();
                 
                 subPanel nuevoSubPanel = new subPanel(2, countMe);
-                
+                // si se presiona el boton a anadir  se anade un subpanel dependiendo su llave
+                //la llave depende de que comando esta ese ese momento en el combo de adicion
                 boton.addActionListener(new ActionListener() {
 
                     @Override
@@ -325,7 +328,7 @@ public class Querys extends JFrame {
                         String campoAnadir = String.valueOf(combo.getSelectedItem());
                         subPanel nuevoSubPanel = null; 
                         try {                            
-                            
+                            // se manda claves diferentes al constructor dependiendo del comando
                             if(campoAnadir.equals("SELECT ___ FROM ___")){
                                 nuevoSubPanel = new subPanel(2, countMe);
                             }else if(campoAnadir.equals("WHERE")){
@@ -340,17 +343,28 @@ public class Querys extends JFrame {
                                  nuevoSubPanel = new subPanel(7, countMe);
                             }else if(campoAnadir.equals("OR NOT(...)")){
                                  nuevoSubPanel = new subPanel(8, countMe);
-                            }else if(campoAnadir.equals("ORDER BY ___ ASC")){
+                            }else if(campoAnadir.equals("ORDER BY ___ [ASC|DESC]") ){
                                  nuevoSubPanel = new subPanel(9, countMe);
-                            }else if(campoAnadir.equals("ORDER BY ___ DESC")){
+                            }else if(campoAnadir.equals("INNER JOIN ___ ON")){
                                  nuevoSubPanel = new subPanel(10, countMe);
+                            }else if(campoAnadir.equals("SELECT AVG(___) FROM ___")){
+                                nuevoSubPanel = new subPanel(11, countMe);
+                            }else if(campoAnadir.equals("SELECT COUNT(___) FROM ___")){
+                                nuevoSubPanel = new subPanel(12, countMe);
+                            }else if(campoAnadir.equals("SELECT SUM(___) FROM ___")){
+                                nuevoSubPanel = new subPanel(13, countMe);
+                            }else if(campoAnadir.equals("SELECT MIN(___) FROM ___")){
+                                nuevoSubPanel = new subPanel(14, countMe);
+                            }else if(campoAnadir.equals("SELECT MAX(___) FROM ___")){
+                                nuevoSubPanel = new subPanel(15, countMe);
+                            }else if(campoAnadir.equals("GROUP BY(____)")){
+                                nuevoSubPanel = new subPanel(16, countMe);
                             }
-                        
                         } catch (SQLException ex) {
                                 Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         
-                        
+                        // se anade el nuevo panel a la lista donde se guarda todos los subpaneles activos y que se pueden borrar
                         listElementsStatement.add(nuevoSubPanel);
                         mainPanel.add(nuevoSubPanel);
                         myFrame.pack();
@@ -365,7 +379,10 @@ public class Querys extends JFrame {
                 
                 add(combo);
                 add(boton);
-                
+
+
+                // Se crea el comando select donde su componente de columna se genera dependenido de la eleccion
+                //de la tabla del FROM
             }else if(key == 2){
 
                 JLabel selectLabel = new JLabel("SELECT");
@@ -386,7 +403,8 @@ public class Querys extends JFrame {
                 } catch (SQLException ex) {
                     Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                 } 
-                
+
+                // Si se cambia la tabla del FROM se cambia las columnas de los SELECT y los campos que depende de estas
                 fromTable.addItemListener(new ItemListener(){
                     @Override
                     public void itemStateChanged(ItemEvent ie) {
@@ -401,7 +419,7 @@ public class Querys extends JFrame {
                         }
                     }
                 });
-                
+                //se actualiza el nombre del componente si se altera
                 selectTable.addItemListener(new ItemListener(){
                     @Override
                     public void itemStateChanged(ItemEvent ie) {
@@ -411,10 +429,9 @@ public class Querys extends JFrame {
                     }
                 });
                 
-                
+                //se añade el boton para retirar este subpanel
                 JButton myButtonRemoveMe = createBotonQuitar();
-                
-                
+                //Se anade los componentes
                 add(selectLabel);
                 add(selectTable);
                 add(anadirSelectParam);
@@ -431,17 +448,19 @@ public class Querys extends JFrame {
                         myFrame.pack();
                     }
                 });
-                
+                //Se añade el boton para poder añadir nuevos parametros
+                //cada vez que se de click en este el nuevo parametro añadido se carga con las columnas
+                //de la tabla que se presenta como la eleccio de from
                 anadirSelectParam.addActionListener(new ActionListener(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         int indiceBotonAnadir=1;
                         Container c = anadirSelectParam.getParent();
-                        for (int i = 0; i < c.getComponentCount(); i++) {
+                        for (int i = 0; i < c.getComponentCount(); i++){
                             System.out.println("El Boton anadir esta en el indice: " + c.getComponent(i).getName() );
                         }
-                        
                        
+                        //se añade comas como la verdadera sintaxis del lenguaje requiere
                         JComboBox nuevoParam = new JComboBox();
                         JLabel coma = new JLabel(",");
                         coma.setName(",");
@@ -460,7 +479,7 @@ public class Querys extends JFrame {
                         });
                         
                         try {
-                            fillAllCombosSELECT(comboBoxesSELECT, fromTable);
+                            fillThisCombo(nuevoParam, fromTable);
                         } catch (SQLException ex) {
                             Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                         }                        
@@ -481,13 +500,17 @@ public class Querys extends JFrame {
                 });
                 */
                 
+                //se añade el boton para remover el subpanel
                 add(myButtonRemoveMe);
                 
+                //en esta pate del consturctor solo entra cuando se desea crear una sentencia con WHERE o WHERE NOT
             }else if(key == 3 || key == 4){
                 JLabel whereLabel = null;
                 if(key == 3){ whereLabel = new JLabel("WHERE");}
                 else if(key == 4){ whereLabel = new JLabel("WHERE NOT");}
                 
+                //Se añade parestesis com parte de la correcta sintaxis
+                // ademas se llena este subpanel con los parametros y sentencias necesarios
                 whereLabel.setName(whereLabel.getText());
                 JLabel openParenthesis = new JLabel("(");
                 openParenthesis.setName(openParenthesis.getText());
@@ -503,6 +526,8 @@ public class Querys extends JFrame {
                 JButton anadirParametros = createBotonAnadir();
                 JButton myButtonRemoveMe = createBotonQuitar();
                 
+                
+                //se añade cada uno dse los coponentes al subpanel
                 add(whereLabel);
                 add(openParenthesis);
                 add(firstParameter);
@@ -513,14 +538,18 @@ public class Querys extends JFrame {
                 add(parametrosOpcionales);
                 add(myButtonRemoveMe);
                 
+                //cada uno de estos hilos listeners es para detectar cambios no solo individualmente 
+                //del coponente sino tambien del efecto que la accion de uno de estos componentes 
+                //tiene sobre el resto
                 
                 comboBoxesParam.add(firstParameter);
                 
+                //los operando tambien se da para la elecion del usuario
                 fillWithOperands(operandos);
                 fillWithAndOr(parametrosOpcionales);
                 
                 try {
-                    fillAllCombos(comboBoxesParam, fromTable);
+                    fillThisCombo(firstParameter, fromTable);
                 }catch(SQLException ex){
                     Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -529,6 +558,7 @@ public class Querys extends JFrame {
                 operandos.setName(String.valueOf(operandos.getSelectedItem()));
                 secondParameter.setName(String.valueOf(secondParameter.getText()));
                 
+                //se puede añadir parametros al where coo AND, AND NOT, OR, OR NOT, etc.
                 anadirParametros.addActionListener(new ActionListener(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -547,7 +577,7 @@ public class Querys extends JFrame {
 
                         comboBoxesParam.add(firstParameter2);
                         try {
-                            fillAllCombos(comboBoxesParam, fromTable);
+                            fillThisCombo(firstParameter2, fromTable);
                         }catch(SQLException ex){
                             Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -581,7 +611,9 @@ public class Querys extends JFrame {
                                 myFrame.pack();
                             }
                         });
-
+                        
+                        // el segundo parametro es un text field donde se puede insertar cualquier tipo de parametro 
+                        // ya que una consulta no solo puede ser de lo que hay sino de lo que no hay
                         secondParameter2.addKeyListener(new KeyListener(){
                             @Override
                             public void keyTyped(KeyEvent ke) {
@@ -658,6 +690,8 @@ public class Querys extends JFrame {
                     }
                 });
                 
+                // en este caso se maneja la cracion de una sentencia logica por parte del usuario,
+                //se debe enteder que esto puede ser un agregado al comando where
             }else if(key == 5 || key == 6 || key == 7 || key == 8){
                 flag = 0;
                 JLabel ANDLabel = null;
@@ -673,6 +707,7 @@ public class Querys extends JFrame {
                 JLabel closeParenthesis = new JLabel(")");
                 closeParenthesis.setName(closeParenthesis.getText());
                 
+                
                 JComboBox parametrosOpcionales = new JComboBox();
                 JButton anadirParametros = createBotonAnadir();
                 JButton myButtonRemoveMe = createBotonQuitar();
@@ -684,7 +719,7 @@ public class Querys extends JFrame {
                 add(parametrosOpcionales);
                 add(myButtonRemoveMe);
                 
-                yNOToNOT_ParamOpcionales(parametrosOpcionales,0);
+                fillWithAndOr(parametrosOpcionales);
                 
                 myButtonRemoveMe.addActionListener(new ActionListener(){
 
@@ -697,9 +732,13 @@ public class Querys extends JFrame {
                     }
                 });
                 
+                
+                //Se pueden anadir mas paramterodentro de la sentencia logica ya creada
                 anadirParametros.addActionListener(new ActionListener(){
                     @Override
                     public void actionPerformed(ActionEvent ae) {
+                        //la primera instancia de creacion  debe crear una instancia con dos parametros, cualquier posteror creacion de
+                        // un parametro logico solo necesita un operador y un parametro
                         if(flag==0){
                             JComboBox primeroGrupo1 = new JComboBox();
                             JComboBox operandoGrupo1 = new JComboBox();
@@ -707,7 +746,7 @@ public class Querys extends JFrame {
 
                             JLabel operador = new JLabel(String.valueOf(parametrosOpcionales.getSelectedItem()));
                             
-                            yNOToNOT_ParamOpcionales(parametrosOpcionales,1);
+                            fillWithAndOr(parametrosOpcionales);
                             
                             JComboBox primeroGrupo2 = new JComboBox();
                             JComboBox operandoGrupo2 = new JComboBox();
@@ -732,7 +771,8 @@ public class Querys extends JFrame {
                            
                             
                             try {
-                                fillAllCombos(comboBoxesParam, fromTable);
+                                fillThisCombo(primeroGrupo1, fromTable);
+                                fillThisCombo(primeroGrupo2, fromTable);
                             } catch (SQLException ex) {
                                 Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -838,7 +878,7 @@ public class Querys extends JFrame {
                             segundoGrupo1.setText("<<parametro>>");
                             
                             try {
-                                fillAllCombos(comboBoxesParam, fromTable);
+                                fillThisCombo(primeroGrupo1, fromTable);
                             } catch (SQLException ex) {
                                 Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -901,12 +941,470 @@ public class Querys extends JFrame {
                     } 
                 });
                 myFrame.pack();
+                
+                
+                //el siguiente comando conciste de que ordenamiento se desea hacer
+                //puede ser Ascendente o Descendente pero necesita de un parametro 
+                //para realizar la ordenacion
             }else if(key == 9){
+                flag = 0;
+                JComboBox DESC_ASC_combo = new JComboBox();
+                DESC_ASC_combo.addItem("ASC");
+                DESC_ASC_combo.addItem("DESC");
+                
+                DESC_ASC_combo.setName(String.valueOf(DESC_ASC_combo.getSelectedItem()));
+                
+                JLabel orderByLabel = new JLabel("ORDER BY ");
+                orderByLabel.setName(orderByLabel.getText());
+                
+                JLabel closeParenthesis = new JLabel(")");
+                closeParenthesis.setName(closeParenthesis.getText());
+                
+                
+                JComboBox comboParametro = new JComboBox();
+                comboBoxesParam.add(comboParametro);
+                
+                fillThisCombo(comboParametro, fromTable);
+                comboParametro.setName(String.valueOf(comboParametro.getSelectedItem()));
+                
+                JButton anadirSelectParam = createBotonAnadir();
+                
+                JButton myButtonRemoveMe = createBotonQuitar();
+                               
+                myButtonRemoveMe.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        countMe = countMe - 1;
+                        me.removeAndReorderFromList(me.index);
+                        me.getParent().remove(me);
+                        myFrame.pack();
+                    }
+                });
+                
+                comboParametro.addItemListener(new ItemListener(){
+                    @Override
+                    public void itemStateChanged(ItemEvent ie) {
+                        comboParametro.setName(String.valueOf(comboParametro.getSelectedItem()));
+                        System.out.println("El nombre ahora es " + comboParametro.getName());
+                        myFrame.pack();
+                    }
+                });
+                
+                DESC_ASC_combo.addItemListener(new ItemListener(){
+                    @Override
+                    public void itemStateChanged(ItemEvent ie) {
+                        DESC_ASC_combo.setName(String.valueOf(DESC_ASC_combo.getSelectedItem()));
+                        System.out.println("El nombre ahora es " + DESC_ASC_combo.getName());
+                        myFrame.pack();
+                    }
+                });
+                // se puede añadir varios parametros dentro de nuestro ORDER BY
+                anadirSelectParam.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int indiceBotonAnadir=1;
+                        Container c = anadirSelectParam.getParent();
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            System.out.println("El Boton anadir esta en el indice: " + c.getComponent(i).getName() );
+                        }
+                        
+                       
+                        JComboBox nuevoParam = new JComboBox();
+                        JLabel coma = new JLabel(",");
+                        coma.setName(",");
+                        JComboBox nuevo_DESC_ASC_combo = new JComboBox();
+                        nuevo_DESC_ASC_combo.addItem("ASC");
+                        nuevo_DESC_ASC_combo.addItem("DESC");
+
+                        nuevo_DESC_ASC_combo.setName(String.valueOf(nuevo_DESC_ASC_combo.getSelectedItem()));
+                        
+                        anadirSelectParam.getParent().add(nuevo_DESC_ASC_combo,3);        
+                        anadirSelectParam.getParent().add(nuevoParam,3);
+                        anadirSelectParam.getParent().add(coma,3);
+                        comboBoxesParam.add(nuevoParam);
+                        
+                        nuevoParam.addItemListener(new ItemListener(){
+                            @Override
+                            public void itemStateChanged(ItemEvent ie) {
+                                nuevoParam.setName(String.valueOf(nuevoParam.getSelectedItem()));
+                                System.out.println("El nombre ahora es " + nuevoParam.getName());
+                                myFrame.pack();
+                            }
+                        });
+                        
+                        nuevo_DESC_ASC_combo.addItemListener(new ItemListener(){
+                            @Override
+                            public void itemStateChanged(ItemEvent ie) {
+                                nuevo_DESC_ASC_combo.setName(String.valueOf(nuevo_DESC_ASC_combo.getSelectedItem()));
+                                System.out.println("El nombre ahora es " + nuevo_DESC_ASC_combo.getName());
+                                myFrame.pack();
+                            }
+                        });
+                        
+                        try {
+                            fillThisCombo(nuevoParam, fromTable);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
+                        }                        
+                        
+                        myFrame.pack();
+                        
+                    }
+                });
+                
+                //Se añade los compnentes al subPanel
+                add(orderByLabel);
+                add(comboParametro);
+                add(DESC_ASC_combo);
+                //add(closeParenthesis);
+                add(anadirSelectParam);
+                add(myButtonRemoveMe);
+                
+                myFrame.pack();
+                
+                
+                //en el siguiente condicion se hace que se acceda para crear el argumento INNER JOIN
+            }else if(key == 10){
+                JLabel INNERJOINLabel = new JLabel("INNER JOIN");
+                INNERJOINLabel.setName(INNERJOINLabel.getText());
+                
+                INNERJOINTables = new JComboBox();
+                fillThisComboINNERJOIN(INNERJOINTables, fromTable);
+                INNERJOINTables.setName(String.valueOf(INNERJOINTables.getSelectedItem()));
+                
+                JLabel tablaOperador1 = new JLabel(INNERJOINTables.getName());
+                tablaOperador1.setName(tablaOperador1.getText());
+                
+                
+                JLabel tablaOperador2 = new JLabel(fromTable.getName());
+                tablaOperador2.setName(tablaOperador2.getText());
+                
+                
+                JComboBox columnOperator1 = new JComboBox();
+                fillThisCombo(columnOperator1, fromTable);
+                columnOperator1.setName(String.valueOf(columnOperator1.getSelectedItem()));
+                
+                JComboBox columnOperator2 = new JComboBox();
+                fillThisCombo(columnOperator2, INNERJOINTables);
+                comboBoxesParam.add(columnOperator2);
+                columnOperator2.setName(String.valueOf(columnOperator2.getSelectedItem()));
+                
+                fromTable.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        
+                        tablaOperador2.setText(String.valueOf(fromTable.getSelectedItem()));
+                        tablaOperador2.setName(String.valueOf(fromTable.getSelectedItem()));
+                    }
+                });
+                
+                INNERJOINTables.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        
+                        tablaOperador1.setText(String.valueOf(INNERJOINTables.getSelectedItem()));
+                        tablaOperador1.setName(String.valueOf(INNERJOINTables.getSelectedItem()));
+                        
+                        try {
+                            
+                            fillThisCombo(columnOperator1,INNERJOINTables);
+                            columnOperator2.setName(String.valueOf(columnOperator1.getSelectedItem()));
+                            
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                        INNERJOINTables.setName(String.valueOf(INNERJOINTables.getSelectedItem()));
+                        
+                        
+                    }
+                });
+                
+                columnOperator2.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        
+                        columnOperator2.setName(String.valueOf(columnOperator2.getSelectedItem()));
+                        
+                    }
+                });
+                
+                columnOperator1.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        
+                        columnOperator1.setName(String.valueOf(columnOperator1.getSelectedItem()));
+                        
+                    }
+                });
+                
+               
+                
+                JComboBox parametrosOpcionales = new JComboBox();
+                fillWithOperands(parametrosOpcionales);
+                parametrosOpcionales.setName(String.valueOf(parametrosOpcionales.getSelectedItem()));
+                
+                parametrosOpcionales.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                       
+                        parametrosOpcionales.setName(String.valueOf(parametrosOpcionales.getSelectedItem()));
+                        
+                    }
+                });
+                
+                
+                JLabel onLabel = new JLabel("ON");
+                onLabel.setName(onLabel.getText());
+                
+                JLabel dotOperator1 = new JLabel(".");
+                dotOperator1.setName(dotOperator1.getText());
+                
+                JLabel dotOperator2 = new JLabel(".");
+                dotOperator2.setName(dotOperator2.getText());
+                
+                JButton myButtonRemoveMe = createBotonQuitar();
+                
+                myButtonRemoveMe.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        countMe = countMe - 1;
+                        me.removeAndReorderFromList(me.index);
+                        me.getParent().remove(me);
+                        myFrame.pack();
+                    }
+                });
+                
+                // INNER JOIN se base en dos cosas, el parametro del from en la consulta
+                //que se esta haciendo y del INNER JOIN, de hay se da la comparacoion por medio de un operador 
+                // entre una columna del uno contra una columna del otro
+                
+                add(INNERJOINLabel);
+                add(INNERJOINTables);
+                add(onLabel);
+                add(tablaOperador1);
+                add(dotOperator1);
+                add(columnOperator1);
+                add(parametrosOpcionales);
+                add(tablaOperador2);
+                add(dotOperator2);
+                add(columnOperator2);
+                add(myButtonRemoveMe);
+                
+                myFrame.pack();
+ 
+             // En esta seccion se añade las consultas de agregacion, de acuerdoa cada una de las llaves
+             //si enmabrgo estas sguen una logica en comun, un argumento entre parentesis con la opcion de generar
+             //mas parametros solo si se agraga un grou by con los mismo
+            }else if(key == 11 || key == 12 || key == 13 || key == 14 || key == 15){
+                flag = 0;
+                JLabel SELECTLabel = null;
+                if(key == 11){SELECTLabel = new JLabel("SELECT AVG (");}
+                else if(key == 12){SELECTLabel = new JLabel("SELECT COUNT (");}
+                else if(key == 13){SELECTLabel = new JLabel("SELECT SUM (");}
+                else if(key == 14){SELECTLabel = new JLabel("SELECT MAX (");}
+                else if(key == 15){SELECTLabel = new JLabel("SELECT MIN (");}
+                
+                SELECTLabel.setName(SELECTLabel.getText());
+                
+                JComboBox comboCualquierSELECT = new JComboBox(); 
+                comboBoxesSELECT.add(comboCualquierSELECT);
+                
+                fillThisCombo(comboCualquierSELECT, fromTable);
+                comboCualquierSELECT.setName(String.valueOf(comboCualquierSELECT.getSelectedItem()));
+                
+                JLabel closeParenthesis = new JLabel(")");
+                closeParenthesis.setName(closeParenthesis.getText());
+                
+                JLabel fromLabel = new JLabel("FROM");
+                fromLabel.setName(fromLabel.getText());
+                
+                JButton anadirSelectParam = createBotonAnadir();
+                
+                JButton myButtonRemoveMe = createBotonQuitar();
+                
+                
+                
+                
+                myButtonRemoveMe.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        countMe = countMe - 1;
+                        me.removeAndReorderFromList(me.index);
+                        me.getParent().remove(me);
+                        myFrame.pack();
+                    }
+                });
+                
+                comboCualquierSELECT.addItemListener(new ItemListener(){
+                    @Override
+                    public void itemStateChanged(ItemEvent ie) {
+                        comboCualquierSELECT.setName(String.valueOf(comboCualquierSELECT.getSelectedItem()));
+                        System.out.println("El nombre ahora es " + comboCualquierSELECT.getName());
+                        myFrame.pack();
+                    }
+                });
+                
+                anadirSelectParam.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int indiceBotonAnadir=1;
+                        Container c = anadirSelectParam.getParent();
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            System.out.println("El Boton anadir esta en el indice: " + c.getComponent(i).getName() );
+                        }
+                        
+                       
+                        JComboBox nuevoParam = new JComboBox();
+                        JLabel coma = new JLabel(",");
+                        coma.setName(",");
+                        
+                        anadirSelectParam.getParent().add(nuevoParam,3);
+                        anadirSelectParam.getParent().add(coma,3);
+                        comboBoxesSELECT.add(nuevoParam);
+                        
+                        nuevoParam.addItemListener(new ItemListener(){
+                            @Override
+                            public void itemStateChanged(ItemEvent ie) {
+                                nuevoParam.setName(String.valueOf(nuevoParam.getSelectedItem()));
+                                System.out.println("El nombre ahora es " + nuevoParam.getName());
+                                myFrame.pack();
+                            }
+                        });
+                        
+                        try {
+                            fillThisCombo(nuevoParam, fromTable);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
+                        }          
+                        //se añade un group by solo si no se ha generado uno antes, si si se lo ha hecho y se desea crear uno nuevo
+                        //si lo hay como hacer (revisar siguente parte).
+                        if(flag==0){
+                            try {
+                                subPanel nuevoSubPanel = new subPanel(16, countMe);
+                                listElementsStatement.add(nuevoSubPanel);
+                                mainPanel.add(nuevoSubPanel);
+                                myFrame.pack();
+                                countMe++;
+                                
+                            } catch (SQLException ex) {
+                                Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            flag=1;
+                        }
+                        
+                        myFrame.pack();                       
+                    }
+                });
+                
+                
+                add(SELECTLabel);
+                add(comboCualquierSELECT);
+                add(closeParenthesis);
+                add(anadirSelectParam);
+                add(fromLabel);
+                add(fromTable);
+                add(myButtonRemoveMe);
+ 
+                myFrame.pack();
+                
+                // para generar GROUP BYs se da un parametro de inmediato, se da la opcion de generar mas parametros
+                //a voluntad, este comando es de gran ayuda para la agrgacion de parametros a una funcion de agragacion
+            }else if(key == 16){
+                
+                JLabel groupByLabel = new JLabel("GROUP BY (");
+                groupByLabel.setName(groupByLabel.getText());
+                
+                JComboBox comboParametro = new JComboBox();
+                comboBoxesParam.add(comboParametro);
+                
+                fillThisCombo(comboParametro, fromTable);
+                comboParametro.setName(String.valueOf(comboParametro.getSelectedItem()));
+                
+                JLabel closeParenthesis = new JLabel(")");
+                closeParenthesis.setName(closeParenthesis.getText());
+                
+                JButton anadirSelectParam = createBotonAnadir();
+                
+                JButton myButtonRemoveMe = createBotonQuitar();
+                               
+                myButtonRemoveMe.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        countMe = countMe - 1;
+                        me.removeAndReorderFromList(me.index);
+                        me.getParent().remove(me);
+                        myFrame.pack();
+                    }
+                });
+                
+                comboParametro.addItemListener(new ItemListener(){
+                    @Override
+                    public void itemStateChanged(ItemEvent ie) {
+                        comboParametro.setName(String.valueOf(comboParametro.getSelectedItem()));
+                        System.out.println("El nombre ahora es " + comboParametro.getName());
+                        myFrame.pack();
+                    }
+                });
+                
+                anadirSelectParam.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int indiceBotonAnadir=1;
+                        Container c = anadirSelectParam.getParent();
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            System.out.println("El Boton anadir esta en el indice: " + c.getComponent(i).getName() );
+                        }
+                        
+                       
+                        JComboBox nuevoParam = new JComboBox();
+                        JLabel coma = new JLabel(",");
+                        coma.setName(",");
+                        
+                        anadirSelectParam.getParent().add(nuevoParam,2);
+                        anadirSelectParam.getParent().add(coma,2);
+                        comboBoxesSELECT.add(nuevoParam);
+                        
+                        nuevoParam.addItemListener(new ItemListener(){
+                            @Override
+                            public void itemStateChanged(ItemEvent ie) {
+                                nuevoParam.setName(String.valueOf(nuevoParam.getSelectedItem()));
+                                System.out.println("El nombre ahora es " + nuevoParam.getName());
+                                myFrame.pack();
+                            }
+                        });
+                        
+                        try {
+                            fillThisCombo(nuevoParam, fromTable);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
+                        }                        
+                        
+                        myFrame.pack();
+                        
+                    }
+                });
+                
+                // se añade cada uno de los componentes al subPanel
+                
+                add(groupByLabel);
+                add(comboParametro);
+                add(closeParenthesis);
+                add(anadirSelectParam);
+                add(myButtonRemoveMe);
+                
+                myFrame.pack();
+                
                 
             }
             
+            
+            
         }
         
+        
+        // cuando se preciona el boton de borrar en un sub pane este metodo se activa para quitarlo de la lista de
+        //subpanels activos
         public void removeAndReorderFromList(int index){
             int size=listElementsStatement.size();
             
@@ -921,43 +1419,44 @@ public class Querys extends JFrame {
             listElementsStatement.remove(index);
         }
         
+        //Se hace uso de la clase enlace para conectar a la capa de datos y hacer una consulta acerca
+        //las tablas de la base de datos, se la coloca en el comboBox que corresponde a FROM del comando SELECT
         public void fillFromCombo(JComboBox combo) throws SQLException{
             String sql = "SELECT table_name FROM user_tables ORDER BY table_name";
-            ResultSet rs = capaDatos.makeQuery(sql);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
-            while(rs.next()){
-                for (int i = 1; i <= columnsNumber; i++) {
-                    String columnValue = rs.getString(i);
-                    combo.addItem(columnValue);
-                }
+            ArrayList<String> response = enlace.solicitarConsultaParaComboFOR(sql);
+            
+            
+            for(String campo: response){
+                    System.out.println("hey: " + campo);
+                    combo.addItem(campo);
             }
+            
             combo.setSelectedIndex(0);
             combo.setName(String.valueOf(combo.getSelectedItem()));
             System.out.println("El nombre ahora es " + combo.getName());
         }
         
+        //CUando hay un cambio en el FROM de la consulta se debe cambiar todo los comboBox  segun el nuevo campo elegido
         public void fillAllCombos(ArrayList<JComboBox> arrayCombos, JComboBox comboFrom) throws SQLException{
             
             int size=arrayCombos.size();
 
             String sql = "SELECT * FROM " + String.valueOf(comboFrom.getSelectedItem());
 
-            ResultSet rs = capaDatos.makeQuery(sql);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
-
-
+            ArrayList<String> response = enlace.solicitarConsultaParaCombo(sql);
+            
             for(int i = 0; i<size; i++){
                 arrayCombos.get(i).removeAllItems();
-                for (int j = 1; j <= columnsNumber; j++) {
-                    arrayCombos.get(i).addItem(rsmd.getColumnName(j));
+                for (int j = 0; j < response.size(); j++) {
+                    arrayCombos.get(i).addItem(response.get(j));
                 }
                 arrayCombos.get(i).setName(String.valueOf(arrayCombos.get(i).getSelectedItem()));
                 System.out.println("El nombre ahora es " + arrayCombos.get(i).getName());
             }
         }
         
+        //Complemento al metodo anterior solo que se lo hace a los parametros a los que corresponde 
+        // de todos los cmandos SELECT existentes
         public void fillAllCombosSELECT(ArrayList<JComboBox> arrayCombos, JComboBox comboFrom) throws SQLException{
             
             int size=arrayCombos.size();
@@ -968,15 +1467,14 @@ public class Querys extends JFrame {
             }
 
             String sql = "SELECT * FROM " + String.valueOf(comboFrom.getSelectedItem());
-
-            ResultSet rs = capaDatos.makeQuery(sql);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
-
+            
+            System.out.println("holaaaaaaaaaaaaaa" + sql);
+            
+            ArrayList<String> response = enlace.solicitarConsultaParaCombo(sql);
 
             for(int i = 0; i<size; i++){
-                for (int j = 1; j <= columnsNumber; j++) {
-                    arrayCombos.get(i).addItem(rsmd.getColumnName(j));
+                for (int j = 0; j < response.size(); j++) {
+                    arrayCombos.get(i).addItem(response.get(j));
                 }
                 arrayCombos.get(i).setName(String.valueOf(arrayCombos.get(i).getSelectedItem()));
                 System.out.println("El nombre ahora es " + arrayCombos.get(i).getName());
@@ -984,7 +1482,47 @@ public class Querys extends JFrame {
             
         }
         
+        //Cuando se añade un combo se usa este metodo para llenarlo correspondientemente
+        public void fillThisCombo(JComboBox combo, JComboBox comboFrom) throws SQLException{
+            
+            combo.removeAllItems();
+            
+            String sql = "SELECT * FROM " + String.valueOf(comboFrom.getSelectedItem());
+
+            ArrayList<String> response = enlace.solicitarConsultaParaCombo(sql);
+            
+
+            for (int j = 0; j < response.size(); j++) {
+                combo.addItem(response.get(j));
+            }
+            
+            
+        }
+        
+        //Se usa para llenar el comboBox, siendo un parametro
+        //independiente del combo FROM de la consulta en creacion
+        public void fillThisComboINNERJOIN(JComboBox combo, JComboBox comboFrom) throws SQLException{
+            
+
+            String sql = "SELECT table_name FROM user_tables ORDER BY table_name";
+            ArrayList<String> response = enlace.solicitarConsultaParaComboFOR(sql);
+            
+            
+            for(String campo: response){
+                    System.out.println("hey: " + campo);
+                    combo.addItem(campo);
+            }
+            
+            combo.setSelectedIndex(0);
+            combo.setName(String.valueOf(combo.getSelectedItem()));
+            System.out.println("El nombre ahora es " + combo.getName());
+            
+            
+        }
+        
+        
         public void fillWithOperands(JComboBox combo){
+            //Se llenaun comboBox con los operandos dentro del array en la linea siguiente
             String[] operandos= {"=", ">", "<", ">=","<=", "<>", "BETWEEN", "LIKE", "IN"};
             
             for(int i=0; i<operandos.length; i++){
@@ -993,14 +1531,16 @@ public class Querys extends JFrame {
             
         }
         
+        
         public void fillWithAndOr(JComboBox combo){
+            // se llena un combo con los siguientes opérandos
             String[] AndOr= {"AND","OR","AND NOT","OR NOT"};
             for(int i=0; i<AndOr.length; i++){
                 combo.addItem(AndOr[i]);
             }
         }
         
-        public void yNOToNOT_ParamOpcionales(JComboBox combo, int flag){
+       /* public void yNOToNOT_ParamOpcionales(JComboBox combo, int flag){
             String[] AndOr= {"AND","OR","AND NOT","OR NOT"};
             if(flag==0){    
                 for(int i=0; i<AndOr.length; i++){
@@ -1012,8 +1552,10 @@ public class Querys extends JFrame {
                     combo.addItem(AndOr[i]);
                 }
             }
-        }
+        } */
         
+        // Se crea un boton para con el icono de adicion
+        //se inserta el icono que aparece cuando se presiona 
         public JButton createBotonAnadir(){
             
             JButton botonAnadir = new JButton(addIcon);
@@ -1026,6 +1568,8 @@ public class Querys extends JFrame {
             return botonAnadir;
         }
         
+        // Se crea un boton para con el icono de eliminar
+        //se inserta el icono que aparece cuando se presiona 
         public JButton createBotonQuitar(){
             
             JButton botonAnadir = new JButton(removeIcon);
@@ -1034,6 +1578,35 @@ public class Querys extends JFrame {
             botonAnadir.setFocusPainted(false); 
             botonAnadir.setOpaque(false);
             botonAnadir.setPressedIcon(removeIconPressed);
+            
+            return botonAnadir;
+        }
+        
+        // Se crea un boton para con el icono de recargar para la actualizacion de la sentencia creada
+        //se inserta el icono que aparece cuando se presiona 
+        public JButton createBotonActualizar(){
+            
+            JButton botonAnadir = new JButton(refreshIcon);
+            botonAnadir.setBorderPainted(false); 
+            botonAnadir.setContentAreaFilled(false); 
+            botonAnadir.setFocusPainted(false); 
+            botonAnadir.setOpaque(false);
+            botonAnadir.setPressedIcon(refreshIconPressed);
+            
+            return botonAnadir;
+        }
+        
+        
+        //Se crea el boton que sirve para hacer la consulta a la base de datos
+        //se inserta el icono que aparece cuando se presiona 
+        public JButton createBotonSend(){
+            
+            JButton botonAnadir = new JButton(queryIcon);
+            botonAnadir.setBorderPainted(false); 
+            botonAnadir.setContentAreaFilled(false); 
+            botonAnadir.setFocusPainted(false); 
+            botonAnadir.setOpaque(false);
+            botonAnadir.setPressedIcon(queryIconPressed);
             
             return botonAnadir;
         }
