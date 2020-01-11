@@ -59,6 +59,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import negocio.Enlace;
+import static ui.Querys.myFrame;
 
  
 
@@ -78,6 +79,8 @@ public class Querys extends JFrame {
 
     // Se declara el JFrame que se utilizara como la interfaz de la vista
     static Querys myFrame;
+    
+    
     //Se inicializa la variable de la cantidad de sub-frames que se usara
     static int countMe = 0;
     JPanel mainPanel;
@@ -119,7 +122,7 @@ public class Querys extends JFrame {
 
     private static void createAndShowGUI() throws SQLException {
         myFrame = new Querys();
-        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        myFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         myFrame.prepareUI();
         //myFrame.setRelativeTo(null);
         myFrame.setVisible(true);
@@ -143,7 +146,7 @@ public class Querys extends JFrame {
 //            public void actionPerformed(ActionEvent e) {
 //                countMe=0;
 //                mainPanel.removeAll();
-//                myFrame.pack();
+myFrame.revalidate();//               myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
 //            }
 //        });
  
@@ -155,7 +158,7 @@ public class Querys extends JFrame {
         getContentPane().add(new subPanel(0, -1), BorderLayout.PAGE_END);
         
         //getContentPane().add(buttonRemoveAll, BorderLayout.PAGE_END);
-        myFrame.pack();
+       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
     }
    
    private void setRelativeTo(Object object) {
@@ -201,12 +204,12 @@ public class Querys extends JFrame {
 //                areaTexto.getDocument().addDocumentListener(new DocumentListener(){
 //                    @Override
 //                    public void insertUpdate(DocumentEvent de) {
-//                        myFrame.pack();
+myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
 //                    }
 //
 //                    @Override
 //                    public void removeUpdate(DocumentEvent de) {
-//                        myFrame.pack();
+myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
 //                    }
 //
 //                    @Override
@@ -278,7 +281,7 @@ public class Querys extends JFrame {
                             
                             consola.setText("El comando es válido, resultado mostrado");
                             myFrame.add(sp, BorderLayout.BEFORE_LINE_BEGINS);
-                            myFrame.pack();
+                           myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             System.out.println("holaaaaaaaaaaaddsa tt");
                             
                         } catch (Exception ex) {
@@ -289,7 +292,7 @@ public class Querys extends JFrame {
                             consola.setText(ex.toString());
                             consola.setBorder( BorderFactory.createLineBorder(Color.GRAY, 4));
                             myFrame.add(consola, BorderLayout.AFTER_LINE_ENDS );
-                            myFrame.pack();
+                           myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                         }
                     }     
                 });
@@ -367,14 +370,14 @@ public class Querys extends JFrame {
                         // se anade el nuevo panel a la lista donde se guarda todos los subpaneles activos y que se pueden borrar
                         listElementsStatement.add(nuevoSubPanel);
                         mainPanel.add(nuevoSubPanel);
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                         countMe++;
                     }
                 });
                 
                 listElementsStatement.add(nuevoSubPanel);
                 mainPanel.add(nuevoSubPanel);
-                myFrame.pack();
+               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                 countMe++;
                 
                 add(combo);
@@ -413,7 +416,7 @@ public class Querys extends JFrame {
                             fillAllCombosSELECT(comboBoxesSELECT, fromTable);
                             fromTable.setName(String.valueOf(fromTable.getSelectedItem()));
                             System.out.println("El nombre ahora es " + fromTable.getName());
-                            myFrame.pack();
+                           myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                         } catch (SQLException ex) {
                             Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -425,7 +428,7 @@ public class Querys extends JFrame {
                     public void itemStateChanged(ItemEvent ie) {
                         selectTable.setName(String.valueOf(selectTable.getSelectedItem()));
                         System.out.println("El nombre ahora es " + selectTable.getName());
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -445,7 +448,7 @@ public class Querys extends JFrame {
                         countMe = countMe - 1;
                         me.removeAndReorderFromList(me.index);
                         me.getParent().remove(me);
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 //Se añade el boton para poder añadir nuevos parametros
@@ -474,7 +477,7 @@ public class Querys extends JFrame {
                             public void itemStateChanged(ItemEvent ie) {
                                 nuevoParam.setName(String.valueOf(nuevoParam.getSelectedItem()));
                                 System.out.println("El nombre ahora es " + nuevoParam.getName());
-                                myFrame.pack();
+                               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             }
                         });
                         
@@ -484,7 +487,7 @@ public class Querys extends JFrame {
                             Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                         }                        
                         
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 /*
@@ -495,7 +498,7 @@ public class Querys extends JFrame {
                         countMe = countMe - 1;
                         me.removeAndReorderFromList(me.index);
                         me.getParent().remove(me);
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 */
@@ -593,13 +596,13 @@ public class Querys extends JFrame {
                         operandos2.setName(String.valueOf(operandos2.getSelectedItem()));
                         secondParameter2.setName(String.valueOf(secondParameter2.getText()));
                         
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                         firstParameter2.addItemListener(new ItemListener(){
                             @Override
                             public void itemStateChanged(ItemEvent ie) {
                                 firstParameter2.setName(String.valueOf(firstParameter2.getSelectedItem()));
                                 System.out.println("El nombre ahora es " + firstParameter2.getName());
-                                myFrame.pack();
+                               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             }
                         });
                 
@@ -608,7 +611,7 @@ public class Querys extends JFrame {
                             public void itemStateChanged(ItemEvent ie) {
                                 operandos2.setName(String.valueOf(operandos2.getSelectedItem()));
                                 System.out.println("El nombre ahora es " + operandos2.getName());
-                                myFrame.pack();
+                               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             }
                         });
                         
@@ -629,7 +632,7 @@ public class Querys extends JFrame {
                             public void keyReleased(KeyEvent ke) {
                                 secondParameter2.setName(secondParameter2.getText());
                                 System.out.println("El nombre ahora es " + secondParameter2.getName());
-                                myFrame.pack();
+                               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             }
                         });
                         
@@ -646,7 +649,7 @@ public class Querys extends JFrame {
                     public void itemStateChanged(ItemEvent ie) {
                         firstParameter.setName(String.valueOf(firstParameter.getSelectedItem()));
                         System.out.println("El nombre ahora es " + firstParameter.getName());
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -655,7 +658,7 @@ public class Querys extends JFrame {
                     public void itemStateChanged(ItemEvent ie) {
                         operandos.setName(String.valueOf(operandos.getSelectedItem()));
                         System.out.println("El nombre ahora es " + operandos.getName());
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -674,7 +677,7 @@ public class Querys extends JFrame {
                     public void keyReleased(KeyEvent ke) {
                         secondParameter.setName(secondParameter.getText());
                         System.out.println("El nombre ahora es " + secondParameter.getName());
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -686,7 +689,7 @@ public class Querys extends JFrame {
                         countMe = countMe - 1;
                         me.removeAndReorderFromList(me.index);
                         me.getParent().remove(me);
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -728,7 +731,7 @@ public class Querys extends JFrame {
                         countMe = countMe - 1;
                         me.removeAndReorderFromList(me.index);
                         me.getParent().remove(me);
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -790,7 +793,7 @@ public class Querys extends JFrame {
                                 public void itemStateChanged(ItemEvent ie) {
                                     primeroGrupo1.setName(String.valueOf(primeroGrupo1.getSelectedItem()));
                                     System.out.println("El nombre ahora es " + primeroGrupo1.getName());
-                                    myFrame.pack();
+                                   myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 }
                             });
 
@@ -799,7 +802,7 @@ public class Querys extends JFrame {
                                 public void itemStateChanged(ItemEvent ie) {
                                     operandoGrupo1.setName(String.valueOf(operandoGrupo1.getSelectedItem()));
                                     System.out.println("El nombre ahora es " + operandoGrupo1.getName());
-                                    myFrame.pack();
+                                   myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 }
                             });
 
@@ -818,7 +821,7 @@ public class Querys extends JFrame {
                                 public void keyReleased(KeyEvent ke) {
                                     segundoGrupo1.setName(segundoGrupo1.getText());
                                     System.out.println("El nombre ahora es " + segundoGrupo1.getName());
-                                    myFrame.pack();
+                                   myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 }
                             });
                             
@@ -827,7 +830,7 @@ public class Querys extends JFrame {
                                 public void itemStateChanged(ItemEvent ie) {
                                     primeroGrupo2.setName(String.valueOf(primeroGrupo2.getSelectedItem()));
                                     System.out.println("El nombre ahora es " + primeroGrupo2.getName());
-                                    myFrame.pack();
+                                   myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 }
                             });
 
@@ -836,7 +839,7 @@ public class Querys extends JFrame {
                                 public void itemStateChanged(ItemEvent ie) {
                                     operandoGrupo2.setName(String.valueOf(operandoGrupo2.getSelectedItem()));
                                     System.out.println("El nombre ahora es " + operandoGrupo2.getName());
-                                    myFrame.pack();
+                                   myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 }
                             });
 
@@ -855,11 +858,11 @@ public class Querys extends JFrame {
                                 public void keyReleased(KeyEvent ke) {
                                     segundoGrupo2.setName(segundoGrupo2.getText());
                                     System.out.println("El nombre ahora es " + segundoGrupo2.getName());
-                                    myFrame.pack();
+                                   myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 }
                             });
                             
-                            myFrame.pack();
+                           myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             flag=1;
                             
                         }else{
@@ -899,7 +902,7 @@ public class Querys extends JFrame {
                                 public void itemStateChanged(ItemEvent ie) {
                                     primeroGrupo1.setName(String.valueOf(primeroGrupo1.getSelectedItem()));
                                     System.out.println("El nombre ahora es " + primeroGrupo1.getName());
-                                    myFrame.pack();
+                                   myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 }
                             });
 
@@ -908,7 +911,7 @@ public class Querys extends JFrame {
                                 public void itemStateChanged(ItemEvent ie) {
                                     operandoGrupo1.setName(String.valueOf(operandoGrupo1.getSelectedItem()));
                                     System.out.println("El nombre ahora es " + operandoGrupo1.getName());
-                                    myFrame.pack();
+                                   myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 }
                             });
 
@@ -927,11 +930,11 @@ public class Querys extends JFrame {
                                 public void keyReleased(KeyEvent ke) {
                                     segundoGrupo1.setName(segundoGrupo1.getText());
                                     System.out.println("El nombre ahora es " + segundoGrupo1.getName());
-                                    myFrame.pack();
+                                   myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 }
                             });
                             
-                            myFrame.pack();
+                           myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             
                         }
                         Container c = anadirParametros.getParent();
@@ -940,7 +943,7 @@ public class Querys extends JFrame {
                         }
                     } 
                 });
-                myFrame.pack();
+               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                 
                 
                 //el siguiente comando conciste de que ordenamiento se desea hacer
@@ -977,7 +980,7 @@ public class Querys extends JFrame {
                         countMe = countMe - 1;
                         me.removeAndReorderFromList(me.index);
                         me.getParent().remove(me);
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -986,7 +989,7 @@ public class Querys extends JFrame {
                     public void itemStateChanged(ItemEvent ie) {
                         comboParametro.setName(String.valueOf(comboParametro.getSelectedItem()));
                         System.out.println("El nombre ahora es " + comboParametro.getName());
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -995,7 +998,7 @@ public class Querys extends JFrame {
                     public void itemStateChanged(ItemEvent ie) {
                         DESC_ASC_combo.setName(String.valueOf(DESC_ASC_combo.getSelectedItem()));
                         System.out.println("El nombre ahora es " + DESC_ASC_combo.getName());
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 // se puede añadir varios parametros dentro de nuestro ORDER BY
@@ -1028,7 +1031,7 @@ public class Querys extends JFrame {
                             public void itemStateChanged(ItemEvent ie) {
                                 nuevoParam.setName(String.valueOf(nuevoParam.getSelectedItem()));
                                 System.out.println("El nombre ahora es " + nuevoParam.getName());
-                                myFrame.pack();
+                               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             }
                         });
                         
@@ -1037,7 +1040,7 @@ public class Querys extends JFrame {
                             public void itemStateChanged(ItemEvent ie) {
                                 nuevo_DESC_ASC_combo.setName(String.valueOf(nuevo_DESC_ASC_combo.getSelectedItem()));
                                 System.out.println("El nombre ahora es " + nuevo_DESC_ASC_combo.getName());
-                                myFrame.pack();
+                               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             }
                         });
                         
@@ -1047,7 +1050,7 @@ public class Querys extends JFrame {
                             Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                         }                        
                         
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                         
                     }
                 });
@@ -1060,7 +1063,7 @@ public class Querys extends JFrame {
                 add(anadirSelectParam);
                 add(myButtonRemoveMe);
                 
-                myFrame.pack();
+               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                 
                 
                 //en el siguiente condicion se hace que se acceda para crear el argumento INNER JOIN
@@ -1171,7 +1174,7 @@ public class Querys extends JFrame {
                         countMe = countMe - 1;
                         me.removeAndReorderFromList(me.index);
                         me.getParent().remove(me);
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -1191,7 +1194,7 @@ public class Querys extends JFrame {
                 add(columnOperator2);
                 add(myButtonRemoveMe);
                 
-                myFrame.pack();
+               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
  
              // En esta seccion se añade las consultas de agregacion, de acuerdoa cada una de las llaves
              //si enmabrgo estas sguen una logica en comun, un argumento entre parentesis con la opcion de generar
@@ -1232,7 +1235,7 @@ public class Querys extends JFrame {
                         countMe = countMe - 1;
                         me.removeAndReorderFromList(me.index);
                         me.getParent().remove(me);
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -1241,7 +1244,7 @@ public class Querys extends JFrame {
                     public void itemStateChanged(ItemEvent ie) {
                         comboCualquierSELECT.setName(String.valueOf(comboCualquierSELECT.getSelectedItem()));
                         System.out.println("El nombre ahora es " + comboCualquierSELECT.getName());
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -1268,7 +1271,7 @@ public class Querys extends JFrame {
                             public void itemStateChanged(ItemEvent ie) {
                                 nuevoParam.setName(String.valueOf(nuevoParam.getSelectedItem()));
                                 System.out.println("El nombre ahora es " + nuevoParam.getName());
-                                myFrame.pack();
+                               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             }
                         });
                         
@@ -1284,7 +1287,7 @@ public class Querys extends JFrame {
                                 subPanel nuevoSubPanel = new subPanel(16, countMe);
                                 listElementsStatement.add(nuevoSubPanel);
                                 mainPanel.add(nuevoSubPanel);
-                                myFrame.pack();
+                               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                                 countMe++;
                                 
                             } catch (SQLException ex) {
@@ -1293,7 +1296,7 @@ public class Querys extends JFrame {
                             flag=1;
                         }
                         
-                        myFrame.pack();                       
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );                       
                     }
                 });
                 
@@ -1306,7 +1309,7 @@ public class Querys extends JFrame {
                 add(fromTable);
                 add(myButtonRemoveMe);
  
-                myFrame.pack();
+               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                 
                 // para generar GROUP BYs se da un parametro de inmediato, se da la opcion de generar mas parametros
                 //a voluntad, este comando es de gran ayuda para la agrgacion de parametros a una funcion de agragacion
@@ -1334,7 +1337,7 @@ public class Querys extends JFrame {
                         countMe = countMe - 1;
                         me.removeAndReorderFromList(me.index);
                         me.getParent().remove(me);
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -1343,7 +1346,7 @@ public class Querys extends JFrame {
                     public void itemStateChanged(ItemEvent ie) {
                         comboParametro.setName(String.valueOf(comboParametro.getSelectedItem()));
                         System.out.println("El nombre ahora es " + comboParametro.getName());
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                     }
                 });
                 
@@ -1370,7 +1373,7 @@ public class Querys extends JFrame {
                             public void itemStateChanged(ItemEvent ie) {
                                 nuevoParam.setName(String.valueOf(nuevoParam.getSelectedItem()));
                                 System.out.println("El nombre ahora es " + nuevoParam.getName());
-                                myFrame.pack();
+                               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                             }
                         });
                         
@@ -1380,7 +1383,7 @@ public class Querys extends JFrame {
                             Logger.getLogger(Querys.class.getName()).log(Level.SEVERE, null, ex);
                         }                        
                         
-                        myFrame.pack();
+                       myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                         
                     }
                 });
@@ -1393,7 +1396,8 @@ public class Querys extends JFrame {
                 add(anadirSelectParam);
                 add(myButtonRemoveMe);
                 
-                myFrame.pack();
+               
+               myFrame.revalidate();myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
                 
                 
             }
