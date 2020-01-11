@@ -25,7 +25,7 @@ public class CapaDatos {
     // Capa de Datos Genérica
     
     // Objeto de conexion con la base de datos
-    private Connection conexion;
+    private static Connection conexion;
     
     // Conectar con la base de datos
     private void conectarBD() {
@@ -752,6 +752,11 @@ public class CapaDatos {
             this.desconectarBD();
             
             return response;
+    }
+    
+    public void iniciar() {
+        this.conectarBD();
+        this.desconectarBD();
     }
     
 }

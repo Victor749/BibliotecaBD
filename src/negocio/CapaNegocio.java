@@ -16,12 +16,8 @@ import java.util.List;
  */
 public class CapaNegocio {
     
-    private final CapaDatos capaDatos; // Instancia de la Capa de Datos
+    private static final CapaDatos capaDatos = new CapaDatos(); // Instancia de la Capa de Datos
     private static final SimpleDateFormat fecha_hora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
-    public CapaNegocio() {
-        capaDatos = new CapaDatos();
-    }
     
     // Los métodos genéricos para CRUD a nivel de Capa de Negocio
     // Hacen un mapeo básico del nombre de la tablas, el cual es 
@@ -356,6 +352,10 @@ public class CapaNegocio {
     public List <Alquiler> todosAlquileres(int orden) {
         List<Alquiler> lista = consultar(Alquiler.class, null, Alquiler.nombreAtributos()[orden]);
         return lista;
+    }
+    
+    public void iniciar() {
+        capaDatos.iniciar();
     }
   
 }
