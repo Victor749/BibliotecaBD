@@ -357,5 +357,9 @@ public class CapaNegocio {
         List<Alquiler> lista = consultar(Alquiler.class, null, Alquiler.nombreAtributos()[orden]);
         return lista;
     }
+    
+    public void iniciar() {
+        capaDatos.iniciar();
+    }
   
 }

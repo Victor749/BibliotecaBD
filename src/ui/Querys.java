@@ -119,7 +119,7 @@ public class Querys extends JFrame {
 
     private static void createAndShowGUI() throws SQLException {
         myFrame = new Querys();
-        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        myFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         myFrame.prepareUI();
         //myFrame.setRelativeTo(null);
         myFrame.setVisible(true);

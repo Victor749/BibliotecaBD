@@ -753,4 +753,9 @@ public class CapaDatos {
             return response;
     }
     
+    public void iniciar() {
+        this.conectarBD();
+        this.desconectarBD();
+    }
+    
 }

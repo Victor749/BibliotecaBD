@@ -5,6 +5,9 @@
  */
 package ui;
 
+import javax.swing.JOptionPane;
+import negocio.CapaNegocio;
+
 /**
  *
  * @author USUARIO
@@ -22,6 +25,13 @@ public class UIMenu extends javax.swing.JFrame {
         this.setTitle("Gestión de Biblioteca");
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+        CapaNegocio capaNegocio = new CapaNegocio();
+        try {
+            capaNegocio.iniciar();
+            JOptionPane.showMessageDialog(this, "¡Conexión Exitosa con la BD!", "OK", JOptionPane.INFORMATION_MESSAGE);
+        } catch (RuntimeException E) {
+            JOptionPane.showMessageDialog(this, "No se pudo conectar con la BD.", "OK", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
