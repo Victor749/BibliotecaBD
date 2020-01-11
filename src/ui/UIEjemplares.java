@@ -106,10 +106,11 @@ public class UIEjemplares extends javax.swing.JFrame {
         }
     }
     
+    // Limita caracteres, para evitar Inyecciones SQL
     private boolean esAlfaNumerico(String cadena) {
         char[] charArray = cadena.toCharArray();
         for(char c : charArray) {
-            if (!(Character.isLetterOrDigit(c) || c == ' ' || c == '-'))
+            if (!(Character.isLetterOrDigit(c) || c == ' ' || c == '-' || c == ',' || c == ':'))
                 return false;
         }
         return true;
