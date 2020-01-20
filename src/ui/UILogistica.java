@@ -32,8 +32,10 @@ public class UILogistica extends javax.swing.JFrame {
     private boolean opcionEstante;
     private CapaNegocio negocio;
     
-    public UILogistica() {
+    
+    public UILogistica(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -46,7 +48,6 @@ public class UILogistica extends javax.swing.JFrame {
         activarBotonesEstante(true);
         mostrarTablas();
         initCombos();
-        negocio = new CapaNegocio();
         jTextFieldIdPlanta.setEditable(false);
         jTextFieldIdEstante.setEditable(false);
         this.jTableEstantes.setEnabled(false);

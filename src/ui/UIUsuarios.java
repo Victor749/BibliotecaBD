@@ -27,8 +27,10 @@ public class UIUsuarios extends javax.swing.JFrame {
     private boolean opcion;
     private CapaNegocio negocio;
     
-    public UIUsuarios() {
+    
+    public UIUsuarios(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -41,7 +43,6 @@ public class UIUsuarios extends javax.swing.JFrame {
         initCombo();
         this.jTableUsuarios.setEnabled(false);
         jTextFieldCedula.setEditable(false);
-        negocio = new CapaNegocio();
     }
     
     private void activarTextos(Boolean estado) {

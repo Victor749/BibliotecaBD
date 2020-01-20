@@ -36,8 +36,11 @@ public class UIEdiciones extends javax.swing.JFrame {
     private TextAutoCompleter textAutoCompleterLibro;
     private TextAutoCompleter textAutoCompleterEditorial;
     
-    public UIEdiciones() {
+
+    
+    public UIEdiciones(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -48,7 +51,6 @@ public class UIEdiciones extends javax.swing.JFrame {
         activarBotones(true);
         mostrarTabla();
         initCombo();
-        negocio = new CapaNegocio();
         this.jTableEdiciones.setEnabled(false);
         textAutoCompleterLibro = new TextAutoCompleter(jTextFieldLibro);
         textAutoCompleterEditorial = new TextAutoCompleter(jTextFieldEditorial);

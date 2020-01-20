@@ -6,6 +6,7 @@
 package bibliotecabd;
 
 import ui.UIMenu;
+import ui.UI_Login;
 
 /**
  *
@@ -17,7 +18,7 @@ public class BibliotecaBD {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        UIMenu ui = new UIMenu();
+        UI_Login ui = new UI_Login();
         ui.iniciar();
     }
     

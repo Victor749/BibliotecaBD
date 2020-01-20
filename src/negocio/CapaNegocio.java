@@ -6,8 +6,10 @@
 package negocio;
 
 import datos.CapaDatos;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,17 +18,27 @@ import java.util.List;
  */
 public class CapaNegocio {
     
-    private static final CapaDatos capaDatos = new CapaDatos(); // Instancia de la Capa de Datos
+    private CapaDatos capaDatos; // Instancia de la Capa de Datos
     private static final SimpleDateFormat fecha_hora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
+    private String usuario;
+    private String contrasena;
     
     // Los métodos genéricos para CRUD a nivel de Capa de Negocio
     // Hacen un mapeo básico del nombre de la tablas, el cual es 
     // el mismo que el nombre de las clases
     
+    public CapaNegocio(String usuario, String contrasena){
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        capaDatos = new CapaDatos(usuario,contrasena);
+    }
+    
     // Envia a la capa de datos un objeto para insertar
     public void insertar(Object objeto) {
         capaDatos.insertBD(objeto, objeto.getClass().getSimpleName());
     }
+    
     
     // Envia a la capa de datos un objeto para actualizar
     public void actualizar(Object objeto) {
@@ -356,6 +368,17 @@ public class CapaNegocio {
     
     public void iniciar() {
         capaDatos.iniciar();
+    }
+    
+     //Lamada a metodos de la capa de datos
+    public ArrayList<String> solicitarConsultaParaCombo(String sqlStatement) throws SQLException{
+        return capaDatos.makeQueryForCombo(sqlStatement);
+    }
+    public ArrayList<String> solicitarConsultaParaComboFOR(String sqlStatement) throws SQLException{
+        return capaDatos.makeQueryForComboFOR(sqlStatement);
+    }
+    public ArrayList<Object> solicitarConsultaParaTabla(String sqlStatement) throws SQLException{
+        return capaDatos.makeQueryForTable(sqlStatement);
     }
   
 }

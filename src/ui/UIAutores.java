@@ -27,8 +27,9 @@ public class UIAutores extends javax.swing.JFrame {
     private boolean opcion;
     private CapaNegocio negocio;
     
-    public UIAutores() {
+    public UIAutores(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -39,7 +40,6 @@ public class UIAutores extends javax.swing.JFrame {
         activarBotones(true);
         mostrarTabla();
         initCombo();
-        negocio = new CapaNegocio();
         jTextFieldId.setEditable(false);
         this.jTableAutores.setEnabled(false);
     }

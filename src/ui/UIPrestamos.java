@@ -25,8 +25,11 @@ public class UIPrestamos extends javax.swing.JFrame {
     private List<Alquiler> alquileres;
     private CapaNegocio negocio;
     
-    public UIPrestamos() {
+    
+    
+    public UIPrestamos(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -35,7 +38,6 @@ public class UIPrestamos extends javax.swing.JFrame {
         this.setVisible(true);
         mostrarTabla();
         initCombo();
-        negocio = new CapaNegocio();
         this.jTableEdiciones.setEnabled(false);
     }
     
@@ -269,22 +271,22 @@ public class UIPrestamos extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonVerEdicionesActionPerformed
 */
     private void jButtonDevolverPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDevolverPrestamoActionPerformed
-        UIDevolverPrestamo ui = new UIDevolverPrestamo();
+        UIDevolverPrestamo ui = new UIDevolverPrestamo(negocio);
         ui.iniciar();
     }//GEN-LAST:event_jButtonDevolverPrestamoActionPerformed
 
     private void jButtonHacerPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHacerPrestamoActionPerformed
-        UIHacerPrestamo ui = new UIHacerPrestamo();
+        UIHacerPrestamo ui = new UIHacerPrestamo(negocio);
         ui.iniciar();
     }//GEN-LAST:event_jButtonHacerPrestamoActionPerformed
 
     private void jButtonVerUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerUsuariosActionPerformed
-        UIUsuarios ui = new UIUsuarios();
+        UIUsuarios ui = new UIUsuarios(negocio);
         ui.iniciar();
     }//GEN-LAST:event_jButtonVerUsuariosActionPerformed
 
     private void jButtonVerEjemplaresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerEjemplaresActionPerformed
-        UIEjemplares ui = new UIEjemplares();
+        UIEjemplares ui = new UIEjemplares(negocio);
         ui.iniciar();
         /*UIEjemplaresAlternativa ui = new UIEjemplaresAlternativa();
         ui.iniciar();*/
