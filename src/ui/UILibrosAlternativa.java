@@ -27,8 +27,11 @@ public class UILibrosAlternativa extends javax.swing.JFrame {
     private boolean opcion;
     private CapaNegocio negocio;
     
-    public UILibrosAlternativa() {
+   
+    
+    public UILibrosAlternativa(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -39,7 +42,6 @@ public class UILibrosAlternativa extends javax.swing.JFrame {
         activarBotones(true);
         mostrarTabla();
         initCombo();
-        negocio = new CapaNegocio();
         this.jTableLibros.setEnabled(false);
         jTextFieldId.setEditable(false);
     }
@@ -441,7 +443,7 @@ public class UILibrosAlternativa extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonMostrarTodosActionPerformed
 
     private void jButtonVerAutoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerAutoresActionPerformed
-        UIAutores ui = new UIAutores();
+        UIAutores ui = new UIAutores(negocio);
         ui.iniciar();
     }//GEN-LAST:event_jButtonVerAutoresActionPerformed
 

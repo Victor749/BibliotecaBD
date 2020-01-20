@@ -35,8 +35,10 @@ public class UIHacerPrestamo extends javax.swing.JFrame {
     private DefaultTableModel modeloTabla;
     private static final SimpleDateFormat fecha_hora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
-    public UIHacerPrestamo() {
+  
+    public UIHacerPrestamo(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -50,7 +52,6 @@ public class UIHacerPrestamo extends javax.swing.JFrame {
         jSpinFieldSegundo.setMaximum(59);
         jSpinFieldSegundo.setMinimum(0);
         mostrarTabla();
-        negocio = new CapaNegocio();
         ejemplares = new ArrayList();
         activarControlesCedula(false);
         activarControlesEjemplar(false);
@@ -384,7 +385,7 @@ public class UIHacerPrestamo extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCedulaKeyReleased
 
     private void jButtonNuevoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoUsuarioActionPerformed
-        UIUsuarios ui = new UIUsuarios();
+        UIUsuarios ui = new UIUsuarios(negocio);
         ui.iniciar();
     }//GEN-LAST:event_jButtonNuevoUsuarioActionPerformed
 

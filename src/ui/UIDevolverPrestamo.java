@@ -28,8 +28,11 @@ public class UIDevolverPrestamo extends javax.swing.JFrame {
     private CapaNegocio negocio;
     private DefaultTableModel modeloTabla;
     
-    public UIDevolverPrestamo() {
+    
+    
+    public UIDevolverPrestamo(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -37,7 +40,6 @@ public class UIDevolverPrestamo extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         mostrarTabla();
-        negocio = new CapaNegocio();
         alquileres = new ArrayList();
         jButtonDevolverPrestamo.setEnabled(false);
         jButtonVerPrestamo.setEnabled(false);

@@ -27,8 +27,11 @@ public class UIEditoriales extends javax.swing.JFrame {
     private boolean opcion;
     private CapaNegocio negocio;
     
-    public UIEditoriales() {
+    
+    public UIEditoriales(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
+        
     }
     
     public void iniciar() {
@@ -39,7 +42,6 @@ public class UIEditoriales extends javax.swing.JFrame {
         activarBotones(true);
         mostrarTabla();
         initCombo();
-        negocio = new CapaNegocio();
         jTextFieldId.setEditable(false);
         this.jTableEditoriales.setEnabled(false);
     }

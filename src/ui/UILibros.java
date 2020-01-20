@@ -31,8 +31,10 @@ public class UILibros extends javax.swing.JFrame {
     private CapaNegocio negocio;
     private TextAutoCompleter textAutoCompleter;
     
-    public UILibros() {
+    
+    public UILibros(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -43,7 +45,6 @@ public class UILibros extends javax.swing.JFrame {
         activarBotones(true);
         mostrarTabla();
         initCombo();
-        negocio = new CapaNegocio();
         this.jTableLibros.setEnabled(false);
         textAutoCompleter = new TextAutoCompleter(jTextFieldAutor);
         jTextFieldId.setEditable(false);

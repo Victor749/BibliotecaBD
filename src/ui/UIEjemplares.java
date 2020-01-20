@@ -36,8 +36,10 @@ public class UIEjemplares extends javax.swing.JFrame {
     private boolean opcion;
     private CapaNegocio negocio;
     
-    public UIEjemplares() {
+   
+    public UIEjemplares(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -47,7 +49,6 @@ public class UIEjemplares extends javax.swing.JFrame {
         activarTextos(false);
         activarBotones(true);
         mostrarTabla();
-        negocio = new CapaNegocio();
         this.jTableEdiciones.setEnabled(false);
         this.jTextFieldIsbn.setEditable(false);
         this.jTextFieldId.setEditable(false);
@@ -607,12 +608,12 @@ public class UIEjemplares extends javax.swing.JFrame {
     private void jButtonVerEdicionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerEdicionesActionPerformed
         /*UIEdicionesAlternativa ui = new UIEdicionesAlternativa();
         ui.iniciar();*/
-        UIEdiciones ui = new UIEdiciones();
+        UIEdiciones ui = new UIEdiciones(negocio);
         ui.iniciar();
     }//GEN-LAST:event_jButtonVerEdicionesActionPerformed
 
     private void jButtonVerLogisitcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerLogisitcaActionPerformed
-        UILogistica ui = new UILogistica();
+        UILogistica ui = new UILogistica(negocio);
         ui.iniciar();
     }//GEN-LAST:event_jButtonVerLogisitcaActionPerformed
 

@@ -58,12 +58,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import negocio.Enlace;
+import negocio.CapaNegocio;
 import static ui.Querys.myFrame;
 
  
 
-public class Querys extends JFrame {
+public  class Querys extends JFrame {
 
 
     // Se cargan los iconos para la interfaz de usuario en las siguientes variables
@@ -76,7 +76,10 @@ public class Querys extends JFrame {
     Icon queryIconPressed = new ImageIcon("src/ui/queryPressed.png");
     Icon refreshIcon = new ImageIcon("src/ui/refresh.png");
     Icon refreshIconPressed = new ImageIcon("src/ui/refreshPressed.png");
-
+    
+    String nombreUsuario;
+    String contrasena;
+    
     // Se declara el JFrame que se utilizara como la interfaz de la vista
     static Querys myFrame;
     
@@ -88,7 +91,7 @@ public class Querys extends JFrame {
     JComboBox fromTable;
     
     // Se inicia el enlace a la capa de negocio que hace referencia a la capa de datos
-    static Enlace enlace = new Enlace();
+    CapaNegocio negocio;
     JTextField consola = new JTextField();
     JScrollPane sp = new JScrollPane();
     JTable tabla = new JTable();
@@ -101,6 +104,11 @@ public class Querys extends JFrame {
 
     //
     JInternalFrame internalFrame = null;
+    
+    public Querys(CapaNegocio capaNegocio){
+        this.negocio=capaNegocio;
+    }
+    
     
     //metodo que se llama para inicializar la interfaz
     public void iniciar() {
@@ -120,8 +128,8 @@ public class Querys extends JFrame {
     }
 
 
-    private static void createAndShowGUI() throws SQLException {
-        myFrame = new Querys();
+    private /*static*/ void createAndShowGUI() throws SQLException {
+        myFrame = new Querys(negocio);
         myFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         myFrame.prepareUI();
         //myFrame.setRelativeTo(null);
@@ -266,7 +274,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
                             sp.removeAll();
                             tabla.removeAll();
                             
-                            ArrayList<Object> response = enlace.solicitarConsultaParaTabla(query);
+                            ArrayList<Object> response = negocio.solicitarConsultaParaTabla(query);
                             
                             
                             
@@ -1427,7 +1435,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
         //las tablas de la base de datos, se la coloca en el comboBox que corresponde a FROM del comando SELECT
         public void fillFromCombo(JComboBox combo) throws SQLException{
             String sql = "SELECT table_name FROM user_tables ORDER BY table_name";
-            ArrayList<String> response = enlace.solicitarConsultaParaComboFOR(sql);
+            ArrayList<String> response = negocio.solicitarConsultaParaComboFOR(sql);
             
             
             for(String campo: response){
@@ -1447,7 +1455,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
 
             String sql = "SELECT * FROM " + String.valueOf(comboFrom.getSelectedItem());
 
-            ArrayList<String> response = enlace.solicitarConsultaParaCombo(sql);
+            ArrayList<String> response = negocio.solicitarConsultaParaCombo(sql);
             
             for(int i = 0; i<size; i++){
                 arrayCombos.get(i).removeAllItems();
@@ -1474,7 +1482,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
             
             System.out.println("holaaaaaaaaaaaaaa" + sql);
             
-            ArrayList<String> response = enlace.solicitarConsultaParaCombo(sql);
+            ArrayList<String> response = negocio.solicitarConsultaParaCombo(sql);
 
             for(int i = 0; i<size; i++){
                 for (int j = 0; j < response.size(); j++) {
@@ -1493,7 +1501,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
             
             String sql = "SELECT * FROM " + String.valueOf(comboFrom.getSelectedItem());
 
-            ArrayList<String> response = enlace.solicitarConsultaParaCombo(sql);
+            ArrayList<String> response = negocio.solicitarConsultaParaCombo(sql);
             
 
             for (int j = 0; j < response.size(); j++) {
@@ -1509,7 +1517,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
             
 
             String sql = "SELECT table_name FROM user_tables ORDER BY table_name";
-            ArrayList<String> response = enlace.solicitarConsultaParaComboFOR(sql);
+            ArrayList<String> response = negocio.solicitarConsultaParaComboFOR(sql);
             
             
             for(String campo: response){

@@ -13,21 +13,32 @@ import negocio.CapaNegocio;
  * @author USUARIO
  */
 public class UIMenu extends javax.swing.JFrame {
-
+    
+    private CapaNegocio capaNegocio;
+    String usuario;
+    String contrasena;
+    
+    
     /**
      * Creates new form UIMenu
      */
-    public UIMenu() {
+    public UIMenu(String usuario, String contrasena) {
         initComponents();
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+    }
+
+    UIMenu() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public void iniciar() {
-        this.setTitle("Gestión de Biblioteca");
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        CapaNegocio capaNegocio = new CapaNegocio();
+        CapaNegocio capaNegocio  = new CapaNegocio(usuario,contrasena);
         try {
             capaNegocio.iniciar();
+            this.setTitle("Gestión de Biblioteca");
+            this.setLocationRelativeTo(null);
+            this.setVisible(true);
             JOptionPane.showMessageDialog(this, "¡Conexión Exitosa con la BD!", "OK", JOptionPane.INFORMATION_MESSAGE);
         } catch (RuntimeException E) {
             JOptionPane.showMessageDialog(this, "No se pudo conectar con la BD.", "OK", JOptionPane.ERROR_MESSAGE);
@@ -45,7 +56,6 @@ public class UIMenu extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu = new javax.swing.JMenu();
         jMenuItemGestor = new javax.swing.JMenuItem();
@@ -68,8 +78,6 @@ public class UIMenu extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Stencil", 0, 24)); // NOI18N
         jLabel3.setText("SISTEMA DE GESTIÓN");
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/logobib.png"))); // NOI18N
 
         jMenu.setText("Menú");
 
@@ -170,10 +178,8 @@ public class UIMenu extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(72, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel3))
+                .addContainerGap(91, Short.MAX_VALUE)
+                .addComponent(jLabel3)
                 .addGap(79, 79, 79))
         );
         layout.setVerticalGroup(
@@ -183,36 +189,34 @@ public class UIMenu extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addGap(12, 12, 12))
+                .addGap(274, 274, 274))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItemUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUsuariosActionPerformed
-        UIUsuarios ui = new UIUsuarios();
+        UIUsuarios ui = new UIUsuarios(capaNegocio);
         ui.iniciar();
     }//GEN-LAST:event_jMenuItemUsuariosActionPerformed
 
     private void jMenuItemLogisticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogisticaActionPerformed
-        UILogistica ui = new UILogistica();
+        UILogistica ui = new UILogistica(capaNegocio);
         ui.iniciar();
     }//GEN-LAST:event_jMenuItemLogisticaActionPerformed
 
     private void jMenuItemAutoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAutoresActionPerformed
-        UIAutores ui = new UIAutores();
+        UIAutores ui = new UIAutores(capaNegocio);
         ui.iniciar();
     }//GEN-LAST:event_jMenuItemAutoresActionPerformed
 
     private void jMenuItemEditorialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEditorialesActionPerformed
-        UIEditoriales ui = new UIEditoriales();
+        UIEditoriales ui = new UIEditoriales(capaNegocio);
         ui.iniciar();
     }//GEN-LAST:event_jMenuItemEditorialesActionPerformed
 
     private void jMenuItemLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLibrosActionPerformed
-        UILibros ui = new UILibros();
+        UILibros ui = new UILibros(capaNegocio);
         ui.iniciar();
        /*UILibrosAlternativa ui = new UILibrosAlternativa();
         ui.iniciar();*/
@@ -220,12 +224,12 @@ public class UIMenu extends javax.swing.JFrame {
 
     private void jMenuItemGestorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGestorActionPerformed
         // TODO add your handling code here:
-        Querys gestor = new Querys();
+        Querys gestor = new Querys(capaNegocio);
         gestor.iniciar();
     }//GEN-LAST:event_jMenuItemGestorActionPerformed
 
     private void jMenuItemPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPrestamosActionPerformed
-        UIPrestamos ui = new UIPrestamos();
+        UIPrestamos ui = new UIPrestamos(capaNegocio);
         ui.iniciar();
     }//GEN-LAST:event_jMenuItemPrestamosActionPerformed
 
@@ -235,14 +239,14 @@ public class UIMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemAcercaDeActionPerformed
 
     private void jMenuItemEjemplaresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEjemplaresActionPerformed
-        UIEjemplares ui = new UIEjemplares();
+        UIEjemplares ui = new UIEjemplares(capaNegocio);
         ui.iniciar();
         /*UIEjemplaresAlternativa ui = new UIEjemplaresAlternativa();
         ui.iniciar();*/
     }//GEN-LAST:event_jMenuItemEjemplaresActionPerformed
 
     private void jMenuItemEdicionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEdicionesActionPerformed
-        UIEdiciones ui = new UIEdiciones();
+        UIEdiciones ui = new UIEdiciones(capaNegocio);
         ui.iniciar();
         /*UIEdicionesAlternativa ui = new UIEdicionesAlternativa();
         ui.iniciar();*/
@@ -286,7 +290,6 @@ public class UIMenu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu;
     private javax.swing.JMenu jMenuAyuda;
     private javax.swing.JMenuBar jMenuBar1;

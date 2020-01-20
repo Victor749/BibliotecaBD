@@ -29,8 +29,9 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
     private boolean opcion;
     private CapaNegocio negocio;
     
-    public UIEdicionesAlternativa() {
+    public UIEdicionesAlternativa(CapaNegocio capaNegocio) {
         initComponents();
+        this.negocio = capaNegocio;
     }
     
     public void iniciar() {
@@ -41,7 +42,6 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
         activarBotones(true);
         mostrarTabla();
         initCombo();
-        negocio = new CapaNegocio();
         this.jTableEdiciones.setEnabled(false);
         this.jDateChooserFecha.setDateFormatString("yyyy-MM-dd");
         this.jTextFieldIsbn.setEditable(false);
@@ -531,12 +531,12 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonMostrarTodosActionPerformed
 
     private void jButtonVerLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerLibrosActionPerformed
-        UILibrosAlternativa ui = new UILibrosAlternativa();
+        UILibrosAlternativa ui = new UILibrosAlternativa(negocio);
         ui.iniciar();
     }//GEN-LAST:event_jButtonVerLibrosActionPerformed
 
     private void jButtonVerEditorialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerEditorialesActionPerformed
-        UIEditoriales ui = new UIEditoriales();
+        UIEditoriales ui = new UIEditoriales(negocio);
         ui.iniciar();
     }//GEN-LAST:event_jButtonVerEditorialesActionPerformed
 
