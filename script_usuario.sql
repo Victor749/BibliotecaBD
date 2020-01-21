@@ -1,21 +1,30 @@
-CREATE TABLESPACE biblioteca
-  DATAFILE 'biblioteca.dat' 
+CREATE TABLESPACE biblioteca3
+  DATAFILE 'biblioteca3.dat' 
   SIZE 20M
   AUTOEXTEND ON;
-CREATE temporary TABLESPACE biblioteca_temp
-  tempfile 'biblioteca_temp.dbf' 
+CREATE temporary TABLESPACE biblioteca_temp3
+  tempfile 'biblioteca_temp3.dbf' 
   SIZE 10M
   AUTOEXTEND ON;
 alter session set "_ORACLE_SCRIPT"=true;
-CREATE USER usuario
+CREATE USER admin3
   IDENTIFIED BY 1234
-  DEFAULT TABLESPACE biblioteca
-  TEMPORARY TABLESPACE biblioteca_temp
-  QUOTA 20M on biblioteca;
-GRANT create session TO usuario;
-GRANT create table TO usuario;
-GRANT create view TO usuario;
-GRANT create any trigger TO usuario;
-GRANT create any procedure TO usuario;
-GRANT create sequence TO usuario;
-GRANT create synonym TO usuario;
+  DEFAULT TABLESPACE biblioteca3
+  TEMPORARY TABLESPACE biblioteca_temp3
+  QUOTA 20M on biblioteca3;
+GRANT create session TO admin3;
+GRANT create table TO admin3;
+GRANT create view TO admin3;
+GRANT create any trigger TO admin3;
+GRANT create any procedure TO admin3;
+GRANT create sequence TO admin3;
+GRANT create synonym TO admin3;
+GRANT create public synonym TO admin3;
+GRANT create user TO admin3;
+GRANT create user TO admin3;
+GRANT create role TO admin3;
+GRANT ALL PRIVILEGES TO admin3 WITH ADMIN OPTION;
+
+
+
+

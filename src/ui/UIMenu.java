@@ -33,7 +33,7 @@ public class UIMenu extends javax.swing.JFrame {
     }
     
     public void iniciar() {
-        CapaNegocio capaNegocio  = new CapaNegocio(usuario,contrasena);
+        capaNegocio  = new CapaNegocio(usuario,contrasena);
         try {
             capaNegocio.iniciar();
             this.setTitle("Gestión de Biblioteca");

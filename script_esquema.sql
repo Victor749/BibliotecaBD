@@ -142,4 +142,46 @@ update usuario set puede_prestamo = 0 where cedula = '0987654321';
 update alquiler set fecha_hora_entrega = '2019-12-28 11:30:00' where usuario_cedula = '0987654321' and fecha_hora_prestamo = '2019-12-27 11:00:23';
 update usuario set puede_prestamo = 1 where cedula = '0987654321';
 update ejemplar set prestado = 0 where edicion_isbn = '7777777777777' and id = 1;
+
+CREATE PUBLIC SYNONYM usuario FOR admin3.usuario;
+CREATE PUBLIC SYNONYM alquiler FOR admin3.alquiler;
+CREATE PUBLIC SYNONYM autor FOR admin3.autor;
+CREATE PUBLIC SYNONYM edicion FOR admin3.edicion;
+CREATE PUBLIC SYNONYM editorial FOR admin3.editorial;
+CREATE PUBLIC SYNONYM ejemplar FOR admin3.ejemplar;
+CREATE PUBLIC SYNONYM estante FOR admin3.estante;
+CREATE PUBLIC SYNONYM libro FOR admin3.libro;
+CREATE PUBLIC SYNONYM planta FOR admin3.planta;
+
+alter session set "_ORACLE_SCRIPT"=true;
+
+CREATE ROLE bibliotecario;
+GRANT ALL ON usuario TO bibliotecario;
+GRANT ALL ON alquiler TO bibliotecario;
+GRANT SELECT ON autor TO bibliotecario;
+GRANT SELECT ON edicion TO bibliotecario;
+GRANT SELECT ON editorial TO bibliotecario;
+GRANT ALL ON ejemplar TO bibliotecario;
+GRANT SELECT ON estante TO bibliotecario;
+GRANT SELECT ON libro TO bibliotecario;
+GRANT SELECT ON planta TO bibliotecario;
+GRANT create SESSION to bibliotecario;
+
+CREATE PUBLIC SYNONYM roleBibliotecario FOR bibliotecario;
+
+
+CREATE ROLE administrador;
+GRANT ALL ON usuario TO administrador;
+GRANT ALL ON alquiler TO administrador;
+GRANT ALL ON autor TO administrador;
+GRANT ALL ON edicion TO administrador;
+GRANT ALL ON editorial TO administrador;
+GRANT ALL ON ejemplar TO administrador;
+GRANT ALL ON estante TO administrador;
+GRANT ALL ON libro TO administrador;
+GRANT ALL ON planta TO administrador;
+GRANT create SESSION to administrador;
+
+CREATE PUBLIC SYNONYM roleAdministrador FOR administrador;
+
 commit;

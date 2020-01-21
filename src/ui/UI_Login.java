@@ -122,6 +122,9 @@ public class UI_Login extends javax.swing.JFrame {
 
     private void jButtonRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistrarseActionPerformed
         // TODO add your handling code here:
+        UI_RegistrarUsuario ui = new UI_RegistrarUsuario();
+        ui.iniciar();
+        
     }//GEN-LAST:event_jButtonRegistrarseActionPerformed
 
     /**

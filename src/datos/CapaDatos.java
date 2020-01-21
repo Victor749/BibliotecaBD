@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
+import static jdk.nashorn.internal.objects.NativeString.toLowerCase;
+import negocio.CapaNegocio;
 
 /**
  *
@@ -765,5 +768,27 @@ public class CapaDatos {
         this.conectarBD();
         this.desconectarBD();
     }
+    
+    
+    public void crearUsuario(String nuevoUsuario, String contrasenaNuevo, String tipo) throws SQLException{
+        this.conectarBD();
+        String comando1 ="alter session set \"_ORACLE_SCRIPT\"=true";
+        System.out.println(comando1);
+        String comando2 ="CREATE USER " + nuevoUsuario + " IDENTIFIED BY " + contrasenaNuevo +"  DEFAULT TABLESPACE biblioteca3  QUOTA 20M on biblioteca3";
+        System.out.println(comando2);
+        String comando3 ="GRANT " + toLowerCase(tipo) + " TO  " + nuevoUsuario;
+        System.out.println(comando3);
+            
+        Statement stmt = conexion.createStatement();
+        
+        boolean st = stmt.execute(comando1);
+        st = stmt.execute(comando2);
+        st = stmt.execute(comando3);
+
+        this.desconectarBD();
+        
+    }
+
+    
     
 }

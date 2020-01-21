@@ -7,6 +7,7 @@ package negocio;
 
 import datos.CapaDatos;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -364,6 +365,10 @@ public class CapaNegocio {
     public List <Alquiler> todosAlquileres(int orden) {
         List<Alquiler> lista = consultar(Alquiler.class, null, Alquiler.nombreAtributos()[orden]);
         return lista;
+    }
+    
+    public void crearUsuario(String nuevoUsuario, String contrasenaNuevo, String tipo) throws SQLException{
+        capaDatos.crearUsuario(nuevoUsuario,contrasenaNuevo, tipo);
     }
     
     public void iniciar() {
