@@ -5,8 +5,13 @@
  */
 package ui;
 
+import java.awt.Container;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import negocio.CapaNegocio;
+import static ui.Querys.myFrame;
 
 /**
  *
@@ -19,6 +24,7 @@ public class UI_Login extends javax.swing.JFrame {
      */
     public UI_Login() {
         initComponents();
+        this.jToggleButtonAPrivilegios.setEnabled(false);
     }
 
     /**
@@ -31,21 +37,16 @@ public class UI_Login extends javax.swing.JFrame {
     private void initComponents() {
 
         jTextFieldUsuario = new javax.swing.JTextField();
-        jTextFieldContrasena = new javax.swing.JTextField();
         jButtonIngresar = new javax.swing.JButton();
         jButtonRegistrarse = new javax.swing.JButton();
+        jTextFieldContrasena = new javax.swing.JPasswordField();
+        jToggleButtonAPrivilegios = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextFieldUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldUsuarioActionPerformed(evt);
-            }
-        });
-
-        jTextFieldContrasena.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldContrasenaActionPerformed(evt);
             }
         });
 
@@ -63,6 +64,19 @@ public class UI_Login extends javax.swing.JFrame {
             }
         });
 
+        jTextFieldContrasena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldContrasenaActionPerformed(evt);
+            }
+        });
+
+        jToggleButtonAPrivilegios.setText("Administrar Privilegios");
+        jToggleButtonAPrivilegios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonAPrivilegiosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -70,30 +84,35 @@ public class UI_Login extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(101, 101, 101)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldContrasena, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-                            .addComponent(jTextFieldUsuario)))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(151, 151, 151)
                         .addComponent(jButtonIngresar))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(142, 142, 142)
-                        .addComponent(jButtonRegistrarse)))
-                .addContainerGap(122, Short.MAX_VALUE))
+                        .addGap(103, 103, 103)
+                        .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(138, 138, 138)
+                        .addComponent(jButtonRegistrarse))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(122, 122, 122)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jToggleButtonAPrivilegios))))
+                .addContainerGap(120, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(54, 54, 54)
                 .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jTextFieldContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
+                .addGap(26, 26, 26)
+                .addComponent(jTextFieldContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addComponent(jButtonIngresar)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonRegistrarse)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jToggleButtonAPrivilegios)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -103,6 +122,28 @@ public class UI_Login extends javax.swing.JFrame {
         this.setTitle("LOGIN");
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+        
+        this.jTextFieldUsuario.addKeyListener(new KeyListener(){
+                            @Override
+                            public void keyTyped(KeyEvent ke) {
+                                //
+                            }
+
+                            @Override
+                            public void keyPressed(KeyEvent ke) {
+                                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                            }
+
+                            @Override
+                            public void keyReleased(KeyEvent ke) {
+                                if(jTextFieldUsuario.getText().equals("admin3")){
+                                    jToggleButtonAPrivilegios.setEnabled(true);
+                                }else{
+                                    jToggleButtonAPrivilegios.setEnabled(false);
+                                }
+                            }
+                        });
+                        
     }
     
     private void jTextFieldUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldUsuarioActionPerformed
@@ -110,15 +151,8 @@ public class UI_Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldUsuarioActionPerformed
 
     private void jButtonIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonIngresarActionPerformed
-        String nombreUsuario = jTextFieldUsuario.getText() ;
-        String contrasena = jTextFieldContrasena.getText() ;
-        UIMenu ui = new UIMenu(nombreUsuario,contrasena);
-        ui.iniciar();
+        
     }//GEN-LAST:event_jButtonIngresarActionPerformed
-
-    private void jTextFieldContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldContrasenaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldContrasenaActionPerformed
 
     private void jButtonRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistrarseActionPerformed
         // TODO add your handling code here:
@@ -126,6 +160,19 @@ public class UI_Login extends javax.swing.JFrame {
         ui.iniciar();
         
     }//GEN-LAST:event_jButtonRegistrarseActionPerformed
+
+    private void jTextFieldContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldContrasenaActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jTextFieldContrasenaActionPerformed
+
+    private void jToggleButtonAPrivilegiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonAPrivilegiosActionPerformed
+        // TODO add your handling code here:
+        String nombreUsuario = jTextFieldUsuario.getText() ;
+        String contrasena = jTextFieldContrasena.getText() ;
+        //UIAsignarPrivilegios ui = new UIAsignarPrivilegios(nombreUsuario,contrasena);
+        //ui.iniciar();
+    }//GEN-LAST:event_jToggleButtonAPrivilegiosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -165,7 +212,8 @@ public class UI_Login extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton jButtonIngresar;
     public javax.swing.JButton jButtonRegistrarse;
-    private javax.swing.JTextField jTextFieldContrasena;
+    private javax.swing.JPasswordField jTextFieldContrasena;
     public javax.swing.JTextField jTextFieldUsuario;
+    private javax.swing.JToggleButton jToggleButtonAPrivilegios;
     // End of variables declaration//GEN-END:variables
 }
