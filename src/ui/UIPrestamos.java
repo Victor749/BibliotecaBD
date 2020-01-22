@@ -103,6 +103,7 @@ public class UIPrestamos extends javax.swing.JFrame {
         jButtonHacerPrestamo = new javax.swing.JButton();
         jButtonVerUsuarios = new javax.swing.JButton();
         jButtonVerEjemplares = new javax.swing.JButton();
+        jButtonBorrarPrestamo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -168,6 +169,13 @@ public class UIPrestamos extends javax.swing.JFrame {
             }
         });
 
+        jButtonBorrarPrestamo.setText("Borrar Préstamo");
+        jButtonBorrarPrestamo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBorrarPrestamoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -192,7 +200,9 @@ public class UIPrestamos extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(109, 109, 109)
                         .addComponent(jButtonHacerPrestamo)
-                        .addGap(346, 346, 346)
+                        .addGap(115, 115, 115)
+                        .addComponent(jButtonBorrarPrestamo)
+                        .addGap(120, 120, 120)
                         .addComponent(jButtonDevolverPrestamo, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
                         .addGap(85, 85, 85))
                     .addGroup(layout.createSequentialGroup()
@@ -213,7 +223,8 @@ public class UIPrestamos extends javax.swing.JFrame {
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonDevolverPrestamo)
-                    .addComponent(jButtonHacerPrestamo))
+                    .addComponent(jButtonHacerPrestamo)
+                    .addComponent(jButtonBorrarPrestamo))
                 .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -292,6 +303,11 @@ public class UIPrestamos extends javax.swing.JFrame {
         ui.iniciar();*/
     }//GEN-LAST:event_jButtonVerEjemplaresActionPerformed
 
+    private void jButtonBorrarPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBorrarPrestamoActionPerformed
+        UIBorrarPrestamo ui = new UIBorrarPrestamo(negocio);
+        ui.iniciar();
+    }//GEN-LAST:event_jButtonBorrarPrestamoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -328,6 +344,7 @@ public class UIPrestamos extends javax.swing.JFrame {
     }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonBorrarPrestamo;
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonDevolverPrestamo;
     private javax.swing.JButton jButtonHacerPrestamo;

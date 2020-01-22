@@ -1,0 +1,13 @@
+drop trigger caso_desabastecimiento;
+drop trigger borrar_prestamo;
+drop table usuario cascade constraints purge;
+drop table autor cascade constraints purge;
+drop table libro cascade constraints purge;
+drop table editorial cascade constraints purge;
+drop table edicion cascade constraints purge;
+drop table planta cascade constraints purge;
+drop table estante cascade constraints purge;
+drop table alquiler cascade constraints purge;
+drop table ejemplar cascade constraints purge;
+drop table desabastecimiento cascade constraints purge;
+drop table pedido cascade constraints purge;

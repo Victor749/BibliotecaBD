@@ -517,7 +517,7 @@ public class UIEjemplaresAlternativa extends javax.swing.JFrame {
         try {
             if (validar(this.jTextFieldIsbn.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jTextFieldPlanta.getText()), Integer.parseInt(this.jTextFieldEstante.getText()), 0, this.jTextFieldObservaciones.getText()));
+                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jTextFieldPlanta.getText()), Integer.parseInt(this.jTextFieldEstante.getText()), this.jTextFieldObservaciones.getText()));
                     JOptionPane.showMessageDialog(this, "Ejemplar ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     ejemplar.setPlanta_id(Integer.parseInt(this.jTextFieldPlanta.getText()));

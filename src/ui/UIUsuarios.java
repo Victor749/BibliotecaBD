@@ -69,11 +69,12 @@ public class UIUsuarios extends javax.swing.JFrame {
         jComboOrden.addItem("Nombre");
         jComboOrden.addItem("Dirección");
         jComboOrden.addItem("Puede Préstamo");
+        jComboOrden.addItem("Vetado");
     }
     
     private void mostrarTabla() {
         String [][] roster = {};
-        String [] columnas = {"Cédula", "Nombre", "Dirección", "Puede Préstamo"};
+        String [] columnas = {"Cédula", "Nombre", "Dirección", "Puede Préstamo", "Vetado"};
         this.modeloTabla = new DefaultTableModel(roster, columnas);
         jTableUsuarios.setModel(modeloTabla);
     }
@@ -89,6 +90,7 @@ public class UIUsuarios extends javax.swing.JFrame {
             this.modeloTabla.setValueAt(usuarios.get(j).getNombre(), this.modeloTabla.getRowCount() - 1, 1);
             this.modeloTabla.setValueAt(usuarios.get(j).getDireccion(), this.modeloTabla.getRowCount() - 1, 2);
             this.modeloTabla.setValueAt(String.valueOf(usuarios.get(j).getPuede_prestamo()), this.modeloTabla.getRowCount() - 1, 3);
+            this.modeloTabla.setValueAt(String.valueOf(usuarios.get(j).getVetado()), this.modeloTabla.getRowCount() - 1, 4);
         }
     }
     
@@ -403,7 +405,7 @@ public class UIUsuarios extends javax.swing.JFrame {
         try {
             if (validar(jTextFieldCedula.getText()) && esAlfaNumerico(jTextFieldNombre.getText()) && esAlfaNumerico(jTextFieldDireccion.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Usuario(jTextFieldCedula.getText(), jTextFieldNombre.getText(), jTextFieldDireccion.getText(), 1));
+                    negocio.insertar(new Usuario(jTextFieldCedula.getText(), jTextFieldNombre.getText(), jTextFieldDireccion.getText()));
                     JOptionPane.showMessageDialog(this, "Usuario ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     usuario.setNombre(jTextFieldNombre.getText());

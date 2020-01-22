@@ -13,17 +13,19 @@ public class Usuario {
     
     public Usuario() {}
 
-    public Usuario(String cedula, String nombre, String direccion, int puede_prestamo) {
+    public Usuario(String cedula, String nombre, String direccion) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.direccion = direccion;
-        this.puede_prestamo = puede_prestamo;
+        this.puede_prestamo = 1;
+        this.vetado = 0;
     }
 
-    public Usuario(String cedula, String nombre, int puede_prestamo) {
+    public Usuario(String cedula, String nombre) {
         this.cedula = cedula;
         this.nombre = nombre;
-        this.puede_prestamo = puede_prestamo;
+        this.puede_prestamo = 1;
+        this.vetado = 0;
     }
 
     public String getCedula() {
@@ -57,6 +59,14 @@ public class Usuario {
     public void setPuede_prestamo(int puede_prestamo) {
         this.puede_prestamo = puede_prestamo;
     }
+    
+    public int getVetado() {
+        return vetado;
+    }
+
+    public void setVetado(int vetado) {
+        this.vetado = vetado;
+    }
 
     @Override
     public String toString() {
@@ -64,7 +74,7 @@ public class Usuario {
     }
     
     public static String[] nombreAtributos() {
-        String[] atributos = {"cedula", "nombre", "direccion", "puede_prestamo"};
+        String[] atributos = {"cedula", "nombre", "direccion", "puede_prestamo", "vetado"};
         return atributos;
     }
     
@@ -72,5 +82,6 @@ public class Usuario {
     private String nombre;
     private String direccion;
     private int puede_prestamo;
+    private int vetado;
     
 }

@@ -52,6 +52,7 @@ public class UIEjemplares extends javax.swing.JFrame {
         this.jTableEdiciones.setEnabled(false);
         this.jTextFieldIsbn.setEditable(false);
         this.jTextFieldId.setEditable(false);
+        this.jComboEstado.setEnabled(false);
         initCombo();
     }
     
@@ -81,12 +82,15 @@ public class UIEjemplares extends javax.swing.JFrame {
         jComboOrden.addItem("Estante (Id)");
         jComboOrden.addItem("Prestado");
         jComboOrden.addItem("Observaciones");
+        jComboOrden.addItem("Mal Estado");
+        this.jComboEstado.addItem("Bien");
+        this.jComboEstado.addItem("Dañado");
         cargarComboPlanta();
     }
     
     private void mostrarTabla() {
         String [][] roster = {};
-        String [] columnas = {"ISBN", "Id", "Planta (Id)", "Estante (Id)", "Prestado", "Observaciones"};
+        String [] columnas = {"ISBN", "Id", "Planta (Id)", "Estante (Id)", "Prestado", "Observaciones", "Mal Estado"};
         this.modeloTabla = new DefaultTableModel(roster, columnas);
         jTableEdiciones.setModel(modeloTabla);
     }
@@ -104,6 +108,7 @@ public class UIEjemplares extends javax.swing.JFrame {
             this.modeloTabla.setValueAt(String.valueOf(ejemplares.get(j).getEstante_id()), this.modeloTabla.getRowCount() - 1, 3);
             this.modeloTabla.setValueAt(String.valueOf(ejemplares.get(j).getPrestado()), this.modeloTabla.getRowCount() - 1, 4);
             this.modeloTabla.setValueAt(ejemplares.get(j).getObservaciones(), this.modeloTabla.getRowCount() - 1, 5);
+            this.modeloTabla.setValueAt(String.valueOf(ejemplares.get(j).getMal_estado()), this.modeloTabla.getRowCount() - 1, 6);
         }
     }
     
@@ -198,6 +203,8 @@ public class UIEjemplares extends javax.swing.JFrame {
         jLabelInformeIsbn = new javax.swing.JLabel();
         jComboPlanta = new javax.swing.JComboBox<>();
         jComboEstante = new javax.swing.JComboBox<>();
+        jComboEstado = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -323,6 +330,9 @@ public class UIEjemplares extends javax.swing.JFrame {
 
         jComboEstante.setToolTipText("");
 
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel9.setText("Estado:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -362,18 +372,26 @@ public class UIEjemplares extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldObservaciones, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jTextFieldIsbn, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jButtonVerEdiciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addComponent(jTextFieldId)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(jComboEstante, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jComboPlanta, javax.swing.GroupLayout.Alignment.LEADING, 0, 458, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButtonVerLogisitca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                    .addComponent(jComboEstante, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(jComboPlanta, javax.swing.GroupLayout.Alignment.LEADING, 0, 458, Short.MAX_VALUE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jTextFieldObservaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                                                .addGap(27, 27, 27)
+                                                .addComponent(jLabel9)
+                                                .addGap(26, 26, 26)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jButtonVerLogisitca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jComboEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jButtonGrabar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -428,7 +446,9 @@ public class UIEjemplares extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextFieldObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancelar)
@@ -479,6 +499,7 @@ public class UIEjemplares extends javax.swing.JFrame {
             if (validar(isbnActualizar) && entero(id)) {
                 ejemplares = negocio.consultarEjemplar(isbnActualizar, Integer.parseInt(id));
                 if (!ejemplares.isEmpty()) {
+                    this.jComboEstado.setEnabled(true);
                     ejemplar = ejemplares.get(0);
                     ejemplares.clear();
                     JOptionPane.showMessageDialog(this, "Modifique los datos de la edición en la ventana principal y luego presione Grabar.", "Nota", JOptionPane.INFORMATION_MESSAGE);
@@ -489,6 +510,11 @@ public class UIEjemplares extends javax.swing.JFrame {
                     this.jComboPlanta.setSelectedItem(String.valueOf(ejemplar.getPlanta_id()));
                     this.jComboEstante.setSelectedItem(String.valueOf(ejemplar.getEstante_id()));
                     this.jTextFieldObservaciones.setText(ejemplar.getObservaciones());
+                    if (ejemplar.getMal_estado() == 1) {
+                        this.jComboEstado.setSelectedItem("Dañado");
+                    } else {
+                        this.jComboEstado.setSelectedItem("Bien");
+                    }
                     opcion = false;
                 } else {
                     JOptionPane.showMessageDialog(this, "No existe un ejemplar con el ISBN e Id ingresados.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -548,12 +574,18 @@ public class UIEjemplares extends javax.swing.JFrame {
         try {
             if (validar(this.jTextFieldIsbn.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()), Integer.parseInt(this.jComboEstante.getSelectedItem().toString()), 0, this.jTextFieldObservaciones.getText()));
+                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()), Integer.parseInt(this.jComboEstante.getSelectedItem().toString()), this.jTextFieldObservaciones.getText()));
                     JOptionPane.showMessageDialog(this, "Ejemplar ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     ejemplar.setPlanta_id(Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()));
                     ejemplar.setEstante_id(Integer.parseInt(this.jComboEstante.getSelectedItem().toString()));
                     ejemplar.setObservaciones(this.jTextFieldObservaciones.getText());
+                    if (this.jComboEstado.getSelectedItem().toString().equals("Dañado")) {
+                       ejemplar.setMal_estado(1); 
+                    } else {
+                        ejemplar.setMal_estado(0); 
+                    }
+                    this.jComboEstado.setEnabled(false);
                     negocio.actualizar(ejemplar);
                     JOptionPane.showMessageDialog(this, "Ejemplar actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -574,6 +606,7 @@ public class UIEjemplares extends javax.swing.JFrame {
         this.activarTextos(false);
         this.vaciarTextos();
         this.jTextFieldIsbn.setEditable(false);
+        this.jComboEstado.setEnabled(false);
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
@@ -682,6 +715,7 @@ public class UIEjemplares extends javax.swing.JFrame {
     private javax.swing.JButton jButtonNuevo;
     private javax.swing.JButton jButtonVerEdiciones;
     private javax.swing.JButton jButtonVerLogisitca;
+    private javax.swing.JComboBox<String> jComboEstado;
     private javax.swing.JComboBox<String> jComboEstante;
     private javax.swing.JComboBox<String> jComboOrden;
     private javax.swing.JComboBox<String> jComboPlanta;
@@ -694,6 +728,7 @@ public class UIEjemplares extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelInformeIsbn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableEdiciones;
