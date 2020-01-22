@@ -19,6 +19,7 @@ public class Usuario {
         this.direccion = direccion;
         this.puede_prestamo = 1;
         this.vetado = 0;
+        this.ultima_fecha_hora_devolucion = " ";
     }
 
     public Usuario(String cedula, String nombre) {
@@ -26,6 +27,7 @@ public class Usuario {
         this.nombre = nombre;
         this.puede_prestamo = 1;
         this.vetado = 0;
+        this.ultima_fecha_hora_devolucion = " ";
     }
 
     public String getCedula() {
@@ -68,6 +70,14 @@ public class Usuario {
         this.vetado = vetado;
     }
 
+    public String getUltima_fecha_hora_devolucion() {
+        return ultima_fecha_hora_devolucion;
+    }
+
+    public void setUltima_fecha_hora_devolucion(String ultima_fecha_hora_devolucion) {
+        this.ultima_fecha_hora_devolucion = ultima_fecha_hora_devolucion;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" + "cedula=" + cedula + ", nombre=" + nombre + ", direccion=" + direccion + ", puede_prestamo=" + puede_prestamo + '}';
@@ -83,5 +93,6 @@ public class Usuario {
     private String direccion;
     private int puede_prestamo;
     private int vetado;
+    private String ultima_fecha_hora_devolucion;
     
 }

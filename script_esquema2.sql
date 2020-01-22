@@ -5,12 +5,13 @@ create table usuario
   direccion varchar2(100), 
   puede_prestamo number(1) check (puede_prestamo in (0,1)) not null,
   vetado number(1) check (vetado in (0,1)) not null,
+  ultima_fecha_hora_devolucion varchar2(20), 
   constraint usuario_pk primary key (cedula)
 );
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado) values ('0123456789', 'Azar Javed', 'Guarida Salamandra', 1, 0);
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado) values ('1234567890', 'Fringilla de Vigo', 'Capital del Imperio Nilfgaardiano', 1, 0);
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado) values ('0987654321', 'Borch Tres Grajos', 'Montañas de Zerrikania', 1, 0);
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado) values ('9876543210', 'Triss Merigold', 'Torre de Maribor', 1, 0);
+insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('0123456789', 'Azar Javed', 'Guarida Salamandra', 1, 0, ' ');
+insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('1234567890', 'Fringilla de Vigo', 'Capital del Imperio Nilfgaardiano', 1, 0, ' ');
+insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('0987654321', 'Borch Tres Grajos', 'Montañas de Zerrikania', 1, 0, ' ');
+insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('9876543210', 'Triss Merigold', 'Torre de Maribor', 1, 0, ' ');
 create table autor
 (
   id number not null,
@@ -146,18 +147,72 @@ create table pedido
   fecha_hora varchar2(20) not null,
   constraint pedido_pk primary key (libro_nombre, fecha_hora)
 );
-insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '1111111111111', 1, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
-update ejemplar set prestado = 1 where edicion_isbn = '1111111111111' and id = 1;
-insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '2222222222222', 2, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
-update ejemplar set prestado = 1 where edicion_isbn = '2222222222222' and id = 2;
-update usuario set puede_prestamo = 0 where cedula = '0123456789';
-insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0987654321', '7777777777777', 1, '2019-12-27 11:00:23', '2019-12-28 12:30:00');
-update ejemplar set prestado = 1 where edicion_isbn = '7777777777777' and id = 1;
-update usuario set puede_prestamo = 0 where cedula = '0987654321';
-update alquiler set fecha_hora_entrega = '2019-12-28 11:30:00' where usuario_cedula = '0987654321' and fecha_hora_prestamo = '2019-12-27 11:00:23';
-update usuario set puede_prestamo = 1 where cedula = '0987654321';
-update ejemplar set prestado = 0 where edicion_isbn = '7777777777777' and id = 1;
+create table mensaje_pendiente
+(
+  nombre_usuario varchar2(100) not null,
+  pendiente number(1) check (pendiente in (0,1)) not null,
+  constraint mensaje_pendiente_pk primary key (nombre_usuario)
+);
+-- insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '1111111111111', 1, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
+-- update ejemplar set prestado = 1 where edicion_isbn = '1111111111111' and id = 1;
+-- insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '2222222222222', 2, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
+-- update ejemplar set prestado = 1 where edicion_isbn = '2222222222222' and id = 2;
+-- update usuario set puede_prestamo = 0 where cedula = '0123456789';
+-- insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0987654321', '7777777777777', 1, '2019-12-27 11:00:23', '2019-12-28 12:30:00');
+-- update ejemplar set prestado = 1 where edicion_isbn = '7777777777777' and id = 1;
+-- update usuario set puede_prestamo = 0 where cedula = '0987654321';
+-- update alquiler set fecha_hora_entrega = '2019-12-28 11:30:00' where usuario_cedula = '0987654321' and fecha_hora_prestamo = '2019-12-27 11:00:23';
+-- update usuario set puede_prestamo = 1 where cedula = '0987654321';
+-- update ejemplar set prestado = 0 where edicion_isbn = '7777777777777' and id = 1;
 commit;
+
+CREATE PUBLIC SYNONYM usuario FOR admin3.usuario;
+CREATE PUBLIC SYNONYM alquiler FOR admin3.alquiler;
+CREATE PUBLIC SYNONYM autor FOR admin3.autor;
+CREATE PUBLIC SYNONYM edicion FOR admin3.edicion;
+CREATE PUBLIC SYNONYM editorial FOR admin3.editorial;
+CREATE PUBLIC SYNONYM ejemplar FOR admin3.ejemplar;
+CREATE PUBLIC SYNONYM estante FOR admin3.estante;
+CREATE PUBLIC SYNONYM libro FOR admin3.libro;
+CREATE PUBLIC SYNONYM planta FOR admin3.planta;
+CREATE PUBLIC SYNONYM pedido FOR admin3.pedido; 
+CREATE PUBLIC SYNONYM desabastecimiento FOR admin3.desabastecimiento;
+CREATE PUBLIC SYNONYM mensaje_pendiente FOR admin3.mensaje_pendiente;
+
+alter session set "_ORACLE_SCRIPT"=true;
+
+CREATE ROLE bibliotecario;
+GRANT ALL ON usuario TO bibliotecario;
+GRANT ALL ON alquiler TO bibliotecario;
+GRANT SELECT ON autor TO bibliotecario;
+GRANT SELECT ON edicion TO bibliotecario;
+GRANT SELECT ON editorial TO bibliotecario;
+GRANT ALL ON ejemplar TO bibliotecario;
+GRANT SELECT ON estante TO bibliotecario;
+GRANT SELECT ON libro TO bibliotecario;
+GRANT SELECT ON planta TO bibliotecario;
+GRANT SELECT ON desabastecimiento TO bibliotecario;
+GRANT SELECT ON pedido TO bibliotecario;
+GRANT SELECT ON mensaje_pendiente TO bibliotecario;
+GRANT create SESSION to bibliotecario;
+CREATE PUBLIC SYNONYM roleBibliotecario FOR bibliotecario;
+
+CREATE ROLE administrador;
+GRANT ALL ON usuario TO administrador;
+GRANT ALL ON alquiler TO administrador;
+GRANT ALL ON autor TO administrador;
+GRANT ALL ON edicion TO administrador;
+GRANT ALL ON editorial TO administrador;
+GRANT ALL ON ejemplar TO administrador;
+GRANT ALL ON estante TO administrador;
+GRANT ALL ON libro TO administrador;
+GRANT ALL ON planta TO administrador;
+GRANT ALL ON desabastecimiento TO administrador;
+GRANT ALL ON pedido TO administrador;
+GRANT SELECT ON mensaje_pendiente TO administrador;
+GRANT create SESSION to administrador;
+CREATE PUBLIC SYNONYM roleAdministrador FOR administrador;
+
 CREATE OR REPLACE TRIGGER caso_desabastecimiento BEFORE INSERT OR DELETE OR UPDATE
   ON ejemplar FOR EACH ROW
 DECLARE
@@ -232,9 +287,42 @@ BEGIN
   END IF;
 END;
 /
+
 CREATE OR REPLACE TRIGGER borrar_prestamo BEFORE DELETE
   ON alquiler FOR EACH ROW
 BEGIN
   update ejemplar set prestado = 0 where edicion_isbn = :old.edicion_isbn and id = :old.ejemplar_id;
 END;
+/
+
+CREATE OR REPLACE TRIGGER validar_prestamo BEFORE INSERT
+  ON alquiler FOR EACH ROW
+DECLARE
+  pp number;
+  fh varchar(20);
+  ufhd varchar2(20);
+  v number;
+BEGIN
+  select puede_prestamo into pp from usuario where cedula = :new.usuario_cedula;
+  SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO fh FROM dual;
+  select vetado into v from usuario where cedula = :new.usuario_cedula;
+  if v = 1 then
+    RAISE_APPLICATION_ERROR(-20001,'El usuario esta vetado.');
+  end if;
+END;    
+/
+
+CREATE OR REPLACE TRIGGER validar_devolucion BEFORE UPDATE OR DELETE
+  ON alquiler FOR EACH ROW
+DECLARE
+  fh varchar(20);
+  ufhd varchar2(20);
+  v number;
+BEGIN
+  SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO fh FROM dual;
+  select ultima_fecha_hora_devolucion into ufhd from usuario where cedula = :old.usuario_cedula;
+  if MONTHS_BETWEEN (TO_DATE (fh, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE (ufhd, 'YYYY-MM-DD HH24:MI:SS')) > 1 then
+    update usuario set vetado = 1 where cedula = :old.usuario_cedula;
+  end if;
+END;    
 /

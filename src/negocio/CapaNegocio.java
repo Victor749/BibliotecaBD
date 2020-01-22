@@ -7,7 +7,6 @@ package negocio;
 
 import datos.CapaDatos;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -122,6 +121,7 @@ public class CapaNegocio {
                     }
                 }
                 usuario.setPuede_prestamo(0);
+                usuario.setUltima_fecha_hora_devolucion(fecha_hora_estimada_entrega);
                 nombreTabla = Usuario.class.getSimpleName();
                 capaDatos.updateT(usuario, nombreTabla, capaDatos.obtenerClavePrimariaT(nombreTabla));
                 capaDatos.commitT();

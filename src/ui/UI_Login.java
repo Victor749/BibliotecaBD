@@ -151,7 +151,10 @@ public class UI_Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldUsuarioActionPerformed
 
     private void jButtonIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonIngresarActionPerformed
-        
+        String nombreUsuario = jTextFieldUsuario.getText() ;
+        String contrasena = jTextFieldContrasena.getText() ;
+        UIMenu ui = new UIMenu(nombreUsuario,contrasena);
+        ui.iniciar();
     }//GEN-LAST:event_jButtonIngresarActionPerformed
 
     private void jButtonRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistrarseActionPerformed

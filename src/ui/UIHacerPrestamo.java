@@ -369,14 +369,14 @@ public class UIHacerPrestamo extends javax.swing.JFrame {
                 this.jLabelCedula.setText("* Ingrese una cédula válida.");
                 activarControlesCedula(false);
             } else {
-                if (usuarios.get(0).getPuede_prestamo() == 1) {
+                //if (usuarios.get(0).getPuede_prestamo() == 1) {
                     usuario = usuarios.get(0);
                     this.jLabelCedula.setText("");
                     activarControlesCedula(true);
-                } else {
+                /*} else {
                     this.jLabelCedula.setText("* El usuario ya tiene un préstamo pendiente.");
                     activarControlesCedula(false);
-                } 
+                } */
             }
         } else {
             this.jLabelCedula.setText("* Una cédula tiene 10 dígitos.");
@@ -468,7 +468,7 @@ public class UIHacerPrestamo extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "No se pudo hacer el préstamo. Hay un libro que ya está prestado: " + resultado, "Advertencia", JOptionPane.WARNING_MESSAGE);
                         break;
                 }
-            }  
+           }  
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, "No se pudo efectuar el préstamo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
