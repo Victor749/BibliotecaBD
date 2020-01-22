@@ -13,21 +13,23 @@ public class Ejemplar {
     
     public Ejemplar() {}
     
-    public Ejemplar(String edicion_isbn, int id, int planta_id, int estante_id, int prestado, String observaciones) {
+    public Ejemplar(String edicion_isbn, int id, int planta_id, int estante_id, String observaciones) {
         this.edicion_isbn = edicion_isbn;
         this.id = id;
         this.planta_id = planta_id;
         this.estante_id = estante_id;
-        this.prestado = prestado;
+        this.prestado = 0;
         this.observaciones = observaciones;
+        this.mal_estado = 0;
     }
 
-    public Ejemplar(String edicion_isbn, int id, int planta_id, int estante_id, int prestado) {
+    public Ejemplar(String edicion_isbn, int id, int planta_id, int estante_id) {
         this.edicion_isbn = edicion_isbn;
         this.id = id;
         this.planta_id = planta_id;
         this.estante_id = estante_id;
-        this.prestado = prestado;
+        this.prestado = 0;
+        this.mal_estado = 0;
     }
 
     public String getEdicion_isbn() {
@@ -78,13 +80,21 @@ public class Ejemplar {
         this.observaciones = observaciones;
     }
 
+    public int getMal_estado() {
+        return mal_estado;
+    }
+
+    public void setMal_estado(int mal_estado) {
+        this.mal_estado = mal_estado;
+    }
+    
     @Override
     public String toString() {
         return "Ejemplar{" + "edicion_isbn=" + edicion_isbn + ", id=" + id + ", planta_id=" + planta_id + ", estante_id=" + estante_id + ", prestado=" + prestado + ", observaciones=" + observaciones + '}';
     }
     
     public static String[] nombreAtributos() {
-        String[] atributos = {"edicion_isbn", "id", "planta_id", "estante_id", "prestado", "observaciones"};
+        String[] atributos = {"edicion_isbn", "id", "planta_id", "estante_id", "prestado", "observaciones", "mal_estado"};
         return atributos;
     }
     
@@ -94,5 +104,6 @@ public class Ejemplar {
     private int estante_id;
     private int prestado;
     private String observaciones;
+    private int mal_estado;
     
 }

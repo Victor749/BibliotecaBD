@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="java.awt.Label" name="label1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="label1"/>
+      </Properties>
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="resizable" type="boolean" value="false"/>
@@ -33,8 +40,8 @@
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace pref="37" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="jScrollPane1" min="-2" pref="559" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -52,10 +59,12 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace pref="224" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="jButtonDesabastecimientos" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="jButtonMostrarTodos" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="223" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="150" max="-2" attributes="0"/>
+                              <Component id="jButtonPedidos" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -132,7 +141,11 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="256" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jButtonMostrarTodos" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jButtonMostrarTodos" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonDesabastecimientos" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonPedidos" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace pref="25" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -288,6 +301,22 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Autor:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonDesabastecimientos">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Desabastecimientos"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDesabastecimientosActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonPedidos">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Pedidos"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPedidosActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

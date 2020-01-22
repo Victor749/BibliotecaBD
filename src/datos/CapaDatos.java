@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package datos;
 
 import java.lang.reflect.Field;
@@ -41,8 +42,7 @@ public class CapaDatos {
     private void conectarBD() {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
-            conexion = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",this.usuario,this.contrasena);
-            
+	    conexion = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",this.usuario,this.contrasena);      
         } catch(SQLException | ClassNotFoundException | IllegalArgumentException e) {
             String mensaje = "No se puede conectar a la BD: " + e.getMessage();
             // El manejo de excepciones en todo el programa se hace de esta forma

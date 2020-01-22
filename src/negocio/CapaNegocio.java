@@ -173,6 +173,40 @@ public class CapaNegocio {
         }
     }
     
+    // Transacción para borrar préstamo
+    public int borrarPrestamo(Usuario usuario, List<Alquiler> lista) {
+        try {
+            if (usuario.getPuede_prestamo() == 0) {
+                capaDatos.inicioT();
+                String nombreTabla = Usuario.class.getSimpleName();
+                usuario.setPuede_prestamo(1);
+                capaDatos.updateT(usuario, nombreTabla, capaDatos.obtenerClavePrimariaT(nombreTabla));
+                /*nombreTabla = Ejemplar.class.getSimpleName();
+                String [] clavePrimariaEjemplar = capaDatos.obtenerClavePrimariaT(nombreTabla);
+                for (Alquiler alquiler : lista) {
+                    String [] valores = {alquiler.getEdicion_isbn(), String.valueOf(alquiler.getEjemplar_id())};*/
+                    //Ejemplar ejemplar = this.consultarT(Ejemplar.class, capaDatos.queryOneWhereString(Ejemplar.class, clavePrimariaEjemplar, valores)/*Ejemplar.nombreAtributos()[0] + " = '" + alquiler.getEdicion_isbn() + "' AND " + Ejemplar.nombreAtributos()[1] + " = " + alquiler.getEjemplar_id()*/, null).get(0);
+                    /*ejemplar.setPrestado(0);
+                    capaDatos.updateT(ejemplar, nombreTabla, clavePrimariaEjemplar);
+                }*/
+                nombreTabla = Alquiler.class.getSimpleName();
+                String [] clavePrimariaAlquiler = capaDatos.obtenerClavePrimariaT(nombreTabla);
+                for (Alquiler alquiler : lista) {
+                    capaDatos.deleteT(alquiler, nombreTabla, clavePrimariaAlquiler);
+                }
+                capaDatos.commitT();
+                capaDatos.finT();
+                return 0; // Éxito
+            } else {
+                return 1; // El usuario no tiene un préstamo pendiente
+            }
+        } catch(Exception e) {
+            capaDatos.rollbackT();
+            capaDatos.finT();
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+    
     // Consultas específicas para alimentar la UI
     // Se usan los métodos de consulta anteriormente definidos
     
@@ -373,6 +407,16 @@ public class CapaNegocio {
     
     public void iniciar() {
         capaDatos.iniciar();
+    }
+    
+    public List<Pedido> todosPedidos() {
+        List<Pedido> lista = consultar(Pedido.class, null, "fecha_hora");
+        return lista;
+    }
+    
+    public List<Desabastecimiento> todosDesabastecimientos() {
+        List<Desabastecimiento> lista = consultar(Desabastecimiento.class, null, "fecha_hora");
+        return lista;
     }
     
      //Lamada a metodos de la capa de datos

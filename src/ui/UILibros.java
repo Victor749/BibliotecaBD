@@ -73,11 +73,12 @@ public class UILibros extends javax.swing.JFrame {
         jComboOrden.addItem("Id");
         jComboOrden.addItem("Título");
         jComboOrden.addItem("Autor (Id)");
+        jComboOrden.addItem("Baja Disponibilidad");
     }
     
     private void mostrarTabla() {
         String [][] roster = {};
-        String [] columnas = {"Id", "Título", "Autor (Id)"};
+        String [] columnas = {"Id", "Título", "Autor (Id)", "Baja Disponibilidad"};
         this.modeloTabla = new DefaultTableModel(roster, columnas);
         jTableLibros.setModel(modeloTabla);
     }
@@ -92,6 +93,7 @@ public class UILibros extends javax.swing.JFrame {
             this.modeloTabla.setValueAt(String.valueOf(libros.get(j).getId()), this.modeloTabla.getRowCount() - 1, 0);
             this.modeloTabla.setValueAt(libros.get(j).getTitulo(), this.modeloTabla.getRowCount() - 1, 1);
             this.modeloTabla.setValueAt(String.valueOf(libros.get(j).getAutor_id()), this.modeloTabla.getRowCount() - 1, 2);
+            this.modeloTabla.setValueAt(String.valueOf(libros.get(j).getBaja_disponibilidad()), this.modeloTabla.getRowCount() - 1, 3);
         }
     }
     
@@ -114,6 +116,7 @@ public class UILibros extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        label1 = new java.awt.Label();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextFieldId = new javax.swing.JTextField();
@@ -134,6 +137,10 @@ public class UILibros extends javax.swing.JFrame {
         jComboOrden = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jButtonDesabastecimientos = new javax.swing.JButton();
+        jButtonPedidos = new javax.swing.JButton();
+
+        label1.setText("label1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -226,6 +233,20 @@ public class UILibros extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setText("Autor:");
 
+        jButtonDesabastecimientos.setText("Desabastecimientos");
+        jButtonDesabastecimientos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDesabastecimientosActionPerformed(evt);
+            }
+        });
+
+        jButtonPedidos.setText("Pedidos");
+        jButtonPedidos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPedidosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -238,7 +259,7 @@ public class UILibros extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap(37, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(layout.createSequentialGroup()
@@ -252,10 +273,12 @@ public class UILibros extends javax.swing.JFrame {
                                             .addComponent(jComboOrden, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(18, 18, 18)
                                             .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonDesabastecimientos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButtonMostrarTodos)
-                                .addGap(223, 223, 223))))
+                                .addGap(150, 150, 150)
+                                .addComponent(jButtonPedidos))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(62, 62, 62)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -315,7 +338,10 @@ public class UILibros extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButtonMostrarTodos)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonMostrarTodos)
+                    .addComponent(jButtonDesabastecimientos)
+                    .addComponent(jButtonPedidos))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -456,6 +482,16 @@ public class UILibros extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextFieldAutorKeyTyped
 
+    private void jButtonDesabastecimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDesabastecimientosActionPerformed
+        UIDesabastecimientos ui = new UIDesabastecimientos(negocio);
+        ui.iniciar();
+    }//GEN-LAST:event_jButtonDesabastecimientosActionPerformed
+
+    private void jButtonPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPedidosActionPerformed
+        UIPedidos ui = new UIPedidos(negocio);
+        ui.iniciar();
+    }//GEN-LAST:event_jButtonPedidosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -495,10 +531,12 @@ public class UILibros extends javax.swing.JFrame {
     private javax.swing.JButton jButtonActualizar;
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonDesabastecimientos;
     private javax.swing.JButton jButtonEliminar;
     private javax.swing.JButton jButtonGrabar;
     private javax.swing.JButton jButtonMostrarTodos;
     private javax.swing.JButton jButtonNuevo;
+    private javax.swing.JButton jButtonPedidos;
     private javax.swing.JComboBox<String> jComboOrden;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -512,5 +550,6 @@ public class UILibros extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldBuscar;
     private javax.swing.JTextField jTextFieldId;
     private javax.swing.JTextField jTextFieldTitulo;
+    private java.awt.Label label1;
     // End of variables declaration//GEN-END:variables
 }
