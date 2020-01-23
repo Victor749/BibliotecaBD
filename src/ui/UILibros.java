@@ -407,14 +407,14 @@ public class UILibros extends javax.swing.JFrame {
     private void jButtonGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarActionPerformed
         try {
             if (esAlfaNumerico(jTextFieldTitulo.getText()) && esAlfaNumerico(jTextFieldAutor.getText())) {
-                List<Autor> autoresTemp = negocio.consultarAutor(jTextFieldAutor.getText());
+                List<Autor> autoresTemp = negocio.consultarAutor(negocio.normalizar(jTextFieldAutor.getText()));
                 if (!autoresTemp.isEmpty()) {
                     Autor autor = autoresTemp.get(0);
                     if (opcion) {
-                    negocio.insertar(new Libro(Integer.parseInt(jTextFieldId.getText()), jTextFieldTitulo.getText(), autor.getId()));
+                    negocio.insertar(new Libro(Integer.parseInt(jTextFieldId.getText()), negocio.normalizar(jTextFieldTitulo.getText()), autor.getId()));
                     JOptionPane.showMessageDialog(this, "Libro ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        libro.setTitulo(jTextFieldTitulo.getText());
+                        libro.setTitulo(negocio.normalizar(jTextFieldTitulo.getText()));
                         libro.setAutor_id(autor.getId());
                         negocio.actualizar(libro);
                         JOptionPane.showMessageDialog(this, "Libro actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
@@ -445,7 +445,7 @@ public class UILibros extends javax.swing.JFrame {
         try {
             String busqueda = jTextFieldBuscar.getText();
             if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                libros = negocio.buscarLibros(busqueda, jComboOrden.getSelectedIndex());
+                libros = negocio.buscarLibros(negocio.normalizar(busqueda), jComboOrden.getSelectedIndex());
                 if (!libros.isEmpty()) {
                     this.cargarDatos();
                     libros.clear();
@@ -473,7 +473,7 @@ public class UILibros extends javax.swing.JFrame {
     private void jTextFieldAutorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldAutorKeyTyped
         String busqueda = this.jTextFieldAutor.getText();
         if (esAlfaNumerico(busqueda)) {
-            autores = negocio.consultarAutores(busqueda, 7);
+            autores = negocio.consultarAutores(negocio.normalizar(busqueda), 7);
             autores.forEach((autor) -> {
                 if (!textAutoCompleter.itemExists(autor.getNombre())) {
                     textAutoCompleter.addItem(autor.getNombre());
