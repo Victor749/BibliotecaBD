@@ -7,6 +7,7 @@
 package datos;
 
 import java.lang.reflect.Field;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,9 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import static jdk.nashorn.internal.objects.NativeString.toLowerCase;
-import negocio.CapaNegocio;
 
 /**
  *
@@ -789,6 +788,24 @@ public class CapaDatos {
         
     }
 
-    
+    public String ejecutarProcedimientoNormalizar (String cadenaSinNorma) {
+        try {
+            conectarBD();
+            String call = "{call normalizar (?,?)}";
+            CallableStatement cst = conexion.prepareCall(call);
+            // Parametro Entrada
+            cst.setString(1, cadenaSinNorma);
+            // Parametro Salida
+            cst.registerOutParameter(2, java.sql.Types.VARCHAR);
+            // Ejecuta
+            cst.execute();
+            String cadenaNormalizada = cst.getString(2);
+            desconectarBD();
+            return cadenaNormalizada;
+        } catch (SQLException e) {
+            desconectarBD();
+            throw new RuntimeException("Error durante la ejecución de un procedimiento almacenado: " + e.getMessage(), e);
+        }
+    }
     
 }

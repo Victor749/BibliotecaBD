@@ -8,8 +8,8 @@ create table usuario
   ultima_fecha_hora_devolucion varchar2(20), 
   constraint usuario_pk primary key (cedula)
 );
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('0123456789', 'Azar Javed', 'Guarida Salamandra', 1, 0, ' ');
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('1234567890', 'Fringilla de Vigo', 'Capital del Imperio Nilfgaardiano', 1, 0, ' ');
+insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('0123456789', 'AZAR JAVED', 'GUARIDA SALAMANDRA', 1, 0, ' ');
+insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('1234567890', 'FRINGILLA DE VIGO', 'CAPITAL DEL IMPERIO NILFGAARDIANO', 1, 0, ' ');
 insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('0987654321', 'Borch Tres Grajos', 'Montañas de Zerrikania', 1, 0, ' ');
 insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('9876543210', 'Triss Merigold', 'Torre de Maribor', 1, 0, ' ');
 create table autor
@@ -150,7 +150,7 @@ create table pedido
 create table mensaje_pendiente
 (
   nombre_usuario varchar2(100) not null,
-  pendiente number(1) check (pendiente in (0,1)) not null,
+  mensaje varchar2(200) not null,
   constraint mensaje_pendiente_pk primary key (nombre_usuario)
 );
 -- insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '1111111111111', 1, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
@@ -298,13 +298,8 @@ END;
 CREATE OR REPLACE TRIGGER validar_prestamo BEFORE INSERT
   ON alquiler FOR EACH ROW
 DECLARE
-  pp number;
-  fh varchar(20);
-  ufhd varchar2(20);
   v number;
 BEGIN
-  select puede_prestamo into pp from usuario where cedula = :new.usuario_cedula;
-  SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO fh FROM dual;
   select vetado into v from usuario where cedula = :new.usuario_cedula;
   if v = 1 then
     RAISE_APPLICATION_ERROR(-20001,'El usuario esta vetado.');
@@ -317,7 +312,6 @@ CREATE OR REPLACE TRIGGER validar_devolucion BEFORE UPDATE OR DELETE
 DECLARE
   fh varchar(20);
   ufhd varchar2(20);
-  v number;
 BEGIN
   SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO fh FROM dual;
   select ultima_fecha_hora_devolucion into ufhd from usuario where cedula = :old.usuario_cedula;
@@ -326,3 +320,14 @@ BEGIN
   end if;
 END;    
 /
+
+create or replace procedure normalizar (entrada IN varchar2, salida OUT varchar2)
+as
+begin
+  salida := UPPER(entrada);
+end normalizar;
+/
+
+CREATE PUBLIC SYNONYM normalizar FOR admin3.normalizar; 
+grant execute on normalizar to bibliotecario;
+grant execute on normalizar to administrador;

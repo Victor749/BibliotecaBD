@@ -419,7 +419,7 @@ public class CapaNegocio {
         return lista;
     }
     
-     //Lamada a metodos de la capa de datos
+     //Llamada a metodos de la capa de datos
     public ArrayList<String> solicitarConsultaParaCombo(String sqlStatement) throws SQLException{
         return capaDatos.makeQueryForCombo(sqlStatement);
     }
@@ -430,4 +430,8 @@ public class CapaNegocio {
         return capaDatos.makeQueryForTable(sqlStatement);
     }
   
+    public String normalizar(String cadenaSinNorma) {
+        return capaDatos.ejecutarProcedimientoNormalizar(cadenaSinNorma);
+    }
+    
 }
