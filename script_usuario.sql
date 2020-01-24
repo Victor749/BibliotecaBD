@@ -21,9 +21,9 @@ GRANT create sequence TO admin3;
 GRANT create synonym TO admin3;
 GRANT create public synonym TO admin3;
 GRANT create user TO admin3;
-GRANT create user TO admin3;
 GRANT create role TO admin3;
 GRANT ALL PRIVILEGES TO admin3 WITH ADMIN OPTION;
+
 
 
 

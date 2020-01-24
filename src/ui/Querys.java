@@ -1434,7 +1434,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
         //Se hace uso de la clase enlace para conectar a la capa de datos y hacer una consulta acerca
         //las tablas de la base de datos, se la coloca en el comboBox que corresponde a FROM del comando SELECT
         public void fillFromCombo(JComboBox combo) throws SQLException{
-            String sql = "SELECT table_name FROM user_tables ORDER BY table_name";
+            String sql = negocio.getStringForTable();
             ArrayList<String> response = negocio.solicitarConsultaParaComboFOR(sql);
             
             
@@ -1516,7 +1516,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
         public void fillThisComboINNERJOIN(JComboBox combo, JComboBox comboFrom) throws SQLException{
             
 
-            String sql = "SELECT table_name FROM user_tables ORDER BY table_name";
+            String sql = negocio.getStringForTable();
             ArrayList<String> response = negocio.solicitarConsultaParaComboFOR(sql);
             
             

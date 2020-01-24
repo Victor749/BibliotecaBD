@@ -150,8 +150,13 @@ create table pedido
 create table mensaje_pendiente
 (
   nombre_usuario varchar2(100) not null,
-  pendiente number(1) check (pendiente in (0,1)) not null,
+  mensaje varchar2(200) not null,
   constraint mensaje_pendiente_pk primary key (nombre_usuario)
+);
+create table nombre
+(
+  nombre_user varchar2(100) not null,
+  constraint nombre_pk primary key (nombre_user)
 );
 -- insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '1111111111111', 1, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
 -- update ejemplar set prestado = 1 where edicion_isbn = '1111111111111' and id = 1;
@@ -178,26 +183,19 @@ CREATE PUBLIC SYNONYM planta FOR admin3.planta;
 CREATE PUBLIC SYNONYM pedido FOR admin3.pedido; 
 CREATE PUBLIC SYNONYM desabastecimiento FOR admin3.desabastecimiento;
 CREATE PUBLIC SYNONYM mensaje_pendiente FOR admin3.mensaje_pendiente;
+CREATE PUBLIC SYNONYM nombre FOR admin3.nombre;
+-- CREATE PUBLIC SYNONYM user_tables FOR admin3.user_tables;
 
 alter session set "_ORACLE_SCRIPT"=true;
 
 CREATE ROLE bibliotecario;
-GRANT ALL ON usuario TO bibliotecario;
-GRANT ALL ON alquiler TO bibliotecario;
-GRANT SELECT ON autor TO bibliotecario;
-GRANT SELECT ON edicion TO bibliotecario;
-GRANT SELECT ON editorial TO bibliotecario;
-GRANT ALL ON ejemplar TO bibliotecario;
-GRANT SELECT ON estante TO bibliotecario;
-GRANT SELECT ON libro TO bibliotecario;
-GRANT SELECT ON planta TO bibliotecario;
-GRANT SELECT ON desabastecimiento TO bibliotecario;
-GRANT SELECT ON pedido TO bibliotecario;
-GRANT SELECT ON mensaje_pendiente TO bibliotecario;
-GRANT create SESSION to bibliotecario;
-CREATE PUBLIC SYNONYM roleBibliotecario FOR bibliotecario;
+
+-- CREATE PUBLIC SYNONYM bibliotecario FOR admin3.bibliotecario;
 
 CREATE ROLE administrador;
+
+-- CREATE PUBLIC SYNONYM administrador FOR admin3.administrador;
+
 GRANT ALL ON usuario TO administrador;
 GRANT ALL ON alquiler TO administrador;
 GRANT ALL ON autor TO administrador;
@@ -211,7 +209,27 @@ GRANT ALL ON desabastecimiento TO administrador;
 GRANT ALL ON pedido TO administrador;
 GRANT SELECT ON mensaje_pendiente TO administrador;
 GRANT create SESSION to administrador;
-CREATE PUBLIC SYNONYM roleAdministrador FOR administrador;
+GRANT SELECT ON nombre TO administrador;
+GRANT SELECT ON user_tables TO administrador;
+GRANT create USER to administrador;
+
+
+GRANT ALL ON usuario TO bibliotecario;
+GRANT ALL ON alquiler TO bibliotecario;
+GRANT SELECT ON autor TO bibliotecario;
+GRANT SELECT ON edicion TO bibliotecario;
+GRANT SELECT ON editorial TO bibliotecario;
+GRANT ALL ON ejemplar TO bibliotecario;
+GRANT SELECT ON estante TO bibliotecario;
+GRANT SELECT ON libro TO bibliotecario;
+GRANT SELECT ON planta TO bibliotecario;
+GRANT SELECT ON desabastecimiento TO bibliotecario;
+GRANT SELECT ON pedido TO bibliotecario;
+GRANT SELECT ON mensaje_pendiente TO bibliotecario;
+GRANT SELECT ON nombre TO bibliotecario;
+GRANT SELECT ON user_tables TO bibliotecario;
+GRANT create SESSION to bibliotecario;
+
 
 CREATE OR REPLACE TRIGGER caso_desabastecimiento BEFORE INSERT OR DELETE OR UPDATE
   ON ejemplar FOR EACH ROW
@@ -325,4 +343,12 @@ BEGIN
     update usuario set vetado = 1 where cedula = :old.usuario_cedula;
   end if;
 END;    
+/
+
+CREATE OR REPLACE TRIGGER caso_NuevoUsuario AFTER INSERT
+  ON nombre FOR EACH ROW 
+DECLARE
+BEGIN
+  INSERT into mensaje_pendiente(nombre_usuario, mensaje) values (:new.nombre_user, 'Bienvenido ' || :new.nombre_user || ' ! '); 
+END;
 /

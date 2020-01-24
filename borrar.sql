@@ -11,3 +11,5 @@ drop table alquiler cascade constraints purge;
 drop table ejemplar cascade constraints purge;
 drop table desabastecimiento cascade constraints purge;
 drop table pedido cascade constraints purge;
+drop table mensaje_pendiente cascade constraints purge;
+drop table nombre cascade constraints purge;

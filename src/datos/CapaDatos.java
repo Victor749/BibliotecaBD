@@ -42,7 +42,7 @@ public class CapaDatos {
     private void conectarBD() {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
-	    conexion = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",this.usuario,this.contrasena);      
+	    conexion = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl",this.usuario,this.contrasena);      
         } catch(SQLException | ClassNotFoundException | IllegalArgumentException e) {
             String mensaje = "No se puede conectar a la BD: " + e.getMessage();
             // El manejo de excepciones en todo el programa se hace de esta forma
@@ -788,7 +788,51 @@ public class CapaDatos {
         this.desconectarBD();
         
     }
+    
+    
+    public String getStringForTable(){
+        String sql = "SELECT table_name FROM user_tables ORDER BY table_name";
+        return sql;
+    }
+    
+    public void grant_Revoke(String permitir, String accion, String tabla, String usuarioToGrantOrRevoke) throws SQLException{
+        this.conectarBD();
+        
+        String toFrom = "";
+        if(permitir.equals("PERMITIR")){
+            permitir = "GRANT";
+        }else{
+            permitir = "REVOKE";
+        }
+        
+        if(accion.equals("SELECCIONAR")){
+            accion = "SELECT";
+        }else if(accion.equals("INSERTAR")){
+            accion = "INSERT";
+        }else if(accion.equals("ACTUALIZAR")){
+            accion = "UPDATE";
+        }else if(accion.equals("BORRAR")){
+            accion = "DELETE";
+        }else if(accion.equals("HACER TODO")){
+            accion = "ALL";
+        }
+        
+        if(permitir.equals("GRANT")){
+            toFrom = toFrom + " TO ";
+        }else{
+            toFrom = toFrom + " FROM ";
+        }
+        
+        String sql = permitir + " " + accion + " ON " + tabla + toFrom + usuarioToGrantOrRevoke;        
+        System.out.println(sql);
+        
+        
+        Statement stmt = conexion.createStatement();
+        
+        boolean st = stmt.execute(sql);
 
+        this.desconectarBD();
+    }
     
     
 }

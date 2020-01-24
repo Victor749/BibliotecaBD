@@ -32,7 +32,7 @@ public class UIMenu extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void iniciar() {
+    public void iniciar(UI_Login parentView) {
         capaNegocio  = new CapaNegocio(usuario,contrasena);
         try {
             capaNegocio.iniciar();
@@ -40,6 +40,7 @@ public class UIMenu extends javax.swing.JFrame {
             this.setLocationRelativeTo(null);
             this.setVisible(true);
             JOptionPane.showMessageDialog(this, "¡Conexión Exitosa con la BD!", "OK", JOptionPane.INFORMATION_MESSAGE);
+            parentView.dispose();
         } catch (RuntimeException E) {
             JOptionPane.showMessageDialog(this, "No se pudo conectar con la BD.", "OK", JOptionPane.ERROR_MESSAGE);
         }

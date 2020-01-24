@@ -430,4 +430,11 @@ public class CapaNegocio {
         return capaDatos.makeQueryForTable(sqlStatement);
     }
   
+    public String getStringForTable(){
+        return capaDatos.getStringForTable();
+    }
+    
+    public void grant_Revoke(String permitir, String accion, String tabla, String usuarioToGrantOrRevoke) throws SQLException{
+         capaDatos.grant_Revoke(permitir, accion, tabla,usuarioToGrantOrRevoke);
+    }
 }

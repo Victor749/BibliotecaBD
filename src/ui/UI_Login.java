@@ -8,6 +8,9 @@ package ui;
 import java.awt.Container;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import negocio.CapaNegocio;
@@ -154,14 +157,13 @@ public class UI_Login extends javax.swing.JFrame {
         String nombreUsuario = jTextFieldUsuario.getText() ;
         String contrasena = jTextFieldContrasena.getText() ;
         UIMenu ui = new UIMenu(nombreUsuario,contrasena);
-        ui.iniciar();
+        ui.iniciar(this);
     }//GEN-LAST:event_jButtonIngresarActionPerformed
 
     private void jButtonRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistrarseActionPerformed
         // TODO add your handling code here:
         UI_RegistrarUsuario ui = new UI_RegistrarUsuario();
         ui.iniciar();
-        
     }//GEN-LAST:event_jButtonRegistrarseActionPerformed
 
     private void jTextFieldContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldContrasenaActionPerformed
@@ -173,8 +175,12 @@ public class UI_Login extends javax.swing.JFrame {
         // TODO add your handling code here:
         String nombreUsuario = jTextFieldUsuario.getText() ;
         String contrasena = jTextFieldContrasena.getText() ;
-        //UIAsignarPrivilegios ui = new UIAsignarPrivilegios(nombreUsuario,contrasena);
-        //ui.iniciar();
+        try {
+            UIAsignarPrivilegios ui = new UIAsignarPrivilegios(nombreUsuario,contrasena);
+        } catch (SQLException ex) { 
+            Logger.getLogger(UI_Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_jToggleButtonAPrivilegiosActionPerformed
 
     /**

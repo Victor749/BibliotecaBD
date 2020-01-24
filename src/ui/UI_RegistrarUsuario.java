@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import negocio.CapaNegocio;
+import negocio.Nombre;
 
 /**
  *
@@ -53,7 +54,7 @@ public class UI_RegistrarUsuario extends javax.swing.JFrame {
         jTextFieldConNuevoUsuario = new javax.swing.JPasswordField();
         jTextFieldContrasenaPatrocinador = new javax.swing.JPasswordField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTextFieldPatrocinador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -146,8 +147,7 @@ public class UI_RegistrarUsuario extends javax.swing.JFrame {
                         .addGap(26, 26, 26)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
+                        .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -156,8 +156,8 @@ public class UI_RegistrarUsuario extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldConNuevoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                            .addComponent(jLabel2))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -198,9 +198,13 @@ public class UI_RegistrarUsuario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"¡El patrocinador existe, se procedera a creal el usuario!", "OK", JOptionPane.INFORMATION_MESSAGE);
             capaNegocio.crearUsuario(nuevoUsuario, contrasenaNuevo, tipo);
             JOptionPane.showMessageDialog(null,"¡El usuario " + nuevoUsuario + " ha sido añadido!", "OK", JOptionPane.INFORMATION_MESSAGE);
+            
+            Nombre usuarioAnadir = new Nombre(nuevoUsuario);
+            capaNegocio.insertar(usuarioAnadir);
+            
         } catch (RuntimeException E) {
             JOptionPane.showMessageDialog(null, "No se encontro el patrocinador ingrese uno correcto.", "OK", JOptionPane.ERROR_MESSAGE);
-        } catch (SQLException ex) {
+        } catch (SQLException ex){
             Logger.getLogger(UI_RegistrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "El nombre de usuario ya existe, ingerese uno diferente", "OK", JOptionPane.ERROR_MESSAGE);
         }
