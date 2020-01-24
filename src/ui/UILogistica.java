@@ -567,11 +567,11 @@ public class UILogistica extends javax.swing.JFrame {
         try {
             if (esAlfaNumerico(jTextFieldNombrePlanta.getText())) {
                 if (opcionPlanta) {
-                    negocio.insertar(new Planta(Integer.parseInt(jTextFieldIdPlanta.getText()), jTextFieldNombrePlanta.getText()));
+                    negocio.insertar(new Planta(Integer.parseInt(jTextFieldIdPlanta.getText()), negocio.normalizar(jTextFieldNombrePlanta.getText())));
                     cargarComboPlanta();
                     JOptionPane.showMessageDialog(this, "Planta ingresada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    planta.setNombre(jTextFieldNombrePlanta.getText());
+                    planta.setNombre(negocio.normalizar(jTextFieldNombrePlanta.getText()));
                     negocio.actualizar(planta);
                     JOptionPane.showMessageDialog(this, "Planta actualizada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -596,7 +596,7 @@ public class UILogistica extends javax.swing.JFrame {
         try {
             String busqueda = jTextFieldBuscarPlanta.getText();
             if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                plantas = negocio.buscarPlantas(busqueda, jComboOrdenPlanta.getSelectedIndex());
+                plantas = negocio.buscarPlantas(negocio.normalizar(busqueda), jComboOrdenPlanta.getSelectedIndex());
                 if (!plantas.isEmpty()) {
                     this.cargarDatosPlanta();
                     plantas.clear();
@@ -626,10 +626,10 @@ public class UILogistica extends javax.swing.JFrame {
             if (esAlfaNumerico(jTextFieldNombreEstante.getText())) {
                 int id_planta = Integer.parseInt(jComboPlanta.getSelectedItem().toString());
                 if (opcionEstante) {
-                    negocio.insertar(new Estante(id_planta, Integer.parseInt(jTextFieldIdEstante.getText()), jTextFieldNombreEstante.getText()));
+                    negocio.insertar(new Estante(id_planta, Integer.parseInt(jTextFieldIdEstante.getText()), negocio.normalizar(jTextFieldNombreEstante.getText())));
                     JOptionPane.showMessageDialog(this, "Estante ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    estante.setNombre(jTextFieldNombreEstante.getText());
+                    estante.setNombre(negocio.normalizar(jTextFieldNombreEstante.getText()));
                     negocio.actualizar(estante);
                     JOptionPane.showMessageDialog(this, "Estante actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -654,7 +654,7 @@ public class UILogistica extends javax.swing.JFrame {
         try {
             String busqueda = jTextFieldBuscarEstante.getText();
             if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                estantes = negocio.buscarEstantes(busqueda, jComboOrdenEstante.getSelectedIndex());
+                estantes = negocio.buscarEstantes(negocio.normalizar(busqueda), jComboOrdenEstante.getSelectedIndex());
                 if (!estantes.isEmpty()) {
                     this.cargarDatosEstante();
                     estantes.clear();

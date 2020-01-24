@@ -405,11 +405,11 @@ public class UIUsuarios extends javax.swing.JFrame {
         try {
             if (validar(jTextFieldCedula.getText()) && esAlfaNumerico(jTextFieldNombre.getText()) && esAlfaNumerico(jTextFieldDireccion.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Usuario(jTextFieldCedula.getText(), jTextFieldNombre.getText(), jTextFieldDireccion.getText()));
+                    negocio.insertar(new Usuario(jTextFieldCedula.getText(), negocio.normalizar(jTextFieldNombre.getText()), negocio.normalizar(jTextFieldDireccion.getText())));
                     JOptionPane.showMessageDialog(this, "Usuario ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    usuario.setNombre(jTextFieldNombre.getText());
-                    usuario.setDireccion(jTextFieldDireccion.getText());
+                    usuario.setNombre(negocio.normalizar(jTextFieldNombre.getText()));
+                    usuario.setDireccion(negocio.normalizar(jTextFieldDireccion.getText()));
                     negocio.actualizar(usuario);
                     JOptionPane.showMessageDialog(this, "Usuario actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -436,7 +436,7 @@ public class UIUsuarios extends javax.swing.JFrame {
         try {
             String busqueda = jTextFieldBuscar.getText();
             if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                usuarios = negocio.buscarUsuarios(busqueda, jComboOrden.getSelectedIndex());
+                usuarios = negocio.buscarUsuarios(negocio.normalizar(busqueda), jComboOrden.getSelectedIndex());
                 if (!usuarios.isEmpty()) {
                     this.cargarDatos();
                     usuarios.clear();

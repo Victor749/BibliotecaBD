@@ -1,333 +1,333 @@
-create table usuario
+CREATE TABLE USUARIO
 (
-  cedula varchar2(10) not null,
-  nombre varchar2(50) not null,
-  direccion varchar2(100), 
-  puede_prestamo number(1) check (puede_prestamo in (0,1)) not null,
-  vetado number(1) check (vetado in (0,1)) not null,
-  ultima_fecha_hora_devolucion varchar2(20), 
-  constraint usuario_pk primary key (cedula)
+  CEDULA VARCHAR2(10) NOT NULL,
+  NOMBRE VARCHAR2(50) NOT NULL,
+  DIRECCION VARCHAR2(100), 
+  PUEDE_PRESTAMO NUMBER(1) CHECK (PUEDE_PRESTAMO IN (0,1)) NOT NULL,
+  VETADO NUMBER(1) CHECK (VETADO IN (0,1)) NOT NULL,
+  ULTIMA_FECHA_HORA_DEVOLUCION VARCHAR2(20), 
+  CONSTRAINT USUARIO_PK PRIMARY KEY (CEDULA)
 );
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('0123456789', 'AZAR JAVED', 'GUARIDA SALAMANDRA', 1, 0, ' ');
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('1234567890', 'FRINGILLA DE VIGO', 'CAPITAL DEL IMPERIO NILFGAARDIANO', 1, 0, ' ');
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('0987654321', 'Borch Tres Grajos', 'Montañas de Zerrikania', 1, 0, ' ');
-insert into usuario (cedula, nombre, direccion, puede_prestamo, vetado, ultima_fecha_hora_devolucion) values ('9876543210', 'Triss Merigold', 'Torre de Maribor', 1, 0, ' ');
-create table autor
+INSERT INTO USUARIO (CEDULA, NOMBRE, DIRECCION, PUEDE_PRESTAMO, VETADO, ULTIMA_FECHA_HORA_DEVOLUCION) VALUES ('0123456789', 'AZAR JAVED', 'GUARIDA SALAMANDRA', 1, 0, ' ');
+INSERT INTO USUARIO (CEDULA, NOMBRE, DIRECCION, PUEDE_PRESTAMO, VETADO, ULTIMA_FECHA_HORA_DEVOLUCION) VALUES ('1234567890', 'FRINGILLA DE VIGO', 'CAPITAL DEL IMPERIO NILFGAARDIANO', 1, 0, ' ');
+INSERT INTO USUARIO (CEDULA, NOMBRE, DIRECCION, PUEDE_PRESTAMO, VETADO, ULTIMA_FECHA_HORA_DEVOLUCION) VALUES ('0987654321', 'BORCH TRES GRAJOS', 'MONTAÑAS DE ZERRIKANIA', 1, 0, ' ');
+INSERT INTO USUARIO (CEDULA, NOMBRE, DIRECCION, PUEDE_PRESTAMO, VETADO, ULTIMA_FECHA_HORA_DEVOLUCION) VALUES ('9876543210', 'TRISS MERIGOLD', 'TORRE DE MARIBOR', 1, 0, ' ');
+CREATE TABLE AUTOR
 (
-  id number not null,
-  nombre varchar2(50) not null,
-  constraint autor_pk primary key (id)
+  ID NUMBER NOT NULL,
+  NOMBRE VARCHAR2(50) NOT NULL,
+  CONSTRAINT AUTOR_PK PRIMARY KEY (ID)
 );
-insert into autor (id, nombre) values (1, 'Anónimo');
-insert into autor (id, nombre) values (2, 'Jaskier');
-insert into autor (id, nombre) values (3, 'Vesemir');
-insert into autor (id, nombre) values (4, 'Nenneke');
-insert into autor (id, nombre) values (5, 'Regis');
-create table editorial
+INSERT INTO AUTOR (ID, NOMBRE) VALUES (1, 'ANÓNIMO');
+INSERT INTO AUTOR (ID, NOMBRE) VALUES (2, 'JASKIER');
+INSERT INTO AUTOR (ID, NOMBRE) VALUES (3, 'VESEMIR');
+INSERT INTO AUTOR (ID, NOMBRE) VALUES (4, 'NENNEKE');
+INSERT INTO AUTOR (ID, NOMBRE) VALUES (5, 'REGIS');
+CREATE TABLE EDITORIAL
 (
-  id number not null,
-  nombre varchar2(100) not null,
-  constraint editorial_pk primary key (id)
+  ID NUMBER NOT NULL,
+  NOMBRE VARCHAR2(100) NOT NULL,
+  CONSTRAINT EDITORIAL_PK PRIMARY KEY (ID)
 );
-insert into editorial (id, nombre) values (1, 'Desconocida');
-insert into editorial (id, nombre) values (2, 'Universidad de Oxenfurt');
-insert into editorial (id, nombre) values (3, 'Kaer Morhen');
-insert into editorial (id, nombre) values (4, 'Santuario de Melitele');
-insert into editorial (id, nombre) values (5, 'Editorial del Ducado de Touissant');
-create table libro
+INSERT INTO EDITORIAL (ID, NOMBRE) VALUES (1, 'DESCONOCIDA');
+INSERT INTO EDITORIAL (ID, NOMBRE) VALUES (2, 'UNIVERSIDAD DE OXENFURT');
+INSERT INTO EDITORIAL (ID, NOMBRE) VALUES (3, 'KAER MORHEN');
+INSERT INTO EDITORIAL (ID, NOMBRE) VALUES (4, 'SANTUARIO DE MELITELE');
+INSERT INTO EDITORIAL (ID, NOMBRE) VALUES (5, 'EDITORIAL DEL DUCADO DE TOUISSANT');
+CREATE TABLE LIBRO
 (
-  id number not null,
-  titulo varchar2(100) not null,
-  autor_id number not null,
-  baja_disponibilidad number(1) check (baja_disponibilidad in (0,1)) not null,
-  ejemplares_totales number not null,
-  ejemplares_prestados number not null,
-  ejemplares_daniados number not null,
-  constraint libro_pk primary key (id),
-  constraint fk_autor foreign key (autor_id) references autor(id)
+  ID NUMBER NOT NULL,
+  TITULO VARCHAR2(100) NOT NULL,
+  AUTOR_ID NUMBER NOT NULL,
+  BAJA_DISPONIBILIDAD NUMBER(1) CHECK (BAJA_DISPONIBILIDAD IN (0,1)) NOT NULL,
+  EJEMPLARES_TOTALES NUMBER NOT NULL,
+  EJEMPLARES_PRESTADOS NUMBER NOT NULL,
+  EJEMPLARES_DANIADOS NUMBER NOT NULL,
+  CONSTRAINT LIBRO_PK PRIMARY KEY (ID),
+  CONSTRAINT FK_AUTOR FOREIGN KEY (AUTOR_ID) REFERENCES AUTOR(ID)
 );
-insert into libro (id, titulo, autor_id, baja_disponibilidad, ejemplares_totales, ejemplares_prestados, ejemplares_daniados) values (1, 'Vampiros: Hechos y Mitos', 5, 0, 4, 2, 0);
-insert into libro (id, titulo, autor_id, baja_disponibilidad, ejemplares_totales, ejemplares_prestados, ejemplares_daniados) values (2, 'Espectros, Apariciones y Condenados', 3, 0, 2, 0, 0);
-insert into libro (id, titulo, autor_id, baja_disponibilidad, ejemplares_totales, ejemplares_prestados, ejemplares_daniados) values (3, 'Plantas del Campo', 4, 0, 2, 0, 0);
-insert into libro (id, titulo, autor_id, baja_disponibilidad, ejemplares_totales, ejemplares_prestados, ejemplares_daniados) values (4, 'Monstruos del Pantano', 3, 0, 1, 0, 0);
-insert into libro (id, titulo, autor_id, baja_disponibilidad, ejemplares_totales, ejemplares_prestados, ejemplares_daniados) values (5, 'Sátira a la Profecía de Ithlinne', 1, 0, 2, 0, 0);
-insert into libro (id, titulo, autor_id, baja_disponibilidad, ejemplares_totales, ejemplares_prestados, ejemplares_daniados) values (6, 'Balada del Lobo Blanco', 2, 0, 1, 0, 0);
-insert into libro (id, titulo, autor_id, baja_disponibilidad, ejemplares_totales, ejemplares_prestados, ejemplares_daniados) values (7, 'Medicina Forense', 4, 0, 2, 0, 0);
-create table edicion
+INSERT INTO LIBRO (ID, TITULO, AUTOR_ID, BAJA_DISPONIBILIDAD, EJEMPLARES_TOTALES, EJEMPLARES_PRESTADOS, EJEMPLARES_DANIADOS) VALUES (1, 'VAMPIROS: HECHOS Y MITOS', 5, 0, 4, 2, 0);
+INSERT INTO LIBRO (ID, TITULO, AUTOR_ID, BAJA_DISPONIBILIDAD, EJEMPLARES_TOTALES, EJEMPLARES_PRESTADOS, EJEMPLARES_DANIADOS) VALUES (2, 'ESPECTROS, APARICIONES Y CONDENADOS', 3, 0, 2, 0, 0);
+INSERT INTO LIBRO (ID, TITULO, AUTOR_ID, BAJA_DISPONIBILIDAD, EJEMPLARES_TOTALES, EJEMPLARES_PRESTADOS, EJEMPLARES_DANIADOS) VALUES (3, 'PLANTAS DEL CAMPO', 4, 0, 2, 0, 0);
+INSERT INTO LIBRO (ID, TITULO, AUTOR_ID, BAJA_DISPONIBILIDAD, EJEMPLARES_TOTALES, EJEMPLARES_PRESTADOS, EJEMPLARES_DANIADOS) VALUES (4, 'MONSTRUOS DEL PANTANO', 3, 0, 1, 0, 0);
+INSERT INTO LIBRO (ID, TITULO, AUTOR_ID, BAJA_DISPONIBILIDAD, EJEMPLARES_TOTALES, EJEMPLARES_PRESTADOS, EJEMPLARES_DANIADOS) VALUES (5, 'SÁTIRA A LA PROFECÍA DE ITHLINNE', 1, 0, 2, 0, 0);
+INSERT INTO LIBRO (ID, TITULO, AUTOR_ID, BAJA_DISPONIBILIDAD, EJEMPLARES_TOTALES, EJEMPLARES_PRESTADOS, EJEMPLARES_DANIADOS) VALUES (6, 'BALADA DEL LOBO BLANCO', 2, 0, 1, 0, 0);
+INSERT INTO LIBRO (ID, TITULO, AUTOR_ID, BAJA_DISPONIBILIDAD, EJEMPLARES_TOTALES, EJEMPLARES_PRESTADOS, EJEMPLARES_DANIADOS) VALUES (7, 'MEDICINA FORENSE', 4, 0, 2, 0, 0);
+CREATE TABLE EDICION
 (
-  isbn varchar2(13) not null,
-  libro_id number not null,
-  editorial_id number not null,
-  numero number(2) not null,
-  fecha varchar2(10),
-  descripcion varchar2(200),
-  constraint edicion_pk primary key (isbn),
-  constraint fk_libro foreign key (libro_id) references libro(id),
-  constraint fk_editorial foreign key (editorial_id) references editorial(id)
+  ISBN VARCHAR2(13) NOT NULL,
+  LIBRO_ID NUMBER NOT NULL,
+  EDITORIAL_ID NUMBER NOT NULL,
+  NUMERO NUMBER(2) NOT NULL,
+  FECHA VARCHAR2(10),
+  DESCRIPCION VARCHAR2(200),
+  CONSTRAINT EDICION_PK PRIMARY KEY (ISBN),
+  CONSTRAINT FK_LIBRO FOREIGN KEY (LIBRO_ID) REFERENCES LIBRO(ID),
+  CONSTRAINT FK_EDITORIAL FOREIGN KEY (EDITORIAL_ID) REFERENCES EDITORIAL(ID)
 );
-insert into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('1111111111111', 1, 1, 1, '1112-04-01', 'Pergaminos, Lengua Antigua');
-insert into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('2222222222222', 1, 5, 2, '1216-07-02', 'Encuadernado, Traducido a Lengua Común, Incluye 8 nuevos mitos');
-insert into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('3333333333333', 5, 1, 1, '1019-11-22', 'Pergaminos, Lengua Élfica');
-insert into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('4444444444444', 2, 3, 1, '1212-04-06', 'Encuadernado, Lengua Común');
-insert into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('5555555555555', 3, 4, 1, '1213-05-07', 'Encuadernado, Lengua Común');
-insert into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('6666666666666', 4, 3, 1, '1219-09-12', 'Encuadernado, Lengua Común');
-insert into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('7777777777777', 6, 2, 1, '1222-12-11', 'Encuadernado, Lengua Común');
-insert into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('8888888888888', 7, 4, 1, '1211-12-08', 'Encuadernado, Lengua Antigua');
-insert into edicion (isbn, libro_id, editorial_id, numero, fecha, descripcion) values ('9999999999999', 7, 4, 2, '1223-11-09', 'Encuadernado, Traducido a Lengua Común');
-create table planta
+INSERT INTO EDICION (ISBN, LIBRO_ID, EDITORIAL_ID, NUMERO, FECHA, DESCRIPCION) VALUES ('1111111111111', 1, 1, 1, '1112-04-01', 'PERGAMINOS, LENGUA ANTIGUA');
+INSERT INTO EDICION (ISBN, LIBRO_ID, EDITORIAL_ID, NUMERO, FECHA, DESCRIPCION) VALUES ('2222222222222', 1, 5, 2, '1216-07-02', 'ENCUADERNADO, TRADUCIDO A LENGUA COMÚN, INCLUYE 8 NUEVOS MITOS');
+INSERT INTO EDICION (ISBN, LIBRO_ID, EDITORIAL_ID, NUMERO, FECHA, DESCRIPCION) VALUES ('3333333333333', 5, 1, 1, '1019-11-22', 'PERGAMINOS, LENGUA ÉLFICA');
+INSERT INTO EDICION (ISBN, LIBRO_ID, EDITORIAL_ID, NUMERO, FECHA, DESCRIPCION) VALUES ('4444444444444', 2, 3, 1, '1212-04-06', 'ENCUADERNADO, LENGUA COMÚN');
+INSERT INTO EDICION (ISBN, LIBRO_ID, EDITORIAL_ID, NUMERO, FECHA, DESCRIPCION) VALUES ('5555555555555', 3, 4, 1, '1213-05-07', 'ENCUADERNADO, LENGUA COMÚN');
+INSERT INTO EDICION (ISBN, LIBRO_ID, EDITORIAL_ID, NUMERO, FECHA, DESCRIPCION) VALUES ('6666666666666', 4, 3, 1, '1219-09-12', 'ENCUADERNADO, LENGUA COMÚN');
+INSERT INTO EDICION (ISBN, LIBRO_ID, EDITORIAL_ID, NUMERO, FECHA, DESCRIPCION) VALUES ('7777777777777', 6, 2, 1, '1222-12-11', 'ENCUADERNADO, LENGUA COMÚN');
+INSERT INTO EDICION (ISBN, LIBRO_ID, EDITORIAL_ID, NUMERO, FECHA, DESCRIPCION) VALUES ('8888888888888', 7, 4, 1, '1211-12-08', 'ENCUADERNADO, LENGUA ANTIGUA');
+INSERT INTO EDICION (ISBN, LIBRO_ID, EDITORIAL_ID, NUMERO, FECHA, DESCRIPCION) VALUES ('9999999999999', 7, 4, 2, '1223-11-09', 'ENCUADERNADO, TRADUCIDO A LENGUA COMÚN');
+CREATE TABLE PLANTA
 (
-  id number not null,
-  nombre varchar2(50) not null,
-  constraint planta_pk primary key (id)
+  ID NUMBER NOT NULL,
+  NOMBRE VARCHAR2(50) NOT NULL,
+  CONSTRAINT PLANTA_PK PRIMARY KEY (ID)
 );
-insert into planta (id, nombre) values (1, 'Planta Baja');
-insert into planta (id, nombre) values (2, '1er Piso');
-insert into planta (id, nombre) values (3, '2do Piso');
-create table estante
+INSERT INTO PLANTA (ID, NOMBRE) VALUES (1, 'PLANTA BAJA');
+INSERT INTO PLANTA (ID, NOMBRE) VALUES (2, '1ER PISO');
+INSERT INTO PLANTA (ID, NOMBRE) VALUES (3, '2DO PISO');
+CREATE TABLE ESTANTE
 (
-  planta_id number not null,
-  id number not null,
-  nombre varchar2(50) not null,
-  constraint estante_pk primary key (planta_id, id),
-  constraint fk_planta foreign key (planta_id) references planta(id)
+  PLANTA_ID NUMBER NOT NULL,
+  ID NUMBER NOT NULL,
+  NOMBRE VARCHAR2(50) NOT NULL,
+  CONSTRAINT ESTANTE_PK PRIMARY KEY (PLANTA_ID, ID),
+  CONSTRAINT FK_PLANTA FOREIGN KEY (PLANTA_ID) REFERENCES PLANTA(ID)
 );
-insert into estante (planta_id, id, nombre) values (1, 1, 'Estante A');
-insert into estante (planta_id, id, nombre) values (1, 2, 'Estante B');
-insert into estante (planta_id, id, nombre) values (2, 1, 'Estante C');
-insert into estante (planta_id, id, nombre) values (3, 1, 'Estante D');
-create table ejemplar
+INSERT INTO ESTANTE (PLANTA_ID, ID, NOMBRE) VALUES (1, 1, 'ESTANTE A');
+INSERT INTO ESTANTE (PLANTA_ID, ID, NOMBRE) VALUES (1, 2, 'ESTANTE B');
+INSERT INTO ESTANTE (PLANTA_ID, ID, NOMBRE) VALUES (2, 1, 'ESTANTE C');
+INSERT INTO ESTANTE (PLANTA_ID, ID, NOMBRE) VALUES (3, 1, 'ESTANTE D');
+CREATE TABLE EJEMPLAR
 (
-  edicion_isbn varchar2(13) not null,
-  id number not null,
-  planta_id number not null,
-  estante_id number not null,
-  prestado number(1) check (prestado in (0,1)) not null,
-  observaciones varchar2(200),
-  mal_estado number(1) check (mal_estado in (0,1)) not null,
-  constraint ejemplar_pk primary key (edicion_isbn, id),
-  constraint fk_edicion foreign key (edicion_isbn) references edicion(isbn),
-  constraint fk_planta_estante foreign key (planta_id, estante_id) references estante(planta_id, id)
+  EDICION_ISBN VARCHAR2(13) NOT NULL,
+  ID NUMBER NOT NULL,
+  PLANTA_ID NUMBER NOT NULL,
+  ESTANTE_ID NUMBER NOT NULL,
+  PRESTADO NUMBER(1) CHECK (PRESTADO IN (0,1)) NOT NULL,
+  OBSERVACIONES VARCHAR2(200),
+  MAL_ESTADO NUMBER(1) CHECK (MAL_ESTADO IN (0,1)) NOT NULL,
+  CONSTRAINT EJEMPLAR_PK PRIMARY KEY (EDICION_ISBN, ID),
+  CONSTRAINT FK_EDICION FOREIGN KEY (EDICION_ISBN) REFERENCES EDICION(ISBN),
+  CONSTRAINT FK_PLANTA_ESTANTE FOREIGN KEY (PLANTA_ID, ESTANTE_ID) REFERENCES ESTANTE(PLANTA_ID, ID)
 );
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('1111111111111', 1, 0, 1, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('1111111111111', 2, 0, 1, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('2222222222222', 1, 0, 1, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('2222222222222', 2, 0, 1, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('3333333333333', 1, 0, 1, 2, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('3333333333333', 2, 0, 1, 2, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('4444444444444', 1, 0, 1, 2, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('4444444444444', 2, 0, 2, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('5555555555555', 1, 0, 2, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('5555555555555', 2, 0, 2, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('6666666666666', 1, 0, 2, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('7777777777777', 1, 0, 3, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('8888888888888', 1, 0, 3, 1, ' ', 0);
-insert into ejemplar (edicion_isbn, id, prestado, planta_id, estante_id, observaciones, mal_estado) values ('9999999999999', 1, 0, 3, 1, ' ', 0);
-create table alquiler
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('1111111111111', 1, 0, 1, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('1111111111111', 2, 0, 1, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('2222222222222', 1, 0, 1, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('2222222222222', 2, 0, 1, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('3333333333333', 1, 0, 1, 2, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('3333333333333', 2, 0, 1, 2, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('4444444444444', 1, 0, 1, 2, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('4444444444444', 2, 0, 2, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('5555555555555', 1, 0, 2, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('5555555555555', 2, 0, 2, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('6666666666666', 1, 0, 2, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('7777777777777', 1, 0, 3, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('8888888888888', 1, 0, 3, 1, ' ', 0);
+INSERT INTO EJEMPLAR (EDICION_ISBN, ID, PRESTADO, PLANTA_ID, ESTANTE_ID, OBSERVACIONES, MAL_ESTADO) VALUES ('9999999999999', 1, 0, 3, 1, ' ', 0);
+CREATE TABLE ALQUILER
 (
-  usuario_cedula varchar2(100) not null,
-  edicion_isbn varchar2(13) not null,
-  ejemplar_id number not null,
-  fecha_hora_prestamo varchar2(20) not null,
-  fecha_hora_estimada_entrega varchar2(20) not null,
-  fecha_hora_entrega varchar2(20),
-  constraint alquiler_pk primary key (usuario_cedula , edicion_isbn, ejemplar_id, fecha_hora_prestamo),
-  constraint fk_usuario foreign key (usuario_cedula) references usuario(cedula) on delete cascade,
-  constraint fk_ejemplar foreign key (edicion_isbn, ejemplar_id) references ejemplar(edicion_isbn, id) on delete cascade
+  USUARIO_CEDULA VARCHAR2(100) NOT NULL,
+  EDICION_ISBN VARCHAR2(13) NOT NULL,
+  EJEMPLAR_ID NUMBER NOT NULL,
+  FECHA_HORA_PRESTAMO VARCHAR2(20) NOT NULL,
+  FECHA_HORA_ESTIMADA_ENTREGA VARCHAR2(20) NOT NULL,
+  FECHA_HORA_ENTREGA VARCHAR2(20),
+  CONSTRAINT ALQUILER_PK PRIMARY KEY (USUARIO_CEDULA , EDICION_ISBN, EJEMPLAR_ID, FECHA_HORA_PRESTAMO),
+  CONSTRAINT FK_USUARIO FOREIGN KEY (USUARIO_CEDULA) REFERENCES USUARIO(CEDULA) ON DELETE CASCADE,
+  CONSTRAINT FK_EJEMPLAR FOREIGN KEY (EDICION_ISBN, EJEMPLAR_ID) REFERENCES EJEMPLAR(EDICION_ISBN, ID) ON DELETE CASCADE
 );
-create table desabastecimiento
+CREATE TABLE DESABASTECIMIENTO
 (
-  libro_id number not null,
-  fecha_hora varchar2(20) not null,
-  constraint desabastecimiento_pk primary key (libro_id, fecha_hora),
-  constraint fk_libro_id foreign key (libro_id) references libro(id)
+  LIBRO_ID NUMBER NOT NULL,
+  FECHA_HORA VARCHAR2(20) NOT NULL,
+  CONSTRAINT DESABASTECIMIENTO_PK PRIMARY KEY (LIBRO_ID, FECHA_HORA),
+  CONSTRAINT FK_LIBRO_ID FOREIGN KEY (LIBRO_ID) REFERENCES LIBRO(ID)
 );
-create table pedido
+CREATE TABLE PEDIDO
 (
-  libro_nombre varchar2(100) not null,
-  fecha_hora varchar2(20) not null,
-  constraint pedido_pk primary key (libro_nombre, fecha_hora)
+  LIBRO_NOMBRE VARCHAR2(100) NOT NULL,
+  FECHA_HORA VARCHAR2(20) NOT NULL,
+  CONSTRAINT PEDIDO_PK PRIMARY KEY (LIBRO_NOMBRE, FECHA_HORA)
 );
-create table mensaje_pendiente
+CREATE TABLE MENSAJE_PENDIENTE
 (
-  nombre_usuario varchar2(100) not null,
-  mensaje varchar2(200) not null,
-  constraint mensaje_pendiente_pk primary key (nombre_usuario)
+  NOMBRE_USUARIO VARCHAR2(100) NOT NULL,
+  MENSAJE VARCHAR2(200) NOT NULL,
+  CONSTRAINT MENSAJE_PENDIENTE_PK PRIMARY KEY (NOMBRE_USUARIO)
 );
--- insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '1111111111111', 1, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
--- update ejemplar set prestado = 1 where edicion_isbn = '1111111111111' and id = 1;
--- insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0123456789', '2222222222222', 2, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
--- update ejemplar set prestado = 1 where edicion_isbn = '2222222222222' and id = 2;
--- update usuario set puede_prestamo = 0 where cedula = '0123456789';
--- insert into alquiler(usuario_cedula, edicion_isbn, ejemplar_id, fecha_hora_prestamo, fecha_hora_estimada_entrega) values ('0987654321', '7777777777777', 1, '2019-12-27 11:00:23', '2019-12-28 12:30:00');
--- update ejemplar set prestado = 1 where edicion_isbn = '7777777777777' and id = 1;
--- update usuario set puede_prestamo = 0 where cedula = '0987654321';
--- update alquiler set fecha_hora_entrega = '2019-12-28 11:30:00' where usuario_cedula = '0987654321' and fecha_hora_prestamo = '2019-12-27 11:00:23';
--- update usuario set puede_prestamo = 1 where cedula = '0987654321';
--- update ejemplar set prestado = 0 where edicion_isbn = '7777777777777' and id = 1;
-commit;
+-- INSERT INTO ALQUILER(USUARIO_CEDULA, EDICION_ISBN, EJEMPLAR_ID, FECHA_HORA_PRESTAMO, FECHA_HORA_ESTIMADA_ENTREGA) VALUES ('0123456789', '1111111111111', 1, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
+-- UPDATE EJEMPLAR SET PRESTADO = 1 WHERE EDICION_ISBN = '1111111111111' AND ID = 1;
+-- INSERT INTO ALQUILER(USUARIO_CEDULA, EDICION_ISBN, EJEMPLAR_ID, FECHA_HORA_PRESTAMO, FECHA_HORA_ESTIMADA_ENTREGA) VALUES ('0123456789', '2222222222222', 2, '2019-12-27 09:10:02', '2019-12-28 00:00:00');
+-- UPDATE EJEMPLAR SET PRESTADO = 1 WHERE EDICION_ISBN = '2222222222222' AND ID = 2;
+-- UPDATE USUARIO SET PUEDE_PRESTAMO = 0 WHERE CEDULA = '0123456789';
+-- INSERT INTO ALQUILER(USUARIO_CEDULA, EDICION_ISBN, EJEMPLAR_ID, FECHA_HORA_PRESTAMO, FECHA_HORA_ESTIMADA_ENTREGA) VALUES ('0987654321', '7777777777777', 1, '2019-12-27 11:00:23', '2019-12-28 12:30:00');
+-- UPDATE EJEMPLAR SET PRESTADO = 1 WHERE EDICION_ISBN = '7777777777777' AND ID = 1;
+-- UPDATE USUARIO SET PUEDE_PRESTAMO = 0 WHERE CEDULA = '0987654321';
+-- UPDATE ALQUILER SET FECHA_HORA_ENTREGA = '2019-12-28 11:30:00' WHERE USUARIO_CEDULA = '0987654321' AND FECHA_HORA_PRESTAMO = '2019-12-27 11:00:23';
+-- UPDATE USUARIO SET PUEDE_PRESTAMO = 1 WHERE CEDULA = '0987654321';
+-- UPDATE EJEMPLAR SET PRESTADO = 0 WHERE EDICION_ISBN = '7777777777777' AND ID = 1;
+COMMIT;
 
-CREATE PUBLIC SYNONYM usuario FOR admin3.usuario;
-CREATE PUBLIC SYNONYM alquiler FOR admin3.alquiler;
-CREATE PUBLIC SYNONYM autor FOR admin3.autor;
-CREATE PUBLIC SYNONYM edicion FOR admin3.edicion;
-CREATE PUBLIC SYNONYM editorial FOR admin3.editorial;
-CREATE PUBLIC SYNONYM ejemplar FOR admin3.ejemplar;
-CREATE PUBLIC SYNONYM estante FOR admin3.estante;
-CREATE PUBLIC SYNONYM libro FOR admin3.libro;
-CREATE PUBLIC SYNONYM planta FOR admin3.planta;
-CREATE PUBLIC SYNONYM pedido FOR admin3.pedido; 
-CREATE PUBLIC SYNONYM desabastecimiento FOR admin3.desabastecimiento;
-CREATE PUBLIC SYNONYM mensaje_pendiente FOR admin3.mensaje_pendiente;
+CREATE PUBLIC SYNONYM USUARIO FOR ADMIN3.USUARIO;
+CREATE PUBLIC SYNONYM ALQUILER FOR ADMIN3.ALQUILER;
+CREATE PUBLIC SYNONYM AUTOR FOR ADMIN3.AUTOR;
+CREATE PUBLIC SYNONYM EDICION FOR ADMIN3.EDICION;
+CREATE PUBLIC SYNONYM EDITORIAL FOR ADMIN3.EDITORIAL;
+CREATE PUBLIC SYNONYM EJEMPLAR FOR ADMIN3.EJEMPLAR;
+CREATE PUBLIC SYNONYM ESTANTE FOR ADMIN3.ESTANTE;
+CREATE PUBLIC SYNONYM LIBRO FOR ADMIN3.LIBRO;
+CREATE PUBLIC SYNONYM PLANTA FOR ADMIN3.PLANTA;
+CREATE PUBLIC SYNONYM PEDIDO FOR ADMIN3.PEDIDO; 
+CREATE PUBLIC SYNONYM DESABASTECIMIENTO FOR ADMIN3.DESABASTECIMIENTO;
+CREATE PUBLIC SYNONYM MENSAJE_PENDIENTE FOR ADMIN3.MENSAJE_PENDIENTE;
 
-alter session set "_ORACLE_SCRIPT"=true;
+ALTER SESSION SET "_ORACLE_SCRIPT"=TRUE;
 
-CREATE ROLE bibliotecario;
-GRANT ALL ON usuario TO bibliotecario;
-GRANT ALL ON alquiler TO bibliotecario;
-GRANT SELECT ON autor TO bibliotecario;
-GRANT SELECT ON edicion TO bibliotecario;
-GRANT SELECT ON editorial TO bibliotecario;
-GRANT ALL ON ejemplar TO bibliotecario;
-GRANT SELECT ON estante TO bibliotecario;
-GRANT SELECT ON libro TO bibliotecario;
-GRANT SELECT ON planta TO bibliotecario;
-GRANT SELECT ON desabastecimiento TO bibliotecario;
-GRANT SELECT ON pedido TO bibliotecario;
-GRANT SELECT ON mensaje_pendiente TO bibliotecario;
-GRANT create SESSION to bibliotecario;
-CREATE PUBLIC SYNONYM roleBibliotecario FOR bibliotecario;
+CREATE ROLE BIBLIOTECARIO;
+GRANT ALL ON USUARIO TO BIBLIOTECARIO;
+GRANT ALL ON ALQUILER TO BIBLIOTECARIO;
+GRANT SELECT ON AUTOR TO BIBLIOTECARIO;
+GRANT SELECT ON EDICION TO BIBLIOTECARIO;
+GRANT SELECT ON EDITORIAL TO BIBLIOTECARIO;
+GRANT ALL ON EJEMPLAR TO BIBLIOTECARIO;
+GRANT SELECT ON ESTANTE TO BIBLIOTECARIO;
+GRANT SELECT ON LIBRO TO BIBLIOTECARIO;
+GRANT SELECT ON PLANTA TO BIBLIOTECARIO;
+GRANT SELECT ON DESABASTECIMIENTO TO BIBLIOTECARIO;
+GRANT SELECT ON PEDIDO TO BIBLIOTECARIO;
+GRANT SELECT ON MENSAJE_PENDIENTE TO BIBLIOTECARIO;
+GRANT CREATE SESSION TO BIBLIOTECARIO;
+CREATE PUBLIC SYNONYM ROLEBIBLIOTECARIO FOR BIBLIOTECARIO;
 
-CREATE ROLE administrador;
-GRANT ALL ON usuario TO administrador;
-GRANT ALL ON alquiler TO administrador;
-GRANT ALL ON autor TO administrador;
-GRANT ALL ON edicion TO administrador;
-GRANT ALL ON editorial TO administrador;
-GRANT ALL ON ejemplar TO administrador;
-GRANT ALL ON estante TO administrador;
-GRANT ALL ON libro TO administrador;
-GRANT ALL ON planta TO administrador;
-GRANT ALL ON desabastecimiento TO administrador;
-GRANT ALL ON pedido TO administrador;
-GRANT SELECT ON mensaje_pendiente TO administrador;
-GRANT create SESSION to administrador;
-CREATE PUBLIC SYNONYM roleAdministrador FOR administrador;
+CREATE ROLE ADMINISTRADOR;
+GRANT ALL ON USUARIO TO ADMINISTRADOR;
+GRANT ALL ON ALQUILER TO ADMINISTRADOR;
+GRANT ALL ON AUTOR TO ADMINISTRADOR;
+GRANT ALL ON EDICION TO ADMINISTRADOR;
+GRANT ALL ON EDITORIAL TO ADMINISTRADOR;
+GRANT ALL ON EJEMPLAR TO ADMINISTRADOR;
+GRANT ALL ON ESTANTE TO ADMINISTRADOR;
+GRANT ALL ON LIBRO TO ADMINISTRADOR;
+GRANT ALL ON PLANTA TO ADMINISTRADOR;
+GRANT ALL ON DESABASTECIMIENTO TO ADMINISTRADOR;
+GRANT ALL ON PEDIDO TO ADMINISTRADOR;
+GRANT SELECT ON MENSAJE_PENDIENTE TO ADMINISTRADOR;
+GRANT CREATE SESSION TO ADMINISTRADOR;
+CREATE PUBLIC SYNONYM ROLEADMINISTRADOR FOR ADMINISTRADOR;
 
-CREATE OR REPLACE TRIGGER caso_desabastecimiento BEFORE INSERT OR DELETE OR UPDATE
-  ON ejemplar FOR EACH ROW
+CREATE OR REPLACE TRIGGER CASO_DESABASTECIMIENTO BEFORE INSERT OR DELETE OR UPDATE
+  ON EJEMPLAR FOR EACH ROW
 DECLARE
-  et number;
-  ep number;
-  ed number;
-  id_libro number;
-  fh varchar(20);
-  titulo_libro varchar(100);
+  ET NUMBER;
+  EP NUMBER;
+  ED NUMBER;
+  ID_LIBRO NUMBER;
+  FH VARCHAR(20);
+  TITULO_LIBRO VARCHAR(100);
 BEGIN
   IF INSERTING THEN
-    select libro_id into id_libro from edicion where isbn = :new.edicion_isbn;
-    select ejemplares_totales into et from libro where id = id_libro;
-    UPDATE libro set ejemplares_totales = (et + 1) where id = id_libro;
-    UPDATE libro set baja_disponibilidad = 0 where id = id_libro;
+    SELECT LIBRO_ID INTO ID_LIBRO FROM EDICION WHERE ISBN = :NEW.EDICION_ISBN;
+    SELECT EJEMPLARES_TOTALES INTO ET FROM LIBRO WHERE ID = ID_LIBRO;
+    UPDATE LIBRO SET EJEMPLARES_TOTALES = (ET + 1) WHERE ID = ID_LIBRO;
+    UPDATE LIBRO SET BAJA_DISPONIBILIDAD = 0 WHERE ID = ID_LIBRO;
   ELSIF DELETING THEN
-    select libro_id into id_libro from edicion where isbn = :old.edicion_isbn;
-    select ejemplares_totales into et from libro where id = id_libro;
-    UPDATE libro set ejemplares_totales = (et - 1) where id = id_libro;
-    if et = 1 then
-      UPDATE libro set baja_disponibilidad = 1 where id = id_libro;
-      SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO fh FROM dual;
-      INSERT INTO desabastecimiento(libro_id, fecha_hora) VALUES (id_libro, fh);
-    end if;
-    if :old.prestado = 1 then
-      select ejemplares_prestados into ep from libro where id = id_libro;
-      UPDATE libro set ejemplares_prestados = (ep - 1) where id = id_libro;
-    else
-      select ejemplares_prestados into ep from libro where id = id_libro;
-      if et <> 1 and et - 1 = ep then
-        UPDATE libro set baja_disponibilidad = 1 where id = id_libro;
-        SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO fh FROM dual;
-	INSERT INTO desabastecimiento(libro_id, fecha_hora) VALUES (id_libro, fh);
-      end if;
-    end if;
-    if :old.mal_estado = 1 then
-      select ejemplares_daniados into ed from libro where id = id_libro;
-      UPDATE libro set ejemplares_daniados = (ed - 1) where id = id_libro;
-    end if;
+    SELECT LIBRO_ID INTO ID_LIBRO FROM EDICION WHERE ISBN = :OLD.EDICION_ISBN;
+    SELECT EJEMPLARES_TOTALES INTO ET FROM LIBRO WHERE ID = ID_LIBRO;
+    UPDATE LIBRO SET EJEMPLARES_TOTALES = (ET - 1) WHERE ID = ID_LIBRO;
+    IF ET = 1 THEN
+      UPDATE LIBRO SET BAJA_DISPONIBILIDAD = 1 WHERE ID = ID_LIBRO;
+      SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO FH FROM DUAL;
+      INSERT INTO DESABASTECIMIENTO(LIBRO_ID, FECHA_HORA) VALUES (ID_LIBRO, FH);
+    END IF;
+    IF :OLD.PRESTADO = 1 THEN
+      SELECT EJEMPLARES_PRESTADOS INTO EP FROM LIBRO WHERE ID = ID_LIBRO;
+      UPDATE LIBRO SET EJEMPLARES_PRESTADOS = (EP - 1) WHERE ID = ID_LIBRO;
+    ELSE
+      SELECT EJEMPLARES_PRESTADOS INTO EP FROM LIBRO WHERE ID = ID_LIBRO;
+      IF ET <> 1 AND ET - 1 = EP THEN
+        UPDATE LIBRO SET BAJA_DISPONIBILIDAD = 1 WHERE ID = ID_LIBRO;
+        SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO FH FROM DUAL;
+	INSERT INTO DESABASTECIMIENTO(LIBRO_ID, FECHA_HORA) VALUES (ID_LIBRO, FH);
+      END IF;
+    END IF;
+    IF :OLD.MAL_ESTADO = 1 THEN
+      SELECT EJEMPLARES_DANIADOS INTO ED FROM LIBRO WHERE ID = ID_LIBRO;
+      UPDATE LIBRO SET EJEMPLARES_DANIADOS = (ED - 1) WHERE ID = ID_LIBRO;
+    END IF;
   ELSIF UPDATING THEN
-    if :old.prestado <> :new.prestado then 
-      select libro_id into id_libro from edicion where isbn = :new.edicion_isbn;
-      select ejemplares_prestados into ep from libro where id = id_libro;
-      if :new.prestado = 1 then
-        UPDATE libro set ejemplares_prestados = (ep + 1) where id = id_libro;
-        select ejemplares_totales into et from libro where id = id_libro;
-        if et = (ep + 1) then
-          UPDATE libro set baja_disponibilidad = 1 where id = id_libro;
-          SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO fh FROM dual;
-	  INSERT INTO desabastecimiento(libro_id, fecha_hora) VALUES (id_libro, fh);
-        end if;
-      else 
-        UPDATE libro set ejemplares_prestados = (ep - 1) where id = id_libro;
-        UPDATE libro set baja_disponibilidad = 0 where id = id_libro;
-      end if;
-    end if;  
-    if :old.mal_estado <> :new.mal_estado then 
-      select libro_id into id_libro from edicion where isbn = :new.edicion_isbn;
-      select ejemplares_daniados into ed from libro where id = id_libro;
-      if :new.mal_estado = 1 then
-        UPDATE libro set ejemplares_daniados = (ed + 1) where id = id_libro;
-        select ejemplares_totales into et from libro where id = id_libro;
-        if et = (ed + 1) then
-          select titulo into titulo_libro from libro where id = id_libro;
-          SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO fh FROM dual;
-	  INSERT INTO pedido(libro_nombre, fecha_hora) VALUES (titulo_libro, fh);
-        end if;
-      else 
-        UPDATE libro set ejemplares_daniados = (ed - 1) where id = id_libro;
-      end if;
-    end if;
+    IF :OLD.PRESTADO <> :NEW.PRESTADO THEN 
+      SELECT LIBRO_ID INTO ID_LIBRO FROM EDICION WHERE ISBN = :NEW.EDICION_ISBN;
+      SELECT EJEMPLARES_PRESTADOS INTO EP FROM LIBRO WHERE ID = ID_LIBRO;
+      IF :NEW.PRESTADO = 1 THEN
+        UPDATE LIBRO SET EJEMPLARES_PRESTADOS = (EP + 1) WHERE ID = ID_LIBRO;
+        SELECT EJEMPLARES_TOTALES INTO ET FROM LIBRO WHERE ID = ID_LIBRO;
+        IF ET = (EP + 1) THEN
+          UPDATE LIBRO SET BAJA_DISPONIBILIDAD = 1 WHERE ID = ID_LIBRO;
+          SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO FH FROM DUAL;
+	  INSERT INTO DESABASTECIMIENTO(LIBRO_ID, FECHA_HORA) VALUES (ID_LIBRO, FH);
+        END IF;
+      ELSE 
+        UPDATE LIBRO SET EJEMPLARES_PRESTADOS = (EP - 1) WHERE ID = ID_LIBRO;
+        UPDATE LIBRO SET BAJA_DISPONIBILIDAD = 0 WHERE ID = ID_LIBRO;
+      END IF;
+    END IF;  
+    IF :OLD.MAL_ESTADO <> :NEW.MAL_ESTADO THEN 
+      SELECT LIBRO_ID INTO ID_LIBRO FROM EDICION WHERE ISBN = :NEW.EDICION_ISBN;
+      SELECT EJEMPLARES_DANIADOS INTO ED FROM LIBRO WHERE ID = ID_LIBRO;
+      IF :NEW.MAL_ESTADO = 1 THEN
+        UPDATE LIBRO SET EJEMPLARES_DANIADOS = (ED + 1) WHERE ID = ID_LIBRO;
+        SELECT EJEMPLARES_TOTALES INTO ET FROM LIBRO WHERE ID = ID_LIBRO;
+        IF ET = (ED + 1) THEN
+          SELECT TITULO INTO TITULO_LIBRO FROM LIBRO WHERE ID = ID_LIBRO;
+          SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO FH FROM DUAL;
+	  INSERT INTO PEDIDO(LIBRO_NOMBRE, FECHA_HORA) VALUES (TITULO_LIBRO, FH);
+        END IF;
+      ELSE 
+        UPDATE LIBRO SET EJEMPLARES_DANIADOS = (ED - 1) WHERE ID = ID_LIBRO;
+      END IF;
+    END IF;
   END IF;
 END;
 /
 
-CREATE OR REPLACE TRIGGER borrar_prestamo BEFORE DELETE
-  ON alquiler FOR EACH ROW
+CREATE OR REPLACE TRIGGER BORRAR_PRESTAMO BEFORE DELETE
+  ON ALQUILER FOR EACH ROW
 BEGIN
-  update ejemplar set prestado = 0 where edicion_isbn = :old.edicion_isbn and id = :old.ejemplar_id;
+  UPDATE EJEMPLAR SET PRESTADO = 0 WHERE EDICION_ISBN = :OLD.EDICION_ISBN AND ID = :OLD.EJEMPLAR_ID;
 END;
 /
 
-CREATE OR REPLACE TRIGGER validar_prestamo BEFORE INSERT
-  ON alquiler FOR EACH ROW
+CREATE OR REPLACE TRIGGER VALIDAR_PRESTAMO BEFORE INSERT
+  ON ALQUILER FOR EACH ROW
 DECLARE
-  v number;
+  V NUMBER;
 BEGIN
-  select vetado into v from usuario where cedula = :new.usuario_cedula;
-  if v = 1 then
-    RAISE_APPLICATION_ERROR(-20001,'El usuario esta vetado.');
-  end if;
+  SELECT VETADO INTO V FROM USUARIO WHERE CEDULA = :NEW.USUARIO_CEDULA;
+  IF V = 1 THEN
+    RAISE_APPLICATION_ERROR(-20001,'EL USUARIO ESTA VETADO.');
+  END IF;
 END;    
 /
 
-CREATE OR REPLACE TRIGGER validar_devolucion BEFORE UPDATE OR DELETE
-  ON alquiler FOR EACH ROW
+CREATE OR REPLACE TRIGGER VALIDAR_DEVOLUCION BEFORE UPDATE OR DELETE
+  ON ALQUILER FOR EACH ROW
 DECLARE
-  fh varchar(20);
-  ufhd varchar2(20);
+  FH VARCHAR(20);
+  UFHD VARCHAR2(20);
 BEGIN
-  SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO fh FROM dual;
-  select ultima_fecha_hora_devolucion into ufhd from usuario where cedula = :old.usuario_cedula;
-  if MONTHS_BETWEEN (TO_DATE (fh, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE (ufhd, 'YYYY-MM-DD HH24:MI:SS')) > 1 then
-    update usuario set vetado = 1 where cedula = :old.usuario_cedula;
-  end if;
+  SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') INTO FH FROM DUAL;
+  SELECT ULTIMA_FECHA_HORA_DEVOLUCION INTO UFHD FROM USUARIO WHERE CEDULA = :OLD.USUARIO_CEDULA;
+  IF MONTHS_BETWEEN (TO_DATE (FH, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE (UFHD, 'YYYY-MM-DD HH24:MI:SS')) > 1 THEN
+    UPDATE USUARIO SET VETADO = 1 WHERE CEDULA = :OLD.USUARIO_CEDULA;
+  END IF;
 END;    
 /
 
-create or replace procedure normalizar (entrada IN varchar2, salida OUT varchar2)
-as
-begin
-  salida := UPPER(entrada);
-end normalizar;
+CREATE OR REPLACE PROCEDURE NORMALIZAR (ENTRADA IN VARCHAR2, SALIDA OUT VARCHAR2)
+AS
+BEGIN
+  SALIDA := UPPER(ENTRADA);
+END NORMALIZAR;
 /
 
-CREATE PUBLIC SYNONYM normalizar FOR admin3.normalizar; 
-grant execute on normalizar to bibliotecario;
-grant execute on normalizar to administrador;
+CREATE PUBLIC SYNONYM NORMALIZAR FOR ADMIN3.NORMALIZAR; 
+GRANT EXECUTE ON NORMALIZAR TO BIBLIOTECARIO;
+GRANT EXECUTE ON NORMALIZAR TO ADMINISTRADOR;

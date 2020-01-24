@@ -574,12 +574,12 @@ public class UIEjemplares extends javax.swing.JFrame {
         try {
             if (validar(this.jTextFieldIsbn.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()), Integer.parseInt(this.jComboEstante.getSelectedItem().toString()), this.jTextFieldObservaciones.getText()));
+                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()), Integer.parseInt(this.jComboEstante.getSelectedItem().toString()), negocio.normalizar(this.jTextFieldObservaciones.getText())));
                     JOptionPane.showMessageDialog(this, "Ejemplar ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     ejemplar.setPlanta_id(Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()));
                     ejemplar.setEstante_id(Integer.parseInt(this.jComboEstante.getSelectedItem().toString()));
-                    ejemplar.setObservaciones(this.jTextFieldObservaciones.getText());
+                    ejemplar.setObservaciones(negocio.normalizar(this.jTextFieldObservaciones.getText()));
                     if (this.jComboEstado.getSelectedItem().toString().equals("Dañado")) {
                        ejemplar.setMal_estado(1); 
                     } else {
@@ -613,7 +613,7 @@ public class UIEjemplares extends javax.swing.JFrame {
         try {
             String busqueda = jTextFieldBuscar.getText();
             if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                ejemplares = negocio.buscarEjemplares(busqueda, jComboOrden.getSelectedIndex());
+                ejemplares = negocio.buscarEjemplares(negocio.normalizar(busqueda), jComboOrden.getSelectedIndex());
                 if (!ejemplares.isEmpty()) {
                     this.cargarDatos();
                     ejemplares.clear();
