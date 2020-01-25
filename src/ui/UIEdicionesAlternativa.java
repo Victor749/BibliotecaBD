@@ -105,12 +105,11 @@ public class UIEdicionesAlternativa extends javax.swing.JFrame {
     }
     
     private boolean esAlfaNumerico(String cadena) {
-        char[] charArray = cadena.toCharArray();
-        for(char c : charArray) {
-            if (!(Character.isLetterOrDigit(c) || c == ' ' || c == '-'))
-                return false;
+        int tipo = negocio.tipoDato(cadena);
+        if (tipo == 1 ){
+            return true;
         }
-        return true;
+        return false;
     }
     
     private boolean validar(String cadena) {

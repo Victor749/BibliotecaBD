@@ -114,12 +114,11 @@ public class UIEjemplares extends javax.swing.JFrame {
     
     // Limita caracteres, para evitar Inyecciones SQL
     private boolean esAlfaNumerico(String cadena) {
-        char[] charArray = cadena.toCharArray();
-        for(char c : charArray) {
-            if (!(Character.isLetterOrDigit(c) || c == ' ' || c == '-' || c == ',' || c == ':'))
-                return false;
+        int tipo = negocio.tipoDato(cadena);
+        if (tipo == 1 ){
+            return true;
         }
-        return true;
+        return false;
     }
     
     private boolean validar(String cadena) {
@@ -134,14 +133,14 @@ public class UIEjemplares extends javax.swing.JFrame {
         return true;
     }
     
+    
     private boolean entero(String cadena) {
-        try {
-            int parseInt = Integer.parseInt(cadena);
+            int tipo = negocio.tipoDato(cadena);
+            if (tipo == 1 ){
+                return false;
+            }
             return true;
-        } catch(NumberFormatException e) {
-            return false;
         }
-    }
     
     private void cargarComboPlanta() {
         plantas = negocio.todasPlantas(0);
@@ -574,12 +573,12 @@ public class UIEjemplares extends javax.swing.JFrame {
         try {
             if (validar(this.jTextFieldIsbn.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()), Integer.parseInt(this.jComboEstante.getSelectedItem().toString()), this.jTextFieldObservaciones.getText()));
+                    negocio.insertar(new Ejemplar(jTextFieldIsbn.getText(), Integer.parseInt(this.jTextFieldId.getText()), Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()), Integer.parseInt(this.jComboEstante.getSelectedItem().toString()), negocio.normalizar(this.jTextFieldObservaciones.getText())));
                     JOptionPane.showMessageDialog(this, "Ejemplar ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     ejemplar.setPlanta_id(Integer.parseInt(this.jComboPlanta.getSelectedItem().toString()));
                     ejemplar.setEstante_id(Integer.parseInt(this.jComboEstante.getSelectedItem().toString()));
-                    ejemplar.setObservaciones(this.jTextFieldObservaciones.getText());
+                    ejemplar.setObservaciones(negocio.normalizar(this.jTextFieldObservaciones.getText()));
                     if (this.jComboEstado.getSelectedItem().toString().equals("Dañado")) {
                        ejemplar.setMal_estado(1); 
                     } else {
@@ -612,8 +611,8 @@ public class UIEjemplares extends javax.swing.JFrame {
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         try {
             String busqueda = jTextFieldBuscar.getText();
-            if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                ejemplares = negocio.buscarEjemplares(busqueda, jComboOrden.getSelectedIndex());
+            if (!busqueda.isEmpty()) {
+                ejemplares = negocio.buscarEjemplares(negocio.normalizar(busqueda), jComboOrden.getSelectedIndex());
                 if (!ejemplares.isEmpty()) {
                     this.cargarDatos();
                     ejemplares.clear();

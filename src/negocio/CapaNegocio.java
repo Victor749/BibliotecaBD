@@ -419,7 +419,7 @@ public class CapaNegocio {
         return lista;
     }
     
-     //Lamada a metodos de la capa de datos
+     //Llamada a metodos de la capa de datos
     public ArrayList<String> solicitarConsultaParaCombo(String sqlStatement) throws SQLException{
         return capaDatos.makeQueryForCombo(sqlStatement);
     }
@@ -436,5 +436,17 @@ public class CapaNegocio {
     
     public void grant_Revoke(String permitir, String accion, String tabla, String usuarioToGrantOrRevoke) throws SQLException{
          capaDatos.grant_Revoke(permitir, accion, tabla,usuarioToGrantOrRevoke);
+    }
+    public String normalizar(String cadenaSinNorma) {
+        return capaDatos.ejecutarProcedimientoNormalizar(cadenaSinNorma);
+    }
+    public int validarCedula(String cedula) {
+        return capaDatos.validarCedula(cedula);
+    }
+    public int tipoDato(String dato) {
+        return capaDatos.tipoDato(dato);
+    }
+    public String mostarMensajePendiente(String usuario) throws SQLException {
+        return capaDatos.mostarMensajePendiente(usuario);
     }
 }

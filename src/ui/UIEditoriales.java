@@ -88,12 +88,11 @@ public class UIEditoriales extends javax.swing.JFrame {
     }
     
     private boolean esAlfaNumerico(String cadena) {
-        char[] charArray = cadena.toCharArray();
-        for(char c : charArray) {
-            if (!(Character.isLetterOrDigit(c) || c == ' '))
-                return false;
+        int tipo = negocio.tipoDato(cadena);
+        if (tipo == 1 ){
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -355,10 +354,10 @@ public class UIEditoriales extends javax.swing.JFrame {
         try {
             if (esAlfaNumerico(jTextFieldNombre.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Editorial(Integer.parseInt(jTextFieldId.getText()), jTextFieldNombre.getText()));
+                    negocio.insertar(new Editorial(Integer.parseInt(jTextFieldId.getText()), negocio.normalizar(jTextFieldNombre.getText())));
                     JOptionPane.showMessageDialog(this, "Editorial ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    editorial.setNombre(jTextFieldNombre.getText());
+                    editorial.setNombre(negocio.normalizar(jTextFieldNombre.getText()));
                     negocio.actualizar(editorial);
                     JOptionPane.showMessageDialog(this, "Editorial actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -382,8 +381,8 @@ public class UIEditoriales extends javax.swing.JFrame {
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         try {
             String busqueda = jTextFieldBuscar.getText();
-            if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                editoriales = negocio.buscarEditoriales(busqueda, jComboOrden.getSelectedIndex());
+            if (!busqueda.isEmpty()) {
+                editoriales = negocio.buscarEditoriales(negocio.normalizar(busqueda), jComboOrden.getSelectedIndex());
                 if (!editoriales.isEmpty()) {
                     this.cargarDatos();
                     editoriales.clear();

@@ -7,6 +7,7 @@
 package datos;
 
 import java.lang.reflect.Field;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,9 +17,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static jdk.nashorn.internal.objects.NativeString.toLowerCase;
-import negocio.CapaNegocio;
+import ui.UI_RegistrarUsuario;
 
 /**
  *
@@ -95,6 +97,7 @@ public class CapaDatos {
                 sentencia.setObject((i + 1), valor);
             }
         } catch(SecurityException | IllegalArgumentException | IllegalAccessException | SQLException e) {
+            System.out.println("hola 2");
             String mensaje = "Error durante creación de sentencia INSERT SQL: " + e.getMessage();
             throw new RuntimeException(mensaje, e);
         } 
@@ -108,16 +111,25 @@ public class CapaDatos {
     // Accesible desde la capa de negocio
     public void insertBD(Object objeto, String nombreTabla) {
         try {
+            System.out.println("hola");
             conectarBD();
+            System.out.println("hola");
             conexion.setAutoCommit(false);
+            System.out.println("hola");
             PreparedStatement sentencia = insertSQL(objeto, nombreTabla);
+            System.out.println("hola");
             sentencia.executeUpdate();
+            System.out.println("hola");
             conexion.commit();
+            System.out.println("hola");
             desconectarBD();
+            System.out.println("hola");
         } catch (SQLException | IllegalArgumentException e) {
             try {
+                Logger.getLogger(UI_RegistrarUsuario.class.getName()).log(Level.SEVERE, null, e);
                 conexion.rollback();
                 desconectarBD();
+                
             } catch (SQLException ex) {
                 String string = "Error durante rollback: " + ex.getMessage();
                 desconectarBD();
@@ -832,6 +844,100 @@ public class CapaDatos {
         boolean st = stmt.execute(sql);
 
         this.desconectarBD();
+    }
+    
+
+    public String ejecutarProcedimientoNormalizar (String cadenaSinNorma) {
+        try {
+            conectarBD();
+            String call = "{call normalizar (?,?)}";
+            CallableStatement cst = conexion.prepareCall(call);
+            // Parametro Entrada
+            cst.setString(1, cadenaSinNorma);
+            // Parametro Salida
+            cst.registerOutParameter(2, java.sql.Types.VARCHAR);
+            // Ejecuta
+            cst.execute();
+            String cadenaNormalizada = cst.getString(2);
+            desconectarBD();
+            return cadenaNormalizada;
+        } catch (SQLException e) {
+            desconectarBD();
+            throw new RuntimeException("Error durante la ejecución de un procedimiento almacenado: " + e.getMessage(), e);
+        }
+    }
+    
+    public int validarCedula(String cedula) {
+        try {
+            conectarBD();
+            String call = "{call validarCed (?,?)}";
+            CallableStatement cst = conexion.prepareCall(call);
+            // Parametro Entrada
+            cst.setString(1, cedula);
+            // Parametro Salida
+            cst.registerOutParameter(2, java.sql.Types.NUMERIC);
+            // Ejecuta
+            cst.execute();
+            int respuesta = cst.getInt(2);
+            System.out.println("HOLAAAAAAAAAAAAAA saddd");
+            desconectarBD();
+            return respuesta;
+        } catch (Exception e) {
+            desconectarBD();
+            throw new RuntimeException("Error durante la ejecución de un procedimiento almacenado: " + e.getMessage(), e);
+        }
+    }
+    
+    public int tipoDato(String dato) {
+        try {
+            conectarBD();
+            String call = "{call TIPORESPUESTA (?,?)}";
+            CallableStatement cst = conexion.prepareCall(call);
+            // Parametro Entrada
+            cst.setString(1, dato);
+            // Parametro Salida
+            cst.registerOutParameter(2, java.sql.Types.NUMERIC);
+            // Ejecuta
+            cst.execute();
+            int respuesta = cst.getInt(2);
+            System.out.println("HOLAAAAAAAAAAAAAA saddd");
+            desconectarBD();
+            return respuesta;
+        } catch (Exception e) {
+            desconectarBD();
+            throw new RuntimeException("Error durante la ejecución de un procedimiento almacenado: " + e.getMessage(), e);
+        }
+    }
+    
+    public String mostarMensajePendiente(String usuario) throws SQLException {
+        
+        this.conectarBD();
+        String sqlStatement = "SELECT MENSAJE FROM MENSAJE_PENDIENTE WHERE NOMBRE_USUARIO = '" + usuario+"'";    
+        System.out.println(sqlStatement);
+        
+        String mensaje = null;
+        
+        
+        Statement st = conexion.createStatement();
+        
+        ResultSet rs = st.executeQuery(sqlStatement);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int columnsNumber = rsmd.getColumnCount();
+
+        while(rs.next()){
+            mensaje = rs.getString(1);
+        }
+        
+        
+        
+
+        this.desconectarBD();
+        
+        
+        return mensaje; 
+        
+        
+        
     }
     
     

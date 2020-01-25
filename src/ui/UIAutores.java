@@ -85,13 +85,12 @@ public class UIAutores extends javax.swing.JFrame {
         }
     }
     
-    private boolean esAlfaNumerico(String cadena) {
-        char[] charArray = cadena.toCharArray();
-        for(char c : charArray) {
-            if (!(Character.isLetterOrDigit(c) || c == ' '))
-                return false;
+   private boolean esAlfaNumerico(String cadena) {
+        int tipo = negocio.tipoDato(cadena);
+        if (tipo == 1 ){
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -353,10 +352,10 @@ public class UIAutores extends javax.swing.JFrame {
         try {
             if (esAlfaNumerico(jTextFieldNombre.getText())) {
                 if (opcion) {
-                    negocio.insertar(new Autor(Integer.parseInt(jTextFieldId.getText()), jTextFieldNombre.getText()));
+                    negocio.insertar(new Autor(Integer.parseInt(jTextFieldId.getText()), negocio.normalizar(jTextFieldNombre.getText())));
                     JOptionPane.showMessageDialog(this, "Autor ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    autor.setNombre(jTextFieldNombre.getText());
+                    autor.setNombre(negocio.normalizar(jTextFieldNombre.getText()));
                     negocio.actualizar(autor);
                     JOptionPane.showMessageDialog(this, "Autor actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -380,8 +379,8 @@ public class UIAutores extends javax.swing.JFrame {
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         try {
             String busqueda = jTextFieldBuscar.getText();
-            if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                autores = negocio.buscarAutores(busqueda, jComboOrden.getSelectedIndex());
+            if (!busqueda.isEmpty()) {
+                autores = negocio.buscarAutores(negocio.normalizar(busqueda), jComboOrden.getSelectedIndex());
                 if (!autores.isEmpty()) {
                     this.cargarDatos();
                     autores.clear();

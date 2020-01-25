@@ -92,13 +92,13 @@ public class UILibrosAlternativa extends javax.swing.JFrame {
     }
     
     private boolean esAlfaNumerico(String cadena) {
-        char[] charArray = cadena.toCharArray();
-        for(char c : charArray) {
-            if (!(Character.isLetterOrDigit(c) || c == ' '))
-                return false;
+        int tipo = negocio.tipoDato(cadena);
+        if (tipo == 1 ){
+            return true;
         }
-        return true;
+        return false;
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.

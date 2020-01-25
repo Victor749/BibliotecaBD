@@ -11,13 +11,13 @@ package negocio;
  */
 public class Nombre {
     
-    private String nombre_user  ;
+    private String nombre_user ;
     
     public Nombre(){
         
     }
     
-    public Nombre(String nombre_user  ){
+    public Nombre(String nombre_user ){
         this.nombre_user   = nombre_user  ;
     }
 

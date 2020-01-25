@@ -117,12 +117,11 @@ public class UIEdiciones extends javax.swing.JFrame {
     
     // Limita caracteres, para evitar Inyecciones SQL
     private boolean esAlfaNumerico(String cadena) {
-        char[] charArray = cadena.toCharArray();
-        for(char c : charArray) {
-            if (!(Character.isLetterOrDigit(c) || c == ' ' || c == '-' || c == ',' || c == ':'))
-                return false;
+        int tipo = negocio.tipoDato(cadena);
+        if (tipo == 1 ){
+            return true;
         }
-        return true;
+        return false;
     }
     
     private boolean validar(String cadena) {
@@ -138,12 +137,11 @@ public class UIEdiciones extends javax.swing.JFrame {
     }
     
     private boolean entero(String cadena) {
-        try {
-            int parseInt = Integer.parseInt(cadena);
-            return true;
-        } catch(NumberFormatException e) {
+        int tipo = negocio.tipoDato(cadena);
+        if (tipo == 1 ){
             return false;
         }
+        return true;
     }
 
     /**
@@ -473,9 +471,9 @@ public class UIEdiciones extends javax.swing.JFrame {
     private void jButtonGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGrabarActionPerformed
         try {
             if (esAlfaNumerico(jTextFieldLibro.getText()) && validar(this.jTextFieldIsbn.getText()) && esAlfaNumerico(jTextFieldEditorial.getText()) && entero(this.jTextFieldNumero.getText())) {
-                List<Libro> librosTemp = negocio.consultarLibro(jTextFieldLibro.getText());
+                List<Libro> librosTemp = negocio.consultarLibro(negocio.normalizar(jTextFieldLibro.getText()));
                 if (!librosTemp.isEmpty()) {
-                    List<Editorial> editorialesTemp = negocio.consultarEditorial(jTextFieldEditorial.getText());
+                    List<Editorial> editorialesTemp = negocio.consultarEditorial(negocio.normalizar(jTextFieldEditorial.getText()));
                         if (!editorialesTemp.isEmpty()) {
                             Libro libro = librosTemp.get(0);
                             Editorial editorial = editorialesTemp.get(0);
@@ -484,14 +482,14 @@ public class UIEdiciones extends javax.swing.JFrame {
                             fmt.setCalendar(calendar);
                             String fecha = fmt.format(calendar.getTime());
                             if (opcion) {
-                                negocio.insertar(new Edicion(jTextFieldIsbn.getText(), libro.getId(), editorial.getId(), Integer.parseInt(this.jTextFieldNumero.getText()), fecha, this.jTextFieldDescripcion.getText()));
+                                negocio.insertar(new Edicion(jTextFieldIsbn.getText(), libro.getId(), editorial.getId(), Integer.parseInt(this.jTextFieldNumero.getText()), fecha, negocio.normalizar(this.jTextFieldDescripcion.getText())));
                                 JOptionPane.showMessageDialog(this, "Edición ingresada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                             } else {
                                 edicion.setLibro_id(libro.getId());
                                 edicion.setEditorial_id(editorial.getId());
                                 edicion.setNumero(Integer.parseInt(this.jTextFieldNumero.getText()));
                                 edicion.setFecha(fecha);
-                                edicion.setDescripcion(this.jTextFieldDescripcion.getText());
+                                edicion.setDescripcion(negocio.normalizar(this.jTextFieldDescripcion.getText()));
                                 negocio.actualizar(edicion);
                                 JOptionPane.showMessageDialog(this, "Edición actualizada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                             }
@@ -527,8 +525,8 @@ public class UIEdiciones extends javax.swing.JFrame {
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         try {
             String busqueda = jTextFieldBuscar.getText();
-            if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                ediciones = negocio.buscarEdiciones(busqueda, jComboOrden.getSelectedIndex());
+            if (!busqueda.isEmpty()) {
+                ediciones = negocio.buscarEdiciones(negocio.normalizar(busqueda), jComboOrden.getSelectedIndex());
                 if (!ediciones.isEmpty()) {
                     this.cargarDatos();
                     ediciones.clear();
@@ -556,7 +554,7 @@ public class UIEdiciones extends javax.swing.JFrame {
     private void jTextFieldEditorialKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldEditorialKeyTyped
         String busqueda = this.jTextFieldEditorial.getText();
         if (esAlfaNumerico(busqueda)) {
-            editoriales = negocio.consultarEditoriales(busqueda, 7);
+            editoriales = negocio.consultarEditoriales(negocio.normalizar(busqueda), 7);
             editoriales.forEach((editorial) -> {
                 if (!textAutoCompleterEditorial.itemExists(editorial.getNombre())) {
                     textAutoCompleterEditorial.addItem(editorial.getNombre());
@@ -568,7 +566,7 @@ public class UIEdiciones extends javax.swing.JFrame {
     private void jTextFieldLibroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldLibroKeyTyped
         String busqueda = this.jTextFieldLibro.getText();
         if (esAlfaNumerico(busqueda)) {
-            libros = negocio.consultarLibros(busqueda, 7);
+            libros = negocio.consultarLibros(negocio.normalizar(busqueda), 7);
             libros.forEach((libro) -> {
                 if (!textAutoCompleterLibro.itemExists(libro.getTitulo())) {
                     textAutoCompleterLibro.addItem(libro.getTitulo());

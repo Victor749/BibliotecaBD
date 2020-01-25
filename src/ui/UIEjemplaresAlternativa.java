@@ -16,6 +16,7 @@ import negocio.CapaNegocio;
 import negocio.Edicion;
 import negocio.Ejemplar;
 
+
 /**
  *
  * @author USUARIO
@@ -108,12 +109,11 @@ public class UIEjemplaresAlternativa extends javax.swing.JFrame {
     }
     
     private boolean esAlfaNumerico(String cadena) {
-        char[] charArray = cadena.toCharArray();
-        for(char c : charArray) {
-            if (!(Character.isLetterOrDigit(c) || c == ' ' || c == '-'))
-                return false;
+        int tipo = negocio.tipoDato(cadena);
+        if (tipo == 1 ){
+            return true;
         }
-        return true;
+        return false;
     }
     
     private boolean validar(String cadena) {
@@ -128,13 +128,12 @@ public class UIEjemplaresAlternativa extends javax.swing.JFrame {
         return true;
     }
     
-    private boolean entero(String cadena) {
-        try {
-            int parseInt = Integer.parseInt(cadena);
-            return true;
-        } catch(NumberFormatException e) {
+private boolean entero(String cadena) {
+        int tipo = negocio.tipoDato(cadena);
+        if (tipo == 1 ){
             return false;
         }
+        return true;
     }
     
 

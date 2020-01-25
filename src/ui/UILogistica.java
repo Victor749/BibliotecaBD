@@ -143,13 +143,13 @@ public class UILogistica extends javax.swing.JFrame {
     }
     
     private boolean esAlfaNumerico(String cadena) {
-        char[] charArray = cadena.toCharArray();
-        for(char c : charArray) {
-            if (!(Character.isLetterOrDigit(c) || c == ' '))
-                return false;
-        }
-        return true;
-    }
+         int tipo = negocio.tipoDato(cadena);
+         if (tipo == 1 ){
+             return true;
+         }
+         return false;
+     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -567,11 +567,11 @@ public class UILogistica extends javax.swing.JFrame {
         try {
             if (esAlfaNumerico(jTextFieldNombrePlanta.getText())) {
                 if (opcionPlanta) {
-                    negocio.insertar(new Planta(Integer.parseInt(jTextFieldIdPlanta.getText()), jTextFieldNombrePlanta.getText()));
+                    negocio.insertar(new Planta(Integer.parseInt(jTextFieldIdPlanta.getText()), negocio.normalizar(jTextFieldNombrePlanta.getText())));
                     cargarComboPlanta();
                     JOptionPane.showMessageDialog(this, "Planta ingresada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    planta.setNombre(jTextFieldNombrePlanta.getText());
+                    planta.setNombre(negocio.normalizar(jTextFieldNombrePlanta.getText()));
                     negocio.actualizar(planta);
                     JOptionPane.showMessageDialog(this, "Planta actualizada con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -595,8 +595,8 @@ public class UILogistica extends javax.swing.JFrame {
     private void jButtonBuscarPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarPlantaActionPerformed
         try {
             String busqueda = jTextFieldBuscarPlanta.getText();
-            if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                plantas = negocio.buscarPlantas(busqueda, jComboOrdenPlanta.getSelectedIndex());
+            if (!busqueda.isEmpty()) {
+                plantas = negocio.buscarPlantas(negocio.normalizar(busqueda), jComboOrdenPlanta.getSelectedIndex());
                 if (!plantas.isEmpty()) {
                     this.cargarDatosPlanta();
                     plantas.clear();
@@ -626,10 +626,10 @@ public class UILogistica extends javax.swing.JFrame {
             if (esAlfaNumerico(jTextFieldNombreEstante.getText())) {
                 int id_planta = Integer.parseInt(jComboPlanta.getSelectedItem().toString());
                 if (opcionEstante) {
-                    negocio.insertar(new Estante(id_planta, Integer.parseInt(jTextFieldIdEstante.getText()), jTextFieldNombreEstante.getText()));
+                    negocio.insertar(new Estante(id_planta, Integer.parseInt(jTextFieldIdEstante.getText()), negocio.normalizar(jTextFieldNombreEstante.getText())));
                     JOptionPane.showMessageDialog(this, "Estante ingresado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    estante.setNombre(jTextFieldNombreEstante.getText());
+                    estante.setNombre(negocio.normalizar(jTextFieldNombreEstante.getText()));
                     negocio.actualizar(estante);
                     JOptionPane.showMessageDialog(this, "Estante actualizado con éxito.", "OK", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -653,8 +653,8 @@ public class UILogistica extends javax.swing.JFrame {
     private void jButtonBuscarEstanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarEstanteActionPerformed
         try {
             String busqueda = jTextFieldBuscarEstante.getText();
-            if (esAlfaNumerico(busqueda) && !busqueda.isEmpty()) {
-                estantes = negocio.buscarEstantes(busqueda, jComboOrdenEstante.getSelectedIndex());
+            if (!busqueda.isEmpty()) {
+                estantes = negocio.buscarEstantes(negocio.normalizar(busqueda), jComboOrdenEstante.getSelectedIndex());
                 if (!estantes.isEmpty()) {
                     this.cargarDatosEstante();
                     estantes.clear();

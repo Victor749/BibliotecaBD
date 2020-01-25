@@ -254,7 +254,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
                                 }
                             }
                         }
-                        
+                        toSend = negocio.normalizar(toSend); //llamada a procedimiento remoto
                         areaTexto.setText(toSend);
                     }
                 });
@@ -1491,6 +1491,7 @@ myFrame.revalidate();//                       myFrame.setExtendedState(myFrame.g
                 arrayCombos.get(i).setName(String.valueOf(arrayCombos.get(i).getSelectedItem()));
                 System.out.println("El nombre ahora es " + arrayCombos.get(i).getName());
             }
+            
             
         }
         

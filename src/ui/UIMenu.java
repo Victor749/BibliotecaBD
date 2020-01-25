@@ -5,6 +5,7 @@
  */
 package ui;
 
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import negocio.CapaNegocio;
 
@@ -32,7 +33,7 @@ public class UIMenu extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void iniciar(UI_Login parentView) {
+    public void iniciar(UI_Login parentView) throws SQLException {
         capaNegocio  = new CapaNegocio(usuario,contrasena);
         try {
             capaNegocio.iniciar();
@@ -41,6 +42,9 @@ public class UIMenu extends javax.swing.JFrame {
             this.setVisible(true);
             JOptionPane.showMessageDialog(this, "¡Conexión Exitosa con la BD!", "OK", JOptionPane.INFORMATION_MESSAGE);
             parentView.dispose();
+            String saludo = capaNegocio.mostarMensajePendiente(usuario);
+            if(saludo == null){saludo = "Bienvenido SUPERUSER";}
+            JOptionPane.showMessageDialog(this, saludo, "HI THERE", JOptionPane.INFORMATION_MESSAGE);
         } catch (RuntimeException E) {
             JOptionPane.showMessageDialog(this, "No se pudo conectar con la BD.", "OK", JOptionPane.ERROR_MESSAGE);
         }
@@ -57,6 +61,7 @@ public class UIMenu extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu = new javax.swing.JMenu();
         jMenuItemGestor = new javax.swing.JMenuItem();
@@ -75,10 +80,12 @@ public class UIMenu extends javax.swing.JFrame {
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Stencil", 0, 24)); // NOI18N
-        jLabel1.setText("bibliotecaria");
+        jLabel1.setText("BIBLIOTECARIA");
 
         jLabel3.setFont(new java.awt.Font("Stencil", 0, 24)); // NOI18N
         jLabel3.setText("SISTEMA DE GESTIÓN");
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/logobib.png"))); // NOI18N
 
         jMenu.setText("Menú");
 
@@ -175,22 +182,27 @@ public class UIMenu extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(111, 111, 111)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(91, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(79, 79, 79))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(82, 82, 82)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(116, 116, 116)
+                        .addComponent(jLabel1)))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(31, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
-                .addGap(274, 274, 274))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
@@ -225,7 +237,8 @@ public class UIMenu extends javax.swing.JFrame {
 
     private void jMenuItemGestorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGestorActionPerformed
         // TODO add your handling code here:
-        Querys gestor = new Querys(capaNegocio);
+        CapaNegocio capaNegocioQuerys = new CapaNegocio("admin3", "1234");
+        Querys gestor = new Querys(capaNegocioQuerys);
         gestor.iniciar();
     }//GEN-LAST:event_jMenuItemGestorActionPerformed
 
@@ -290,6 +303,7 @@ public class UIMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu;
     private javax.swing.JMenu jMenuAyuda;
