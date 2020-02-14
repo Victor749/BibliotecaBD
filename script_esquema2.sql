@@ -388,7 +388,6 @@ begin
             else
                 decena:=to_char(suma);
                 suma:=to_number(substr(decena,2,1));
-                -- en suma se almacena el ultimo digito de la suma anterior y a 10 se le resta este valor y se lo almacena en suma
                 suma:=10-suma;
             end if;
             if(suma=verificador)then
